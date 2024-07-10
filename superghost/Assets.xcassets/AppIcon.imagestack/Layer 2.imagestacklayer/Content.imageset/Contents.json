@@ -1,0 +1,17 @@
+{
+  "images" : [
+    {
+      "idiom" : "tv",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "1024x1024-black-solid-color-background.jpg",
+      "idiom" : "tv",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
