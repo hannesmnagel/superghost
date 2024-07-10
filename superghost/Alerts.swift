@@ -8,18 +8,9 @@
 import SwiftUI
 import SwiftData
 
-struct AlertItem: Identifiable, Equatable, Hashable {
-    let id = UUID()
-    var isForQuit = false
-    var title: String
-    var message: String
-    var buttonTitle: String
-
-    static let youWin = AlertItem(title: "You Win!", message: "You are good at this game!", buttonTitle: "Rematch")
-
-    static let youLost = AlertItem(title: "You Lost!", message: "Get a revenge!", buttonTitle: "Rematch")
-
-    static let quit = AlertItem(isForQuit: true, title: "GameOver", message: "Other player left.", buttonTitle: "Quit")
+enum AlertItem: String, Equatable, Identifiable {
+    var id: String {self.rawValue}
+    case won, lost, playerLeft
 }
 
 enum GameNotification: String {
@@ -50,17 +41,17 @@ struct AlertView: View {
     var content: some View {
 
         VStack{
-            Text(alertItem.title)
+            Text(alertItem == .won ? "You won!" : "You lost!")
                 .font(ApearanceManager.largeTitle.bold())
-            Text(alertItem.message)
+            Text(alertItem == .won ? "Can you win another one?" : "Get a revenge!")
                 .font(ApearanceManager.headline)
                 .padding(.bottom)
-            if alertItem.isForQuit{
+            if alertItem == .playerLeft {
                 AsyncButton{
                     try await viewModel.quitGame()
                     isPresented = false
                 } label: {
-                    Text(alertItem.buttonTitle)
+                    Text("Quit")
                 }
             } else {
                 Spacer()
@@ -83,7 +74,7 @@ struct AlertView: View {
                         viewModel.alertItem = nil
                         try await viewModel.resetGame()
                     } label: {
-                        Text(alertItem.buttonTitle)
+                        Text("Rematch")
                     }
 #if !os(watchOS)
                     .keyboardShortcut(.defaultAction)

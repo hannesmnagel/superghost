@@ -9,24 +9,6 @@ import SwiftUI
 import Combine
 import SwiftData
 
-@Model
-class GameStat: Hashable, Identifiable {
-    let player2: String
-    let won: Bool
-    let word: String
-    let withInvitation: Bool
-    let createdAt = Date()
-    @Attribute(.unique) public var id = UUID()
-
-    init(player2: String, withInvitation: Bool, won: Bool, word: String, id: String) {
-        self.id = UUID(uuidString: id) ?? UUID()
-        self.player2 = player2
-        self.won = won
-        self.word = word
-        self.withInvitation = withInvitation
-    }
-}
-
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -125,16 +107,16 @@ final class GameViewModel: ObservableObject {
         if game!.winningPlayerId != "" {
 
             if game!.winningPlayerId == currentUser.id {
-                alertItem = .youWin
+                alertItem = .won
             } else {
-                alertItem = .youLost
+                alertItem = .lost
             }
         }
     }
 
     func resetGame() async throws {
         guard game != nil else {
-            alertItem = .quit
+            alertItem = .playerLeft
             return
         }
         if game!.rematchPlayerId.count == 1 {
@@ -209,4 +191,5 @@ struct Game: Codable, Equatable {
 struct User: Codable {
     var id = UUID().uuidString
 }
+
 
