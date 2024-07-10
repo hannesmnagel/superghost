@@ -82,6 +82,8 @@ struct GameView: View {
                                 Text("Yes, I lied")
                             }
                         } else {
+                            LoadingView(namespace: namespace)
+                            Text("Waiting for player response...")
                         }
                     }
                     .disabled(viewModel.checkForGameBoardStatus())
