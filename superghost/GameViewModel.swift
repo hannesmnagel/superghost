@@ -162,34 +162,5 @@ final class GameViewModel: ObservableObject {
         } catch {
         }
     }
-
 }
-
-
-struct Move: Codable, Equatable {
-
-    let isPlayer1: Bool
-    let word: String
-}
-
-
-struct Game: Codable, Equatable {
-    let id: String
-    var player1Id: String
-    var player2Id: String
-
-    var blockMoveForPlayerId: String
-    var winningPlayerId: String = ""
-    var challengingUserId: String = ""
-    var rematchPlayerId: [String]
-
-    var moves: [Move]
-
-    var createdAt : String = Date().ISO8601Format()
-}
-
-struct User: Codable {
-    var id = UUID().uuidString
-}
-
 
