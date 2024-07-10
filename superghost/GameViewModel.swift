@@ -7,54 +7,23 @@
 
 import SwiftUI
 import Combine
+import SwiftData
 
-public struct GameStat: RawRepresentable, Hashable, Identifiable {
+@Model
+class GameStat: Hashable, Identifiable {
     let player2: String
     let won: Bool
     let word: String
-    public var id = UUID()
+    let withInvitation: Bool
+    let createdAt = Date()
+    @Attribute(.unique) public var id = UUID()
 
-    init(player2: String, won: Bool, word: String) {
+    init(player2: String, withInvitation: Bool, won: Bool, word: String, id: String) {
+        self.id = UUID(uuidString: id) ?? UUID()
         self.player2 = player2
         self.won = won
         self.word = word
-    }
-    public var rawValue: String {
-        // Encode the properties as a JSON string
-        let dict: [String: Any] = ["player2": player2, "won": won, "word": word]
-        if let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []),
-           let jsonString = String(data: jsonData, encoding: .utf8) {
-            return jsonString
-        }
-        return ""
-    }
-
-    public init?(rawValue: String) {
-        // Decode the JSON string back into properties
-        if let jsonData = rawValue.data(using: .utf8),
-           let dict = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-           let player2 = dict["player2"] as? String,
-           let won = dict["won"] as? Bool,
-           let word = dict["word"] as? String {
-            self.player2 = player2
-            self.won = won
-            self.word = word
-        } else {
-            return nil
-        }
-    }
-}
-
-extension Array: RawRepresentable where Element == GameStat {
-    public var rawValue: String {
-        (try? JSONEncoder().encode(self.map({$0.rawValue})).base64EncodedString()) ?? ""
-    }
-
-    public init?(rawValue: String) {
-        if let data = Data(base64Encoded: rawValue),
-           let decoded = try? JSONDecoder().decode([String].self, from: data){
-            self = decoded.compactMap({.init(rawValue: $0)})
-        } else {return nil}
+        self.withInvitation = withInvitation
     }
 }
 
@@ -81,6 +50,8 @@ final class GameViewModel: ObservableObject {
 
     private var cancellables: Set<AnyCancellable> = []
 
+    var withInvitation = false
+
     init() {
         retriveUser()
         if currentUser == nil {
@@ -92,6 +63,7 @@ final class GameViewModel: ObservableObject {
     func getTheGame() async throws {
         try await ApiLayer.shared.startGame(with: currentUser.id)
 
+        withInvitation = false
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
@@ -99,6 +71,7 @@ final class GameViewModel: ObservableObject {
     func joinGame(with gameId: String) async throws {
         try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId)
 
+        withInvitation = true
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
@@ -106,6 +79,7 @@ final class GameViewModel: ObservableObject {
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(with: currentUser.id)
 
+        withInvitation = true
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
@@ -140,6 +114,7 @@ final class GameViewModel: ObservableObject {
         return game != nil ? game!.player1Id == currentUser.id : false
     }
 
+    @MainActor
     func checkIfGameIsOver() {
 
         guard game != nil else {
@@ -189,11 +164,9 @@ final class GameViewModel: ObservableObject {
     func saveUser() {
         currentUser = User()
         do {
-            print("encoding user object")
             let data = try JSONEncoder().encode(currentUser)
             userData = data
         } catch {
-            print("couldnt same user object")
         }
 
     }
@@ -203,10 +176,8 @@ final class GameViewModel: ObservableObject {
         guard let userData = userData else { return }
 
         do {
-            print("decoding user")
             currentUser = try JSONDecoder().decode(User.self, from: userData)
         } catch {
-            print("no user saved")
         }
     }
 

@@ -13,6 +13,17 @@ struct GameView: View {
     let namespace: Namespace.ID
 
     var body: some View {
+        ViewThatFits{
+            content
+            ScrollView{
+                content
+            }
+        }
+    }
+
+    @ViewBuilder @MainActor
+    var content: some View {
+
         VStack {
             Text(viewModel.gameNotification.rawValue)
 
@@ -21,8 +32,17 @@ struct GameView: View {
                 isPresented = false
             } label: {
                 Text("Quit Game")
+#if os(watchOS)
+                    .padding(-15)
+                    .font(.caption2)
+#endif
             }
+#if os(watchOS)
+            .scaleEffect(0.5)
+            .padding(.bottom, -15)
+#else
             .keyboardShortcut(.cancelAction)
+#endif
 
 
             Spacer()
@@ -30,49 +50,53 @@ struct GameView: View {
             if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
                 LoadingView(namespace: namespace)
                 if viewModel.game?.player2Id == "privateGame"{
-                    if let url = URL(string: "superghost://superghost.dev/\(viewModel.game?.id ?? "")"){
+                    if let url = URL(string: "superghost://hannesnagel.com/superghost/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
                         ShareLink(item: url)
                     }
                 }
-            }
+            } else {
 
-            if let game = viewModel.game{
+                if let game = viewModel.game{
 
-                VStack {
-                    if game.challengingUserId.isEmpty {
-                        LetterPicker(viewModel: viewModel)
-                        if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
+                    VStack {
+                        if game.challengingUserId.isEmpty {
+                            LetterPicker(viewModel: viewModel)
+                            if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
+                                AsyncButton{
+                                    viewModel.game?.challengingUserId = viewModel.currentUser.id
+                                    viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
+                                    try await ApiLayer.shared.updateGame(viewModel.game!)
+                                } label: {
+                                    Text("There is no such word")
+                                }
+                            }
+                        } else if game.challengingUserId != viewModel.currentUser.id{
+                            Text(game.moves.last?.word ?? "")
+                                .font(ApearanceManager.headline)
+                            SayTheWordButton(viewModel: viewModel)
                             AsyncButton{
-                                viewModel.game?.challengingUserId = viewModel.currentUser.id
-                                viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
+                                viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
                                 try await ApiLayer.shared.updateGame(viewModel.game!)
                             } label: {
-                                Text("There is no such word")
+                                Text("Yes, I lied")
                             }
+                        } else {
                         }
-                    } else if game.challengingUserId != viewModel.currentUser.id{
-                        Text(game.moves.last?.word ?? "")
-                            .font(.headline)
-                        SayTheWordButton(viewModel: viewModel)
-                        AsyncButton{
-                            viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
-                            try await ApiLayer.shared.updateGame(viewModel.game!)
-                        } label: {
-                            Text("Yes, I lied")
-                        }
-                    } else {
                     }
+                    .disabled(viewModel.checkForGameBoardStatus())
+                    .padding()
+                    .sheet(item: $viewModel.alertItem) { alertItem in
+                        AlertView(alertItem: alertItem, viewModel: viewModel, isPresented: $isPresented)
+                        #if os(macOS)
+                            .frame(minWidth: 500, minHeight: 500)
+                        #endif
+                    }
+                    Spacer()
                 }
-                .disabled(viewModel.checkForGameBoardStatus())
-                .padding()
-                .sheet(item: $viewModel.alertItem) { alertItem in
-                    AlertView(alertItem: alertItem, viewModel: viewModel, isPresented: $isPresented)
-                }
-                Spacer()
             }
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.bordered)
         .animation(.snappy, value: viewModel.gameNotification)
         .animation(.snappy, value: viewModel.alertItem)
         .animation(.snappy, value: viewModel.game)
@@ -89,25 +113,16 @@ struct LetterPicker: View {
 
     var body: some View {
         let word = viewModel.game?.moves.last?.word ?? ""
-        HStack{
-            Picker("", selection: $leadingLetter) {
-                ForEach(allowedLetters, id: \.self){letter in
-                    Text(letter)
-                }
-            }
-            .disabled(!trailingLetter.isEmpty)
+        VStackWatch{
+            SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
+                .disabled(!trailingLetter.isEmpty)
             if !word.isEmpty {
                 Text(word)
-                Picker("", selection: $trailingLetter) {
-                    ForEach(allowedLetters, id: \.self){letter in
-                        Text(letter)
-                    }
-                }
-                .disabled(!leadingLetter.isEmpty)
+                SingleLetterPicker(letter: $trailingLetter, allowedLetters: allowedLetters)
+                    .disabled(!leadingLetter.isEmpty)
             }
         }
-        .font(.largeTitle)
-        .pickerStyle(.wheel)
+        .font(ApearanceManager.largeTitle)
 
         AsyncButton{
             try await viewModel.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)")
@@ -116,13 +131,66 @@ struct LetterPicker: View {
         } label: {
             Text("Submit Move")
         }
+        #if !os(watchOS)
+        .keyboardShortcut(.defaultAction)
+        #endif
         .disabled(leadingLetter.isEmpty && trailingLetter.isEmpty)
+    }
+    struct SingleLetterPicker: View {
+        @Binding var letter: String
+        let allowedLetters: [String]
+
+
+        var body: some View {
+#if !os(macOS)
+            Picker("", selection: $letter) {
+                ForEach(allowedLetters, id: \.self){letter in
+                    Text(letter)
+                }
+            }
+            .pickerStyle(.wheel)
+
+#if os(watchOS)
+            .frame(minHeight: 50)
+#endif
+#else
+            TextField("Letter", text: .init(get: {
+                letter
+            }, set: {
+                let newLetter = String($0.suffix(1))
+                if allowedLetters.joined().localizedCaseInsensitiveContains(newLetter){
+                    letter = newLetter.uppercased()
+                }
+            }))
+            .font(.body)
+#endif
+        }
+    }
+}
+
+struct VStackWatch<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View{
+        #if os(watchOS)
+        VStack{content}
+        #else
+        HStack{content}
+        #endif
     }
 }
 
 #Preview{
     @Namespace var namespace
     return GameView(viewModel: GameViewModel(), isPresented: .constant(true), namespace: namespace)
+}
+#Preview{
+    let vm = {
+        let result = GameViewModel()
+        result.game = Game(id: "", player1Id: "", player2Id: "", blockMoveForPlayerId: "", rematchPlayerId: [], moves: [Move(isPlayer1: true, word: "WORD")])
+        return result
+    }()
+    return LetterPicker(viewModel: vm)
 }
 
 func isWord(_ word: String) async throws -> Bool {

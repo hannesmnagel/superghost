@@ -1,15 +1,14 @@
 //
 //  superghostApp.swift
-//  superghost
+//  superghost Watch App
 //
-//  Created by Hannes Nagel on 6/15/24.
+//  Created by Hannes Nagel on 6/28/24.
 //
 
 import SwiftUI
-import SwiftData
 
 @main
-struct superghostApp: App {
+struct superghost_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
