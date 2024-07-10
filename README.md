@@ -1,5 +1,8 @@
-#superghost
+**superghost**
+
+
 is a word game. 
+
 You can test it on Testflight right now here:
 https://testflight.apple.com/join/OzTDTCgF
 
