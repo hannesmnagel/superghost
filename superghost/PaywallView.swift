@@ -26,8 +26,11 @@ struct PaywallView: View {
                     } else {
                         ContentUnavailableView("There is nothing available to purchase", systemImage: "questionmark.folder", description: Text("No products found"))
                     }
-                case .failure(_):
+                case .failure(let error):
                     ContentUnavailableView("You can't upgrade right now", systemImage: "network.slash", description: Text("An error occured"))
+                        .contextMenu{
+                            Text(error.localizedDescription)
+                        }
                 }
             }
         }
