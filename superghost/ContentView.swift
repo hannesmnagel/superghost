@@ -47,6 +47,9 @@ struct ContentView: View {
             Task{try? await fetchSubscription()}
         } content: {
             PaywallView()
+#if os(macOS)
+                .frame(minWidth: 500, minHeight: 500)
+#endif
         }
         .fontDesign(.rounded)
     }

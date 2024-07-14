@@ -46,6 +46,10 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             Text("Learn How To Play")
                 .font(ApearanceManager.largeTitle.bold())
                 .padding(.bottom)
+            #if os(macOS)
+            Text(instructions.joined(separator: "\n\n"))
+                .padding()
+            #else
             TabView(selection: $selection){
                 ForEach(instructions, id:\.self){instruction in
                     Text(instruction)
@@ -62,6 +66,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             }
             .tabViewStyle(.page)
             .padding()
+            #endif
             Button("Got it", action: next)
                 .buttonStyle(.bordered)
         }
