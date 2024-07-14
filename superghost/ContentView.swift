@@ -12,11 +12,6 @@ struct BlackOutTransition: Transition {
     func body(content: Content, phase: TransitionPhase) -> some View {
         content
             .blur(radius: phase == .identity ? 0 : 10)
-            .overlay{
-                if !(phase == .identity){
-                    Rectangle().fill(Color.black).ignoresSafeArea()
-                }
-            }
     }
 }
 
@@ -33,11 +28,9 @@ struct ContentView: View {
                 FirstUseView()
                     .transition(BlackOutTransition())
             } else if isGameViewPresented{
-                GameView(viewModel: viewModel, isPresented: $isGameViewPresented)
-                    .transition(BlackOutTransition())
+                GameView(viewModel: viewModel, isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
             } else {
-                HomeView(isSuperghost: isSuperghost, viewModel: viewModel, isGameViewPresented: $isGameViewPresented)
-                    .transition(BlackOutTransition())
+                HomeView(isSuperghost: isSuperghost, showTrialEndsIn: showTrialEndsIn, viewModel: viewModel, isGameViewPresented: $isGameViewPresented)
             }
         }
         .animation(.smooth, value: isFirstUse)
