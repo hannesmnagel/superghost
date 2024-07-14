@@ -91,6 +91,24 @@ struct HomeView: View {
                     isGameViewPresented = true
                 }
             }
+            .sheet(item: $gameStatSelection) { gameStat in
+                VStack{
+                    WordDefinitionView(word: gameStat.word, game: gameStat)
+                        .padding(.top)
+#if !os(watchOS)
+                        .overlay(alignment: .topTrailing){
+                            Button{gameStatSelection = nil} label: {
+                                Image(systemName: "xmark")
+                            }
+                            .padding(.top.union(.trailing))
+                        }
+#endif
+                }
+                .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())
+#if os(macOS)
+                .frame(minWidth: 500, minHeight: 500)
+#endif
+            }
         }
     }
 }
