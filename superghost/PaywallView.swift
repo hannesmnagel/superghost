@@ -49,9 +49,14 @@ struct PaywallView: View {
                     ContentUnavailableView("You can't upgrade right now", systemImage: "network.slash", description: Text("An error occured"))
                     Text(error.localizedDescription)
                         .contextMenu{
-                            Text(
+                        Button(
                                 (try? String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt"))) ?? "none"
-                            )
+                        ) {
+                            #if os(iOS)
+                            UIPasteboard.general.string = (try? String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt"))) ?? "none"
+#endif
+
+                        }
                         }
                 }
             }
