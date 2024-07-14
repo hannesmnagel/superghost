@@ -68,17 +68,19 @@ struct AlertView: View {
 #if !os(watchOS)
                     .keyboardShortcut(.cancelAction)
 #endif
-                    Spacer()
-                    AsyncButton{
-                        viewModel.game?.winningPlayerId.removeAll()
-                        viewModel.alertItem = nil
-                        try await viewModel.resetGame()
-                    } label: {
-                        Text("Rematch")
-                    }
+                    if viewModel.game?.player2Id != "botPlayer"{
+                        Spacer()
+                        AsyncButton{
+                            viewModel.game?.winningPlayerId.removeAll()
+                            viewModel.alertItem = nil
+                            try await viewModel.resetGame()
+                        } label: {
+                            Text("Rematch")
+                        }
 #if !os(watchOS)
-                    .keyboardShortcut(.defaultAction)
+                        .keyboardShortcut(.defaultAction)
 #endif
+                    }
 
                     Spacer()
                 }
