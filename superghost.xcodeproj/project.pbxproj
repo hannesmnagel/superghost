@@ -331,6 +331,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		382A7E582C4423180067B51B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 8;
 			files = (
 			);
@@ -341,11 +342,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/superghost/revenuecatkey.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "echo \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "echo \"Running script to embed revenuecatkey...\"\n\n# Check if the environment variable is set\nif [ -z \"$revenuecatkey\" ]; then\n    echo \"Error: Environment variable 'revenuecatkey' is not set.\"\n    exit 1\nfi\n\n# Write the environment variable to the file\necho \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n\n# Verify the file was created\nif [ ! -f \"${SRCROOT}/superghost/revenuecatkey.txt\" ]; then\n    echo \"Error: Failed to create revenuecatkey.txt\"\n    exit 1\nfi\n\necho \"Successfully wrote revenuecatkey to ${SRCROOT}/superghost/revenuecatkey.txt\"\n";
 		};
 		382A7E592C4424160067B51B /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
