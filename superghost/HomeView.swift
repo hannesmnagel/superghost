@@ -40,7 +40,8 @@ struct HomeView: View {
                                     .multilineTextAlignment(.center)
                                 }
                                 Spacer()
-                                SettingsButton()
+                                SettingsButton(viewModel: viewModel, isSuperghost: isSuperghost)
+                                    .font(ApearanceManager.title)
                                     .textCase(nil)
                             }
 
