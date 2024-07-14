@@ -10,7 +10,7 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var viewModel : GameViewModel
     @Binding var isPresented: Bool
-    let namespace: Namespace.ID
+    let isSuperghost: Bool
 
     var body: some View {
         ViewThatFits{
@@ -48,7 +48,7 @@ struct GameView: View {
             Spacer()
 
             if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
-                LoadingView(namespace: namespace)
+                LoadingView()
                 if viewModel.game?.player2Id == "privateGame"{
                     if let url = URL(string: "superghost://hannesnagel.com/superghost/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
@@ -61,7 +61,7 @@ struct GameView: View {
 
                     VStack {
                         if game.challengingUserId.isEmpty {
-                            LetterPicker(viewModel: viewModel)
+                            LetterPicker(viewModel: viewModel, isSuperghost: isSuperghost)
                             if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
                                 AsyncButton{
                                     viewModel.game?.challengingUserId = viewModel.currentUser.id
@@ -77,12 +77,12 @@ struct GameView: View {
                             SayTheWordButton(viewModel: viewModel)
                             AsyncButton{
                                 viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
-                                try await ApiLayer.shared.updateGame(viewModel.game!)
+                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
                             } label: {
                                 Text("Yes, I lied")
                             }
                         } else {
-                            LoadingView(namespace: namespace)
+                            LoadingView()
                             Text("Waiting for player response...")
                         }
                     }
@@ -108,6 +108,7 @@ struct GameView: View {
 
 struct LetterPicker: View {
     @ObservedObject var viewModel: GameViewModel
+    let isSuperghost: Bool
     @State private var leadingLetter = ""
     @State private var trailingLetter = ""
     let allowedLetters = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
@@ -116,13 +117,15 @@ struct LetterPicker: View {
     var body: some View {
         let word = viewModel.game?.moves.last?.word ?? ""
         VStackWatch{
-            SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
-                .disabled(!trailingLetter.isEmpty)
             if !word.isEmpty {
+                if viewModel.withInvitation || isSuperghost{
+                    SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
+                        .disabled(!trailingLetter.isEmpty)
+                }
                 Text(word)
-                SingleLetterPicker(letter: $trailingLetter, allowedLetters: allowedLetters)
-                    .disabled(!leadingLetter.isEmpty)
             }
+            SingleLetterPicker(letter: $trailingLetter, allowedLetters: allowedLetters)
+                .disabled(!leadingLetter.isEmpty)
         }
         .font(ApearanceManager.largeTitle)
 
@@ -183,7 +186,7 @@ struct VStackWatch<Content: View>: View {
 }
 
 #Preview{
-    return GameView(viewModel: GameViewModel(), isPresented: .constant(true))
+    GameView(viewModel: GameViewModel(), isPresented: .constant(true), isSuperghost: true)
         .modifier(PreviewModifier())
 }
 #Preview{
@@ -192,7 +195,8 @@ struct VStackWatch<Content: View>: View {
         result.game = Game(id: "", player1Id: "", player2Id: "", blockMoveForPlayerId: "", rematchPlayerId: [], moves: [Move(isPlayer1: true, word: "WORD")])
         return result
     }()
-    return LetterPicker(viewModel: vm)
+    return LetterPicker(viewModel: vm, isSuperghost: true)
+        .modifier(PreviewModifier())
 }
 
 func isWord(_ word: String) async throws -> Bool {
@@ -246,7 +250,7 @@ struct SayTheWordButton: View {
                 if try await isWord(word) && word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") {
                     viewModel.game?.moves.append(.init(isPlayer1: viewModel.isPlayerOne(), word: word))
                     viewModel.game!.winningPlayerId = viewModel.currentUser.id
-                    try await ApiLayer.shared.updateGame(viewModel.game!)
+                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
                 } else{
                     word = "This doesn't fit"
                 }

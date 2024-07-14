@@ -96,6 +96,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(isSuperghost: true, viewModel: GameViewModel(), isGameViewPresented: .constant(false))
+    HomeView(isSuperghost: true, showTrialEndsIn: nil, viewModel: GameViewModel(), isGameViewPresented: .constant(false))
         .modifier(PreviewModifier())
 }

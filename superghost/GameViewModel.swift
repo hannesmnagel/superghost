@@ -13,6 +13,7 @@ import SwiftData
 @MainActor
 final class GameViewModel: ObservableObject {
 
+    @Published var showPaywall = false
     @AppStorage("user") private var userData: Data?
 
     @Published var game: Game? {
@@ -51,7 +52,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     func joinGame(with gameId: String) async throws {
-        try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId)
+        try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId, isPrivate: true)
 
         withInvitation = true
         ApiLayer.shared.$game
@@ -83,7 +84,7 @@ final class GameViewModel: ObservableObject {
     }
 
     func quitGame() async throws {
-        try await ApiLayer.shared.quitGame()
+        try await ApiLayer.shared.quitGame(isPrivate: withInvitation)
         alertItem = nil
     }
 

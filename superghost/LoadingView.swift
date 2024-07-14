@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LoadingView: View {
     let date = Date()
-    let namespace: Namespace.ID
 
     var body: some View {
 
@@ -27,7 +26,6 @@ struct LoadingView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .offset(x: offsetX, y: offsetY)
-                        .matchedGeometryEffect(id: "ghost", in: namespace)
                     Circle()
                         .fill()
                         .scaleEffect(y: 0.2)
@@ -46,8 +44,7 @@ struct LoadingView: View {
 
 
 #Preview {
-    @Namespace var namespace
-    return LoadingView(namespace: namespace)
+    return LoadingView()
         .border(.red)
         .frame(width: 400, height: 700)
         .modifier(PreviewModifier())
