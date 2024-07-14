@@ -80,7 +80,7 @@ final class GameViewModel: ObservableObject {
             game?.winningPlayerId = isPlayerOne() ? game!.player2Id : game!.player1Id
         }
 
-        try await ApiLayer.shared.updateGame(game!)
+        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation)
     }
 
     func quitGame() async throws {
@@ -135,7 +135,7 @@ final class GameViewModel: ObservableObject {
         game!.rematchPlayerId.append(currentUser.id)
         alertItem = nil
 
-        try await ApiLayer.shared.updateGame(game!)
+        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation)
     }
 
 

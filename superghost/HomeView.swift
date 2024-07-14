@@ -9,9 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @Binding var gameStatSelection: GameStat?
-    @State var isSuperghost: Bool
-    @State var showTrialEndsIn: Int?
+    let isSuperghost: Bool
+    let showTrialEndsIn: Int?
+    @State private var gameStatSelection: GameStat?
     @ObservedObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]

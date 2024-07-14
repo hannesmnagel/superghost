@@ -66,7 +66,7 @@ struct GameView: View {
                                 AsyncButton{
                                     viewModel.game?.challengingUserId = viewModel.currentUser.id
                                     viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
-                                    try await ApiLayer.shared.updateGame(viewModel.game!)
+                                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
                                 } label: {
                                     Text("There is no such word")
                                 }
