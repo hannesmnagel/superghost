@@ -37,4 +37,5 @@ struct WaitingGhost: View {
 
 #Preview {
     WaitingGhost()
+        .modifier(PreviewModifier())
 }

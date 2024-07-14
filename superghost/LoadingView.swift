@@ -50,5 +50,6 @@ struct LoadingView: View {
     return LoadingView(namespace: namespace)
         .border(.red)
         .frame(width: 400, height: 700)
+        .modifier(PreviewModifier())
 }
 

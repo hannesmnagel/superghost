@@ -183,8 +183,8 @@ struct VStackWatch<Content: View>: View {
 }
 
 #Preview{
-    @Namespace var namespace
-    return GameView(viewModel: GameViewModel(), isPresented: .constant(true), namespace: namespace)
+    return GameView(viewModel: GameViewModel(), isPresented: .constant(true))
+        .modifier(PreviewModifier())
 }
 #Preview{
     let vm = {

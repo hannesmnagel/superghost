@@ -15,4 +15,5 @@ struct SettingsButton: View {
 
 #Preview {
     SettingsButton()
+        .modifier(PreviewModifier())
 }

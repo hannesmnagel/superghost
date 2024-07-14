@@ -14,5 +14,6 @@ struct InstructionsView: View {
 }
 
 #Preview {
-    InstructionsView()
+    InstructionsView{}
+        .modifier(PreviewModifier())
 }

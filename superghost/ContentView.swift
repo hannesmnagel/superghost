@@ -272,7 +272,7 @@ extension Array where Element == GameStat {
 
 #Preview {
     ContentView()
-        .modelContainer(for: GameStat.self, inMemory: false)
+        .modifier(PreviewModifier())
 }
 
 struct AsyncButton<Label:View>: View {

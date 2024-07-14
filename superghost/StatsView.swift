@@ -139,4 +139,5 @@ struct StatsView: View {
 
 #Preview {
     StatsView(selection: .constant(nil), isSuperghost: true)
+        .modifier(PreviewModifier())
 }

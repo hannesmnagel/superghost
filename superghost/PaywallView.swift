@@ -15,4 +15,5 @@ struct PaywallView: View {
 
 #Preview {
     PaywallView()
+        .modifier(PreviewModifier())
 }
