@@ -13,7 +13,7 @@ import RevenueCat
 struct superghostApp: App {
     init(){
         Purchases.logLevel = .debug
-        try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")))
+        try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
     }
     var body: some Scene {
         WindowGroup {
