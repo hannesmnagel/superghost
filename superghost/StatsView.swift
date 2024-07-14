@@ -12,7 +12,7 @@ struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
     @Binding var selection: GameStat?
-    @State var isSuperghost : Bool
+    let isSuperghost : Bool
 
     var body: some View {
 #if os(macOS)

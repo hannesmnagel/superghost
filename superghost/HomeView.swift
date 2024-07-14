@@ -22,7 +22,6 @@ struct HomeView: View {
                 List{
                     Section{
                         StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
-                            .id(isSuperghost.description.appending(gameStatSelection.debugDescription))
                     } header: {
                         VStack{
 
