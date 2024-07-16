@@ -1,12 +1,8 @@
 {
   "images" : [
     {
-      "idiom" : "tv",
-      "scale" : "1x"
-    },
-    {
       "filename" : "1024x1024-black-solid-color-background.jpg",
-      "idiom" : "tv",
+      "idiom" : "vision",
       "scale" : "2x"
     }
   ],
