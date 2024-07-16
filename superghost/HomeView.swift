@@ -27,6 +27,7 @@ struct HomeView: View {
 
                             HStack{
                                 if let showTrialEndsIn {
+                                    Spacer()
                                     Group{
                                         Text("Trial ends in \(showTrialEndsIn, format: .number) days. \n")
                                             .foregroundStyle(.red)
