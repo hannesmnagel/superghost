@@ -19,6 +19,9 @@ struct superghostApp: App {
         WindowGroup {
             ContentView()
                 .modelContainer(for: GameStat.self)
+#if os(macOS)
+                .frame(minHeight: 500)
+#endif
         }
     }
 }
