@@ -70,6 +70,7 @@
 		381DE8342C34648600E6CB04 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
+		38A46C1A2C466A3D004950E3 /* superghost Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "superghost Watch App.entitlements"; sourceTree = "<group>"; };
 		38AE75042C1E094500DFB6A7 /* superghost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superghost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38AE75072C1E094500DFB6A7 /* superghostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = superghostApp.swift; sourceTree = "<group>"; };
 		38AE75092C1E094500DFB6A7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -190,6 +191,7 @@
 		38D498182C2F222B0006E080 /* superghost Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				38A46C1A2C466A3D004950E3 /* superghost Watch App.entitlements */,
 				381DE8332C3462E700E6CB04 /* superghost-Watch-App-Info.plist */,
 				38D498192C2F222B0006E080 /* superghostApp.swift */,
 				38D4981D2C2F222D0006E080 /* Assets.xcassets */,
@@ -347,10 +349,12 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "echo \"Running script to embed revenuecatkey...\"\n\n# Check if the environment variable is set\nif [ -z \"$revenuecatkey\" ]; then\n    echo \"Error: Environment variable 'revenuecatkey' is not set.\"\n    exit 1\nfi\n\n# Write the environment variable to the file\necho \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n\n# Verify the file was created\nif [ ! -f \"${SRCROOT}/superghost/revenuecatkey.txt\" ]; then\n    echo \"Error: Failed to create revenuecatkey.txt\"\n    exit 1\nfi\n\necho \"Successfully wrote revenuecatkey to ${SRCROOT}/superghost/revenuecatkey.txt\"\n";
+			showEnvVarsInLog = 0;
 		};
 		382A7E592C4424160067B51B /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -361,10 +365,12 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/superghost/revenuecatkey.txt",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "echo \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n";
+			shellScript = "echo \"Running script to embed revenuecatkey...\"\n\n# Check if the environment variable is set\nif [ -z \"$revenuecatkey\" ]; then\n    echo \"Error: Environment variable 'revenuecatkey' is not set.\"\n    exit 1\nfi\n\n# Write the environment variable to the file\necho \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n\n# Verify the file was created\nif [ ! -f \"${SRCROOT}/superghost/revenuecatkey.txt\" ]; then\n    echo \"Error: Failed to create revenuecatkey.txt\"\n    exit 1\nfi\n\necho \"Successfully wrote revenuecatkey to ${SRCROOT}/superghost/revenuecatkey.txt\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -630,6 +636,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "superghost Watch App/superghost Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"superghost Watch App/Preview Content\"";
@@ -661,6 +668,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "superghost Watch App/superghost Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"superghost Watch App/Preview Content\"";
