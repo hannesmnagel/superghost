@@ -81,9 +81,6 @@ struct HomeView: View {
             }
             .onOpenURL { url in
                 Task{
-                    guard url.scheme == "superghost" else {
-                        return
-                    }
                     let gameId = url.lastPathComponent
 
                     try await viewModel.joinGame(with: gameId)
