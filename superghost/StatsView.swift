@@ -14,6 +14,8 @@ struct StatsView: View {
     @Binding var selection: GameStat?
     let isSuperghost : Bool
 
+    @State private var expandingList = false
+
     var body: some View {
 #if os(macOS)
         VStack{}
@@ -23,7 +25,7 @@ struct StatsView: View {
 #else
         summary
 #endif
-        ForEach(games){game in
+        ForEach(games.prefix(expandingList ? .max : 5)){game in
             Button{selection = game} label: {
                 HStack{
                     Text(game.word)
@@ -34,6 +36,9 @@ struct StatsView: View {
             }
             .buttonStyle(.plain)
             .listRowBackground(game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
+        }
+        if games.count > 5 {
+            Button(expandingList ? "Less" : "More"){withAnimation(.smooth){expandingList.toggle()}}
         }
     }
     @ViewBuilder @MainActor
@@ -52,10 +57,10 @@ struct StatsView: View {
 #if os(macOS)
             VStack{
                 Text(wordToday)
-                Text("word today")
+                Text("Word Today")
                     .font(ApearanceManager.footnote)
             }
-            .frame(maxWidth: .infinity)
+            .frame(width: 100)
             Divider()
 #endif
             VStack{
