@@ -7,9 +7,15 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
+
+    @AppStorage("winningRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
+    @AppStorage("winningStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
+    @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
+    @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
 
     @Binding var selection: GameStat?
     let isSuperghost : Bool
@@ -43,16 +49,6 @@ struct StatsView: View {
     }
     @ViewBuilder @MainActor
     var summary: some View {
-        let winningRate = games.winningRate
-        let winningStreak = games.winningStreak
-        let gamesToday = games.today
-        let wonToday = gamesToday.won.count
-        let gamesLostToday = gamesToday.lost
-        let word = isSuperghost ? "SUPERGHOST" : "GHOST"
-        let lettersOfWord = word.prefix(gamesLostToday.count)
-        let placeHolders = Array(repeating: "-", count: word.count).joined()
-        let actualPlaceHolders = placeHolders.prefix(word.count-gamesLostToday.count)
-        let wordToday = lettersOfWord.appending(actualPlaceHolders)
         HStack(alignment: .top){
 #if os(macOS)
             VStack{
@@ -78,11 +74,25 @@ struct StatsView: View {
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
-                Text(wonToday, format: .number)
+                Text(winsToday, format: .number)
                 Text("Wins Today")
                     .font(ApearanceManager.footnote)
             }
             .frame(maxWidth: .infinity)
+        }
+        .task(id: games.debugDescription) {
+            winningRate = games.winningRate
+            winningStreak = games.winningStreak
+            let gamesToday = games.today
+            winsToday = gamesToday.won.count
+            let gamesLostToday = gamesToday.lost
+
+            let word = isSuperghost ? "SUPERGHOST" : "GHOST"
+            let lettersOfWord = word.prefix(gamesLostToday.count)
+            let placeHolders = Array(repeating: "-", count: word.count).joined()
+            let actualPlaceHolders = placeHolders.prefix(word.count-gamesLostToday.count)
+            wordToday = lettersOfWord.appending(actualPlaceHolders)
+            WidgetCenter.shared.reloadAllTimelines()
         }
 #if os(watchOS)
         .font(ApearanceManager.headline)
@@ -101,9 +111,9 @@ struct StatsView: View {
                         )
 #else
                     Rectangle()
-                        .fill(.red.opacity(0.5 + 0.1 * Double(gamesLostToday.count)))
+                        .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(gamesLostToday.count) / 5.0
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
                         )
 #endif
                 }
@@ -127,9 +137,9 @@ struct StatsView: View {
                             )
 #else
                         Rectangle()
-                            .fill(.red.opacity(0.5 + 0.1 * Double(gamesLostToday.count)))
+                            .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(gamesLostToday.count) / 5.0
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
                             )
 #endif
                     }

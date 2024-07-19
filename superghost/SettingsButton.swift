@@ -45,8 +45,9 @@ struct SettingsButton: View {
                     }
                     if let managementURL{Link("Manage subscription", destination: managementURL).font(.body)}
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .task{
-                    managementURL = try? await Purchases.shared.customerInfo().managementURL
+                    managementURL = try? await Purchases.shared.restorePurchases().managementURL
                 }
                 .font(.body)
                 .navigationDestination(for: Destination.self) { selectedDestination in
@@ -64,6 +65,7 @@ struct SettingsButton: View {
             }
 #if os(macOS)
             .frame(minWidth: 500, minHeight: 500)
+
 #endif
         }
     }

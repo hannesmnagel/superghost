@@ -22,7 +22,7 @@ private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> Stri
 }
 private func isSuperghost() async -> Bool {
     do{
-        let info = try await Purchases.shared.customerInfo()
+        let info = try await Purchases.shared.restorePurchases()
         let subscriptions = info.activeSubscriptions
         let isSuperGhost = subscriptions.contains("monthly.superghost") || Calendar.current.date(byAdding: .day, value: -7, to: .now) ?? .now < info.firstSeen
         return isSuperGhost

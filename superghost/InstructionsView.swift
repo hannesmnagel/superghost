@@ -49,6 +49,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             #if os(macOS)
             Text(instructions.joined(separator: "\n\n"))
                 .padding()
+                .lineLimit(nil)
             #else
             TabView(selection: $selection){
                 ForEach(instructions, id:\.self){instruction in

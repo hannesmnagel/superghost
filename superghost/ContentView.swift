@@ -20,7 +20,7 @@ struct ContentView: View {
     @State var isGameViewPresented = false
     @StateObject var viewModel = GameViewModel()
     @State private var showTrialEndsIn : Int?
-    @State private var isSuperghost = false
+    @AppStorage("isSuperghost", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var isSuperghost = false
 
     var body: some View {
         Group{
@@ -55,7 +55,7 @@ struct ContentView: View {
     }
 
     func fetchSubscription() async throws {
-        let info = try await Purchases.shared.customerInfo()
+        let info = try await Purchases.shared.restorePurchases()
         let subscriptions = info.activeSubscriptions
         let timeSinceTrialEnd = (Calendar.current.date(byAdding: .day, value: -7, to: .now) ?? .now).timeIntervalSince(info.firstSeen)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
@@ -64,6 +64,8 @@ struct ContentView: View {
         //is in trial:
         if !subscriptions.contains("monthly.superghost") && timeSinceTrialEnd < 0 {
             showTrialEndsIn = Int(-daysSinceTrialEnd)
+        } else {
+            showTrialEndsIn = nil
         }
         //is not superghost, every 4 days:
         if !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
