@@ -32,7 +32,7 @@
 		38AF91A22C46D683003D100B /* gamestatsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF91A12C46D683003D100B /* gamestatsWidget.swift */; };
 		38AF91A42C46D683003D100B /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF91A32C46D683003D100B /* AppIntent.swift */; };
 		38AF91A62C46D685003D100B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38AF91A52C46D685003D100B /* Assets.xcassets */; };
-		38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */; platformFilters = (ios, macos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38AF91B02C46D718003D100B /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
 		38B1BAD72C3ECBC100E3E377 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD62C3ECBC100E3E377 /* Game.swift */; };
 		38B1BAD82C3ECBC100E3E377 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD62C3ECBC100E3E377 /* Game.swift */; };
@@ -643,6 +643,10 @@
 		};
 		38AF91AA2C46D685003D100B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				macos,
+			);
 			target = 38AF919A2C46D683003D100B /* gamestatsWidgetExtension */;
 			targetProxy = 38AF91A92C46D685003D100B /* PBXContainerItemProxy */;
 		};
