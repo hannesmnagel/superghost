@@ -7,7 +7,9 @@
 
 import SwiftUI
 import SwiftData
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
@@ -92,7 +94,9 @@ struct StatsView: View {
             let placeHolders = Array(repeating: "-", count: word.count).joined()
             let actualPlaceHolders = placeHolders.prefix(word.count-gamesLostToday.count)
             wordToday = lettersOfWord.appending(actualPlaceHolders)
+#if canImport(WidgetKit)
             WidgetCenter.shared.reloadAllTimelines()
+#endif
         }
 #if os(watchOS)
         .font(ApearanceManager.headline)
@@ -105,9 +109,9 @@ struct StatsView: View {
                 GeometryReader{geo in
 #if os(watchOS)
                     UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
-                        .fill(.red.opacity(0.5 + 0.1 * Double(gamesLostToday.count)))
+                        .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(gamesLostToday.count) / 5.0
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
                         )
 #else
                     Rectangle()
@@ -131,9 +135,9 @@ struct StatsView: View {
                     GeometryReader{geo in
 #if os(watchOS)
                         UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
-                            .fill(.red.opacity(0.5 + 0.1 * Double(gamesLostToday.count)))
+                            .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(gamesLostToday.count) / 5.0
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
                             )
 #else
                         Rectangle()

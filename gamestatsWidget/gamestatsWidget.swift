@@ -101,36 +101,12 @@ struct gamestatsWidgetEntryView : View {
 }
 
 struct gamestatsWidget: Widget {
-    @AppStorage("isSuperghost", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var isSuperghost = false
-    @AppStorage("winningRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
-    @AppStorage("winningStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
-    @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
-    @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
-
-
-
     let kind: String = "Gamestats Widget"
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             gamestatsWidgetEntryView(entry: entry)
                 .containerBackground(.black, for: .widget)
-        }
-        .backgroundTask(.appRefresh("apprefresh")) { _ in
-            await MainActor.run{
-                let games = try! ModelContainer(for: GameStat.self).mainContext.fetch(FetchDescriptor<GameStat>())
-                winningRate = games.winningRate
-                winningStreak = games.winningStreak
-                let gamesToday = games.today
-                winsToday = gamesToday.won.count
-                let gamesLostToday = gamesToday.lost
-
-                let word = isSuperghost ? "SUPERGHOST" : "GHOST"
-                let lettersOfWord = word.prefix(gamesLostToday.count)
-                let placeHolders = Array(repeating: "-", count: word.count).joined()
-                let actualPlaceHolders = placeHolders.prefix(word.count-gamesLostToday.count)
-                wordToday = lettersOfWord.appending(actualPlaceHolders)
-            }
         }
     }
 }

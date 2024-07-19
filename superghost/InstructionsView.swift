@@ -77,6 +77,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
         }
         .font(ApearanceManager.headline)
         .padding()
+        .foregroundStyle(.white)
     }
 }
 
