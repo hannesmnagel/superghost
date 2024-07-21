@@ -17,6 +17,7 @@ struct BlackOutTransition: Transition {
 
 struct ContentView: View {
     @AppStorage("isFirstUse") var isFirstUse = true
+    @AppStorage("lastPaywallView") var lastPaywallView = Date.distantPast.ISO8601Format()
     @State var isGameViewPresented = false
     @StateObject var viewModel = GameViewModel()
     @State private var showTrialEndsIn : Int?
@@ -68,8 +69,10 @@ struct ContentView: View {
             showTrialEndsIn = nil
         }
         //is not superghost, every 4 days:
-        if !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
+        let showedPaywallToday = Calendar.current.isDateInToday(ISO8601DateFormatter().date(from: lastPaywallView) ?? Date.distantPast)
+        if !showedPaywallToday && !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
             viewModel.showPaywall = true
+            lastPaywallView = Date().ISO8601Format()
         }
     }
 }
