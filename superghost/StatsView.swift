@@ -14,8 +14,8 @@ import WidgetKit
 struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
-    @AppStorage("winningRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
-    @AppStorage("winningStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
+    @AppStorage("winRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
+    @AppStorage("winStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
     @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
     @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
 
@@ -63,14 +63,14 @@ struct StatsView: View {
 #endif
             VStack{
                 Text(winningStreak, format: .number)
-                Text("Winning Streak")
+                Text("Win Streak")
                     .font(ApearanceManager.footnote)
             }
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
                 Text(winningRate, format: .percent.precision(.fractionLength(0)))
-                Text("Winning Rate")
+                Text("Win Rate")
                     .font(ApearanceManager.footnote)
             }
             .frame(maxWidth: .infinity)

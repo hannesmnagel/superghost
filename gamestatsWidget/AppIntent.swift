@@ -24,8 +24,8 @@ enum Configuration: String, Codable, Sendable, AppEnum {
 
     static var caseDisplayRepresentations: [Configuration : DisplayRepresentation ] {
         [
-            .rate : .init(title: "Winning Rate", subtitle: "Display Your current winning rate"),
-            .streak : .init(title: "Winning Streak", subtitle: "Display Your current winning streak"),
+            .rate : .init(title: "Win Rate", subtitle: "Display Your current win rate"),
+            .streak : .init(title: "Win Streak", subtitle: "Display Your current win streak"),
             .word : .init(title: "Word Today", subtitle: "Display Your Progress today"),
             .winsToday : .init(title: "Wins Today", subtitle: "Display Your Wins today"),
             .icon : .init(title: "Superghost Icon", subtitle: "Launch Superghost")
