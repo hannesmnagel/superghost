@@ -74,7 +74,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                     }
                         .task {
                             do{
-                                try await Task.sleep(for: .seconds(4))
+                                try await Task.sleep(for: .seconds(6))
                                 guard let index = instructions.firstIndex(of: instruction) else {return}
                                 selection = instructions[(index + 1) % instructions.count]
                             }catch{}
