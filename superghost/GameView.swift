@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameView: View {
-    @ObservedObject var viewModel : GameViewModel
+    @EnvironmentObject var viewModel : GameViewModel
     @Binding var isPresented: Bool
     let isSuperghost: Bool
 
@@ -61,7 +61,7 @@ struct GameView: View {
 
                     VStack {
                         if game.challengingUserId.isEmpty {
-                            LetterPicker(viewModel: viewModel, isSuperghost: isSuperghost)
+                            LetterPicker(isSuperghost: isSuperghost)
                             if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
                                 AsyncButton{
                                     viewModel.game?.challengingUserId = viewModel.currentUser.id
@@ -74,7 +74,7 @@ struct GameView: View {
                         } else if game.challengingUserId != viewModel.currentUser.id{
                             Text(game.moves.last?.word ?? "")
                                 .font(ApearanceManager.headline)
-                            SayTheWordButton(viewModel: viewModel)
+                            SayTheWordButton()
                             AsyncButton{
                                 viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
                                 try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
@@ -89,7 +89,7 @@ struct GameView: View {
                     .disabled(viewModel.checkForGameBoardStatus())
                     .padding()
                     .sheet(item: $viewModel.alertItem) { alertItem in
-                        AlertView(alertItem: alertItem, viewModel: viewModel, isPresented: $isPresented)
+                        AlertView(alertItem: alertItem, isPresented: $isPresented)
                         #if os(macOS)
                             .frame(minWidth: 500, minHeight: 500)
                         #endif
@@ -107,7 +107,7 @@ struct GameView: View {
 }
 
 struct LetterPicker: View {
-    @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject var viewModel: GameViewModel
     let isSuperghost: Bool
     @State private var leadingLetter = ""
     @State private var trailingLetter = ""
@@ -186,7 +186,7 @@ struct VStackWatch<Content: View>: View {
 }
 
 #Preview{
-    GameView(viewModel: GameViewModel(), isPresented: .constant(true), isSuperghost: true)
+    GameView(isPresented: .constant(true), isSuperghost: true)
         .modifier(PreviewModifier())
 }
 #Preview{
@@ -195,7 +195,8 @@ struct VStackWatch<Content: View>: View {
         result.game = Game(id: "", player1Id: "", player2Id: "", blockMoveForPlayerId: "", rematchPlayerId: [], moves: [Move(isPlayer1: true, word: "WORD")])
         return result
     }()
-    return LetterPicker(viewModel: vm, isSuperghost: true)
+    return LetterPicker(isSuperghost: true)
+        .environmentObject(vm)
         .modifier(PreviewModifier())
 }
 
@@ -238,7 +239,7 @@ struct Definition: Codable, Hashable {
 }
 
 struct SayTheWordButton: View {
-    @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject var viewModel: GameViewModel
     @State private var isExpanded = false
     @State private var word = ""
     var body: some View {

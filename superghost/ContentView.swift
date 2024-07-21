@@ -28,9 +28,9 @@ struct ContentView: View {
                 FirstUseView()
                     .transition(BlackOutTransition())
             } else if isGameViewPresented{
-                GameView(viewModel: viewModel, isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
+                GameView(isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
             } else {
-                HomeView(isSuperghost: isSuperghost, showTrialEndsIn: showTrialEndsIn, viewModel: viewModel, isGameViewPresented: $isGameViewPresented)
+                HomeView(isSuperghost: isSuperghost, showTrialEndsIn: showTrialEndsIn, isGameViewPresented: $isGameViewPresented)
             }
         }
         .animation(.smooth, value: isFirstUse)

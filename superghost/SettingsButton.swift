@@ -9,7 +9,7 @@ import SwiftUI
 import RevenueCat
 
 struct SettingsButton: View {
-    @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject var viewModel: GameViewModel
     let isSuperghost: Bool
     @State private var managementURL: URL?
     @State private var showingSettings = false
@@ -72,6 +72,6 @@ struct SettingsButton: View {
 }
 
 #Preview {
-    SettingsButton(viewModel: GameViewModel(), isSuperghost: true)
+    SettingsButton(isSuperghost: true)
         .modifier(PreviewModifier())
 }

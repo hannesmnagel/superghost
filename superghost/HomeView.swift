@@ -12,7 +12,7 @@ struct HomeView: View {
     let isSuperghost: Bool
     let showTrialEndsIn: Int?
     @State private var gameStatSelection: GameStat?
-    @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
@@ -112,6 +112,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(isSuperghost: true, showTrialEndsIn: nil, viewModel: GameViewModel(), isGameViewPresented: .constant(false))
+    HomeView(isSuperghost: true, showTrialEndsIn: 2, isGameViewPresented: .constant(false))
         .modifier(PreviewModifier())
 }

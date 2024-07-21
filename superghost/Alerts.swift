@@ -21,7 +21,7 @@ enum GameNotification: String {
 
 struct AlertView: View {
     @State var alertItem: AlertItem
-    @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject var viewModel: GameViewModel
     @Binding var isPresented: Bool
     @Environment(\.dismiss) var dismiss
 
