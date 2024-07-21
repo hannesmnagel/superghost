@@ -43,7 +43,7 @@ struct AlertView: View {
         VStack{
             Text(alertItem == .won ? "You won!" : "You lost!")
                 .font(ApearanceManager.largeTitle.bold())
-            Text(alertItem == .won ? "Can you win another one?" : "Get a revenge!")
+            Text(alertItem == .won ? "Can you win another one?" : "Get revenge!")
                 .font(ApearanceManager.headline)
                 .padding(.bottom)
             if alertItem == .playerLeft {
