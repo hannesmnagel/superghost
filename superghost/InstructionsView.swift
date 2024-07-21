@@ -25,6 +25,9 @@ Every time you lose, you collect a letter of the word GHOST or SUPERGHOST. When 
 Get a winning streak of 10 online matches to earn a free day of superghost.
 """
     ]
+    #if os(watchOS)
+    @State var selection = "learn"
+    #else
     @State var selection = """
 Inspired by a game played on the chalk board, superghost is a word game where you have to add letters so that:
 
@@ -32,6 +35,8 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
 
 - It could become a word when adding more letters
 """
+    #endif
+
     let next: ()->Void
 
     var body: some View {
@@ -43,17 +48,30 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
     @MainActor @ViewBuilder
     var content: some View{
         VStack{
+            #if !os(watchOS)
             Text("Learn How To Play")
                 .font(ApearanceManager.largeTitle.bold())
                 .padding(.bottom)
+#endif
             #if os(macOS)
             Text(instructions.joined(separator: "\n\n"))
                 .padding()
                 .lineLimit(nil)
             #else
             TabView(selection: $selection){
+                #if os(watchOS)
+                Text("Learn How To Play")
+                    .font(ApearanceManager.howToPlayTitle)
+                    .padding(.bottom)
+                    .tag("learn")
+                #endif
                 ForEach(instructions, id:\.self){instruction in
-                    Text(instruction)
+                    ViewThatFits{
+                        Text(instruction)
+                        ScrollView{
+                            Text(instruction)
+                        }
+                    }
                         .task {
                             do{
                                 try await Task.sleep(for: .seconds(4))
@@ -64,6 +82,10 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                         .tag(instruction)
                         .tabItem { Circle() }
                 }
+
+                Button("Got it", action: next)
+                    .buttonStyle(.bordered)
+                    .tag("end")
             }
             #if os(watchOS)
             .tabViewStyle(.verticalPage)
@@ -72,12 +94,17 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             #endif
             .padding()
             #endif
+            #if !os(watchOS)
             Button("Got it", action: next)
                 .buttonStyle(.bordered)
+            #endif
         }
         .font(ApearanceManager.headline)
         .padding()
         .foregroundStyle(.white)
+        #if os(watchOS)
+        .ignoresSafeArea()
+        #endif
     }
 }
 

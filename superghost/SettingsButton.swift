@@ -37,7 +37,7 @@ struct SettingsButton: View {
                         }
                     } else {
                         #if DEBUG
-                        Button("Subscribe to Superghost"){
+                        Button("Show Paywall"){
                             showingSettings = false
                             viewModel.showPaywall = true
                         }
@@ -53,10 +53,7 @@ struct SettingsButton: View {
                 .navigationDestination(for: Destination.self) { selectedDestination in
                     switch selectedDestination {
                     case .learn:
-                        ViewThatFits{
-                            InstructionsView{destination = .none}
-                            ScrollView{InstructionsView{destination = .none}}
-                        }
+                        InstructionsView{destination = .none}
                     case .none:
                         EmptyView()
                     }

@@ -20,10 +20,15 @@ struct PaywallView: View {
                 case .success(let offering):
                     if let offering = offering.current {
                         #if !os(macOS)
+#if !os(watchOS)
                         RevenueCatUI.PaywallView(offering: offering, displayCloseButton: true)
                             .onRequestedDismissal {
                                 dismiss()
                             }
+#else
+                            RevenueCatUI.PaywallView(offering: offering)
+                            .contentMargins(.top, 10)
+#endif
                         #else
                         if let package = offering.availablePackages.first {
                             AsyncButton{

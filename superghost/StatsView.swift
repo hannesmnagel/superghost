@@ -111,13 +111,13 @@ struct StatsView: View {
                     UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
                         .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
                         )
 #else
                     Rectangle()
                         .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
                         )
 #endif
                 }
@@ -137,13 +137,13 @@ struct StatsView: View {
                         UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
                             .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
                             )
 #else
                         Rectangle()
                             .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / 5.0
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
                             )
 #endif
                     }

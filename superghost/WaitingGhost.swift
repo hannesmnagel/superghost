@@ -26,8 +26,8 @@ struct WaitingGhost: View {
                     content
                         .offset(x: offsetX)
                         .rotationEffect(.degrees(rotationAngle))
-                        .offset(y: -geo.frame(in: .scrollView).minY*0.5 + geo.size.height/2)
-                        .scaleEffect(1+geo.frame(in: .scrollView).minY/1000)
+                        .offset(y: -geo.frame(in: .scrollView).minY*0.8 + geo.size.height/2)
+                        .scaleEffect(0.8+geo.frame(in: .scrollView).minY/1000)
                 }
                 .padding(.vertical, 60)
                 .padding(.bottom, 60)

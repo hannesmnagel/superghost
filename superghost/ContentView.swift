@@ -53,6 +53,7 @@ struct ContentView: View {
 #endif
         }
         .fontDesign(.rounded)
+        .environmentObject(viewModel)
     }
 
     func fetchSubscription() async throws {
@@ -80,12 +81,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modifier(PreviewModifier())
-}
-
-import TipKit
-
-struct HowToPlayTip: Tip {
-    var title = Text("Get Started")
-    var message = Text("Learn how to play and view tips to win!")
-    var actions : [Tip.Action] { [Tip.Action(id: "learn-how-to-play", title: "Learn more")] }
 }

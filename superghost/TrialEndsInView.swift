@@ -14,7 +14,7 @@ struct TrialEndsInView: View {
     var body: some View {
         Group{
             Text("Trial ends in \(days, format: .number) days. \n")
-                .foregroundStyle(.red)
+                .foregroundStyle(.orange)
                 .font(ApearanceManager.headline) + Text("Upgrade now!")
                 .foregroundStyle(.accent)
                 .font(.subheadline)
@@ -23,6 +23,7 @@ struct TrialEndsInView: View {
             viewModel.showPaywall = true
         }
         .multilineTextAlignment(.center)
+        .lineLimit(2)
     }
 }
 

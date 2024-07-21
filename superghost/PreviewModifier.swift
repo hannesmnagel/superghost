@@ -13,5 +13,6 @@ struct PreviewModifier: ViewModifier {
             .preferredColorScheme(.dark)
             .fontDesign(.rounded)
             .modelContainer(for: GameStat.self, inMemory: false)
+            .environmentObject(GameViewModel())
     }
 }
