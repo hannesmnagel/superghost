@@ -83,7 +83,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                     .tag(instruction)
                     .tabItem { Circle() }
                 }
-#if !os(watchOS)
+#if os(watchOS)
                 Button("Got it", action: next)
                     .buttonStyle(.bordered)
                     .tag("end")
