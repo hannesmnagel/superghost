@@ -129,13 +129,15 @@ struct WordDefinitionView: View {
                 #if !os(watchOS)
                     .padding()
                     .padding(.vertical, 50)
-                #endif
                     .listRowSeparator(.hidden)
+                #endif
             }
             if definitions.isEmpty{
                 ContentUnavailableView("Couldn't get definitions!", systemImage: "character.book.closed")
                     .listRowBackground(Color.clear)
+                #if !os(watchOS)
                     .listRowSeparator(.hidden)
+                #endif
             }
             ForEach(definitions, id: \.self) { entry in
                 viewFor(entry: entry)
@@ -154,8 +156,8 @@ struct WordDefinitionView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
                     #if !os(watchOS)
+                    .listRowSeparator(.hidden)
                     .padding(.top, 30)
                     #endif
                 }
