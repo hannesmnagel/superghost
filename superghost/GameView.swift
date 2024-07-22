@@ -267,12 +267,12 @@ struct SayTheWordButton: View {
     }
 }
 
-func retry<R:Sendable>( _ action: () async throws ->R) async rethrows -> R {
+func retry<R:Sendable>(count: Int = 3, _ action: () async throws ->R) async rethrows -> R {
     do {
         return try await action()
     } catch {
-
-        return try await retry{
+        guard count > 0 else {throw error}
+        return try await retry(count: count-1){
             try? await Task.sleep(nanoseconds: 700000000)
             return try await action()
         }

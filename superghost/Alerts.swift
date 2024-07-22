@@ -111,7 +111,11 @@ struct AlertView: View {
 struct WordDefinitionView: View {
     let word: String
     @State var game: GameStat? = nil
-    @State private var definitions = [WordEntry]()
+    @State private var definitions = LoadingState.loading
+
+    private enum LoadingState{
+        case failed, loading, success(definitions: [WordEntry])
+    }
 
     var body: some View {
 
@@ -122,7 +126,14 @@ struct WordDefinitionView: View {
                     .font(ApearanceManager.wordInDefinitionView)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .task {
-                        definitions = (try? await define(word)) ?? []
+                        do {
+                            let loadedDefinitions = try await define(word)
+                            definitions = .success(definitions: loadedDefinitions)
+                        } catch let error as DecodingError {
+                            definitions = .success(definitions: [])
+                        } catch {
+                            definitions = .failed
+                        }
                     }
                     .listRowInsets(.init())
                     .listRowBackground(Color.clear)
@@ -132,16 +143,33 @@ struct WordDefinitionView: View {
                     .listRowSeparator(.hidden)
                 #endif
             }
-            if definitions.isEmpty{
-                ContentUnavailableView("Couldn't get definitions!", systemImage: "character.book.closed")
+            switch definitions {
+            case .failed:
+                ContentUnavailableView("Couldn't get definitions!", systemImage: "network.slash")
                     .listRowBackground(Color.clear)
-                #if !os(watchOS)
+#if !os(watchOS)
                     .listRowSeparator(.hidden)
-                #endif
+#endif
+            case .loading:
+                ProgressView()
+                    .listRowBackground(Color.clear)
+#if !os(watchOS)
+                    .listRowSeparator(.hidden)
+#endif
+            case .success(let definitions):
+                if definitions.isEmpty{
+                    ContentUnavailableView("This is not a word", systemImage: "character.book.closed")
+                        .listRowBackground(Color.clear)
+#if !os(watchOS)
+                        .listRowSeparator(.hidden)
+#endif
+                } else {
+                    ForEach(definitions, id: \.self) { entry in
+                        viewFor(entry: entry)
+                    }
+                }
             }
-            ForEach(definitions, id: \.self) { entry in
-                viewFor(entry: entry)
-            }
+
             if let game{
                 Section{
                     #if os(watchOS)
