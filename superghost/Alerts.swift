@@ -13,11 +13,6 @@ enum AlertItem: String, Equatable, Identifiable {
     case won, lost, playerLeft
 }
 
-enum GameNotification: String {
-    case waitingForPlayer = "Waiting for player"
-    case started = "Game has started"
-    case finished = "Player left the game"
-}
 
 struct AlertView: View {
     @State var alertItem: AlertItem
@@ -41,18 +36,21 @@ struct AlertView: View {
     var content: some View {
 
         VStack{
-            Text(alertItem == .won ? "You won!" : "You lost!")
-                .font(ApearanceManager.youWonOrLost)
-            Text(alertItem == .won ? "Can you win another one?" : "Get revenge!")
-                .font(ApearanceManager.youWonOrLostSubtitle)
+            Text(alertItem == .won ? "You won!" : alertItem == .playerLeft ? "Player left": "You lost!")
+                .font(AppearanceManager.youWonOrLost)
+            Text(alertItem == .won ? "Can you win another one?" : alertItem == .playerLeft ? "Play a new game" : "Get revenge!")
+                .font(AppearanceManager.youWonOrLostSubtitle)
                 .padding(.bottom)
             if alertItem == .playerLeft {
+                Spacer()
                 AsyncButton{
                     try await viewModel.quitGame()
                     isPresented = false
                 } label: {
                     Text("Quit")
                 }
+                .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
+                Spacer()
             } else {
                 Spacer()
                 let word = viewModel.game?.moves.last?.word.uppercased() ?? ""
@@ -63,8 +61,9 @@ struct AlertView: View {
                         try await viewModel.quitGame()
                         isPresented = false
                     } label: {
-                        Text("Quit        ")
+                        Text("   Quit    ")
                     }
+                    .buttonStyle(AppearanceManager.QuitRematch(isPrimary: viewModel.game?.player2Id == "botPlayer"))
 #if !os(watchOS)
                     .keyboardShortcut(.cancelAction)
 #endif
@@ -77,6 +76,7 @@ struct AlertView: View {
                         } label: {
                             Text("Rematch")
                         }
+                        .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
 #if !os(watchOS)
                         .keyboardShortcut(.defaultAction)
 #endif
@@ -123,13 +123,14 @@ struct WordDefinitionView: View {
             Section{
                 Text(word)
                     .padding(.leading)
-                    .font(ApearanceManager.wordInDefinitionView)
+                    .font(AppearanceManager.wordInDefinitionView)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .task {
                         do {
                             let loadedDefinitions = try await define(word)
                             definitions = .success(definitions: loadedDefinitions)
                         } catch let error as DecodingError {
+                            let _ = error
                             definitions = .success(definitions: [])
                         } catch {
                             definitions = .failed
@@ -204,11 +205,11 @@ struct WordDefinitionView: View {
                     GridRow{
                         VStack(alignment: .leading, spacing: 2) {
                             Text(definition.definition)
-                                .font(ApearanceManager.definitions)
+                                .font(AppearanceManager.definitions)
 
                             if !definition.synonyms.isEmpty {
                                 Text("Synonyms: \(definition.synonyms.joined(separator: ", "))")
-                                    .font(ApearanceManager.synonyms)
+                                    .font(AppearanceManager.synonyms)
                                     .foregroundColor(.secondary)
                             }
                         }
@@ -220,4 +221,17 @@ struct WordDefinitionView: View {
             }
         }
     }
+}
+
+#Preview{
+    AlertView(alertItem: .lost, isPresented: .constant(true))
+        .modifier(PreviewModifier())
+}
+#Preview{
+    AlertView(alertItem: .playerLeft, isPresented: .constant(true))
+        .modifier(PreviewModifier())
+}
+#Preview{
+    AlertView(alertItem: .won, isPresented: .constant(true))
+        .modifier(PreviewModifier())
 }

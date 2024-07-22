@@ -20,14 +20,16 @@ private let os = OS.macOS
 private let os = OS.visionOS
 #endif
 
-class ApearanceManager {
+class AppearanceManager {
+    private init(){}
+
     static let hostGame: Font = os == .watchOS ? .headline : .largeTitle
     static let startGame: Font = os == .watchOS ? .title : .largeTitle
     static let howToPlayTitle: Font = os == .watchOS ? .title2.bold() : .largeTitle.bold()
     static let trialEndsIn: Font = os == .watchOS ? .headline : .largeTitle
     static let instructions: Font = .headline
     static let buttonsInSettings: Font = .body
-    static let quitGame: Font = .caption2
+    static let quitGame: Font = os == .watchOS ? .headline : .title
     static let wordInGame: Font = .headline
     static let letterPicker: Font = .headline
     static let statsLabel: Font = .footnote
@@ -40,4 +42,45 @@ class ApearanceManager {
     static let synonyms: Font = .footnote
     static let definitions: Font = .body
     static let wordInDefinitionView: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
+
+    struct QuitRematch: ButtonStyle {
+        let isPrimary: Bool
+
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .padding(.horizontal)
+                .padding()
+                .background(isPrimary ? Color.accent : .clear)
+                .background(isPrimary ? Material.thick : .thin)
+                .clipShape(.capsule)
+                .scaleEffect(configuration.isPressed ? 0.9 : 1)
+        }
+    }
+    struct StartGame: ButtonStyle {
+        @Environment(\.isEnabled) var isEnabled
+
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .foregroundStyle(isEnabled ? .white : .secondary)
+                .padding(.horizontal)
+                .padding()
+                .background(isEnabled ? .accent : .accent.opacity(0.5))
+                .background(Material.thick)
+                .clipShape(.capsule)
+                .scaleEffect(configuration.isPressed ? 0.9 : 1)
+                .font(AppearanceManager.startGame)
+        }
+    }
+    struct HostGame: ButtonStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .foregroundStyle(.white)
+                .padding(.horizontal)
+                .padding()
+                .background(Material.thin)
+                .clipShape(.capsule)
+                .scaleEffect(configuration.isPressed ? 0.9 : 1)
+                .font(AppearanceManager.hostGame)
+        }
+    }
 }

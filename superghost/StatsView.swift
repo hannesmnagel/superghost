@@ -55,34 +55,34 @@ struct StatsView: View {
 #if os(macOS)
             VStack{
                 Text(wordToday)
-                    .font(ApearanceManager.statsValue)
+                    .font(AppearanceManager.statsValue)
                 Text("Word Today")
-                    .font(ApearanceManager.statsLabel)
+                    .font(AppearanceManager.statsLabel)
             }
             .frame(width: 100)
             Divider()
 #endif
             VStack{
                 Text(winningStreak, format: .number)
-                    .font(ApearanceManager.statsValue)
+                    .font(AppearanceManager.statsValue)
                 Text("Win Streak")
-                    .font(ApearanceManager.statsLabel)
+                    .font(AppearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
                 Text(winningRate, format: .percent.precision(.fractionLength(0)))
-                    .font(ApearanceManager.statsValue)
+                    .font(AppearanceManager.statsValue)
                 Text("Win Rate")
-                    .font(ApearanceManager.statsLabel)
+                    .font(AppearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
                 Text(winsToday, format: .number)
-                    .font(ApearanceManager.statsValue)
+                    .font(AppearanceManager.statsValue)
                 Text("Wins Today")
-                    .font(ApearanceManager.statsLabel)
+                    .font(AppearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
         }
@@ -96,7 +96,7 @@ struct StatsView: View {
             let word = isSuperghost ? "SUPERGHOST" : "GHOST"
             let lettersOfWord = word.prefix(gamesLostToday.count)
             let placeHolders = Array(repeating: "-", count: word.count).joined()
-            let actualPlaceHolders = placeHolders.prefix(word.count-gamesLostToday.count)
+            let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
             wordToday = lettersOfWord.appending(actualPlaceHolders)
 #if canImport(WidgetKit)
             WidgetCenter.shared.reloadAllTimelines()

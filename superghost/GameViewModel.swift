@@ -9,6 +9,12 @@ import SwiftUI
 import Combine
 import SwiftData
 
+enum GameStatusText {
+    case waitingForPlayer, started
+}
+private enum GameStatus {
+    case waitingForPlayer, started, lost, won, playerLeft
+}
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -17,19 +23,20 @@ final class GameViewModel: ObservableObject {
     @AppStorage("user") private var userData: Data?
 
     @Published var game: Game? {
-        didSet {
+        willSet {
             checkIfGameIsOver()
             //check the game status
 
-            if game == nil { updateGameNotificationFor(.finished) } else {
-                game?.player2Id == "" ? updateGameNotificationFor(.waitingForPlayer) : updateGameNotificationFor(.started)
+            if newValue == nil { updateGameStatus(.playerLeft) } else {
+                newValue?.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
             }
         }
     }
 
-    @Published var gameNotification = GameNotification.waitingForPlayer
+    @Published var gameStatusText = GameStatusText.waitingForPlayer
     @Published var currentUser: User!
     @Published var alertItem: AlertItem?
+
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -76,8 +83,8 @@ final class GameViewModel: ObservableObject {
         game!.blockMoveForPlayerId = currentUser.id
 
         if try await isWord(letter){
-            print("is word....")
             game?.winningPlayerId = isPlayerOne() ? game!.player2Id : game!.player1Id
+            updateGameStatus(.lost)
         }
 
         try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation)
@@ -86,10 +93,6 @@ final class GameViewModel: ObservableObject {
     func quitGame() async throws {
         try await ApiLayer.shared.quitGame(isPrivate: withInvitation)
         alertItem = nil
-    }
-
-    func checkForGameBoardStatus() -> Bool {
-        return game != nil ? game!.blockMoveForPlayerId == currentUser.id : false
     }
 
 
@@ -139,8 +142,19 @@ final class GameViewModel: ObservableObject {
     }
 
 
-    func updateGameNotificationFor(_ state: GameNotification) {
-        gameNotification = state
+    private func updateGameStatus(_ state: GameStatus) {
+        switch state{
+        case .waitingForPlayer:
+            gameStatusText = .waitingForPlayer
+        case .started:
+            gameStatusText = .started
+        case .lost:
+            alertItem = .lost
+        case .won:
+            alertItem = .won
+        case .playerLeft:
+            alertItem = .playerLeft
+        }
     }
 
     //MARK: - User object

@@ -71,8 +71,7 @@ struct HomeView: View {
                 }
                 Spacer()
                 SettingsButton(isSuperghost: isSuperghost)
-                    .font(ApearanceManager.settingsButton)
-                    .textCase(nil)
+                    .font(AppearanceManager.settingsButton)
             }
             WaitingGhost()
 
@@ -83,10 +82,15 @@ struct HomeView: View {
                 Text("Start")
             }
             .disabled(games.today.lost.count >= (isSuperghost ? 10 : 5))
+            .onTapGesture {
+                if !isSuperghost && games.today.lost.count >= 5{
+                    viewModel.showPaywall = true
+                }
+            }
 #if !os(watchOS)
             .keyboardShortcut(.defaultAction)
 #endif
-            .font(ApearanceManager.startGame)
+            .buttonStyle(AppearanceManager.StartGame())
 
             AsyncButton {
                 try await viewModel.hostGame()
@@ -94,12 +98,12 @@ struct HomeView: View {
             } label: {
                 Text("Host a Game")
             }
-            .font(ApearanceManager.hostGame)
+            .buttonStyle(AppearanceManager.HostGame())
         }
-        .buttonStyle(.bordered)
         .tint(.accent)
         .frame(maxWidth: .infinity)
         .padding(.bottom, 30)
+        .textCase(nil)
     }
 }
 

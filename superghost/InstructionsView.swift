@@ -50,7 +50,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
         VStack{
 #if !os(watchOS)
             Text("Learn How To Play")
-                .font(ApearanceManager.howToPlayTitle)
+                .font(AppearanceManager.howToPlayTitle)
                 .padding(.bottom)
 #endif
 #if os(macOS)
@@ -61,7 +61,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             TabView(selection: $selection){
 #if os(watchOS)
                 Text("Learn How To Play")
-                    .font(ApearanceManager.howToPlayTitle)
+                    .font(AppearanceManager.howToPlayTitle)
                     .padding(.bottom)
                     .tag("learn")
 #endif
@@ -72,7 +72,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                             Text(instruction)
                         }
                     }
-                    .font(ApearanceManager.instructions)
+                    .font(AppearanceManager.instructions)
                     .task {
                         do{
                             try await Task.sleep(for: .seconds(6))

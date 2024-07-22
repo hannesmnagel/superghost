@@ -13,93 +13,103 @@ struct GameView: View {
     let isSuperghost: Bool
 
     var body: some View {
-        ViewThatFits{
+#if os(watchOS)
+        ScrollView{
             content
-            ScrollView{
-                content
-            }
         }
+#else
+        content
+#endif
     }
 
     @ViewBuilder @MainActor
     var content: some View {
 
         VStack {
-            Text(viewModel.gameNotification.rawValue)
-
-            AsyncButton{
-                try await viewModel.quitGame()
-                isPresented = false
-            } label: {
-                Text("Quit Game")
-#if os(watchOS)
-                    .padding(-15)
-                    .font(ApearanceManager.quitGame)
+            HStack{
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                    .font(AppearanceManager.quitGame)
+                    .hidden()
+                Spacer()
+                switch viewModel.gameStatusText {
+                case .waitingForPlayer:
+                    Text("Waiting for Player")
+                case .started:
+                    Text("Game started")
+                }
+                Spacer()
+                AsyncButton{
+                    isPresented = false
+                    try await viewModel.quitGame()
+                } label: {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                        .font(AppearanceManager.quitGame)
+                }
+#if !os(watchOS)
+                .keyboardShortcut(.cancelAction)
 #endif
+                .buttonStyle(.plain)
             }
-#if os(watchOS)
-            .scaleEffect(0.5)
-            .padding(.bottom, -15)
-#else
-            .keyboardShortcut(.cancelAction)
-#endif
-
 
             Spacer()
 
+            //MARK: Private Game Share Link Screen
             if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
+                #if !os(watchOS)
                 LoadingView()
+                #else
+                Spacer(minLength: 30)
+                #endif
                 if viewModel.game?.player2Id == "privateGame"{
                     if let url = URL(string: "https://hannesnagel.com/superghost/private/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
                         ShareLink(item: url)
                     }
                 }
-            } else {
-
-                if let game = viewModel.game{
-
-                    VStack {
-                        if game.challengingUserId.isEmpty {
-                            LetterPicker(isSuperghost: isSuperghost)
-                            if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
-                                AsyncButton{
-                                    viewModel.game?.challengingUserId = viewModel.currentUser.id
-                                    viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
-                                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
-                                } label: {
-                                    Text("There is no such word")
-                                }
-                            }
-                        } else if game.challengingUserId != viewModel.currentUser.id{
-                            Text(game.moves.last?.word ?? "")
-                                .font(ApearanceManager.wordInGame)
-                            SayTheWordButton(isSuperghost: isSuperghost)
+                //MARK: Playing:
+            } else if let game = viewModel.game{
+                VStack {
+                    if game.challengingUserId.isEmpty {
+                        LetterPicker(isSuperghost: isSuperghost)
+                        if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
                             AsyncButton{
-                                viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
+                                viewModel.game?.challengingUserId = viewModel.currentUser.id
+                                viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
                                 try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
                             } label: {
-                                Text("Yes, I lied")
+                                Text("There is no such word")
                             }
-                        } else {
-                            LoadingView()
-                            Text("Waiting for player response...")
                         }
+                        //MARK: When you are challenged
+                    } else if game.challengingUserId != viewModel.currentUser.id{
+                        Text(game.moves.last?.word ?? "")
+                            .font(AppearanceManager.wordInGame)
+                        SayTheWordButton(isSuperghost: isSuperghost)
+                        AsyncButton{
+                            viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
+                            try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
+                        } label: {
+                            Text("Yes, I lied")
+                        }
+                        //MARK: When you challenged
+                    } else {
+                        LoadingView()
+                        Text("Waiting for player response...")
                     }
-                    .disabled(viewModel.checkForGameBoardStatus())
-                    .padding()
-                    .sheet(item: $viewModel.alertItem) { alertItem in
-                        AlertView(alertItem: alertItem, isPresented: $isPresented)
-                        #if os(macOS)
-                            .frame(minWidth: 500, minHeight: 500)
-                        #endif
-                    }
-                    Spacer()
                 }
+                .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
+                .padding()
+                Spacer()
             }
         }
+        .sheet(item: $viewModel.alertItem) { alertItem in
+            AlertView(alertItem: alertItem, isPresented: $isPresented)
+#if os(macOS)
+                .frame(minWidth: 500, minHeight: 500)
+#endif
+        }
         .buttonStyle(.bordered)
-        .animation(.snappy, value: viewModel.gameNotification)
+        .animation(.snappy, value: viewModel.gameStatusText)
         .animation(.snappy, value: viewModel.alertItem)
         .animation(.snappy, value: viewModel.game)
         .animation(.snappy, value: viewModel.game?.moves)
@@ -123,11 +133,11 @@ struct LetterPicker: View {
                         .disabled(!trailingLetter.isEmpty)
                 }
                 Text(word)
-                    .font(ApearanceManager.wordInGame)
+                    .font(AppearanceManager.wordInGame)
             }
             SingleLetterPicker(letter: $trailingLetter, allowedLetters: allowedLetters)
                 .disabled(!leadingLetter.isEmpty)
-                .font(ApearanceManager.letterPicker)
+                .font(AppearanceManager.letterPicker)
         }
 
         AsyncButton{

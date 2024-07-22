@@ -21,10 +21,10 @@ struct FirstUseView: View {
                     .resizable()
                     .scaledToFit()
                 Text("Superghost")
-                    .font(ApearanceManager.startUpSuperghost)
+                    .font(AppearanceManager.startUpSuperghost)
                     .fontWeight(.heavy)
                 Text("Tap to play")
-                    .font(ApearanceManager.startUpSuperghostTapToPlay)
+                    .font(AppearanceManager.startUpSuperghostTapToPlay)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onTapGesture {
@@ -36,7 +36,7 @@ struct FirstUseView: View {
                 .tag(FirstUseState.howTo)
                 .tabItem {}
             Text("Let's go")
-                .font(ApearanceManager.startUpSuperghost)
+                .font(AppearanceManager.startUpSuperghost)
                 .task{
                     try? await Task.sleep(for: .milliseconds(500))
                     finished()

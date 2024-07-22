@@ -9,13 +9,6 @@ import Foundation
 import Combine
 import RevenueCat
 
-protocol BackendCommunicator {
-    func startGame(with: String) async throws
-    func joinGame(with: String, in: String) async throws
-    func hostGame(with: String) async throws
-    func updateGame(_ : Game) async throws
-    func quitGame() async throws
-}
 
 private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> String {
     "\(option.rawValue)://hannesnagel.com/\(isSuperghost ? "superghost" : "ghost")"
@@ -31,7 +24,7 @@ private func isSuperghost() async -> Bool {
     }
 }
 enum RequestType:String{case https, wss}
-final class ApiLayer: ObservableObject/*, BackendCommunicator*/ {
+final class ApiLayer: ObservableObject {
 
     func startGame(with: String) async throws {
         do{
@@ -170,20 +163,24 @@ final class ApiLayer: ObservableObject/*, BackendCommunicator*/ {
     }
 
     #else
-    var webSocketTask: URLSessionWebSocketTask?
+    private var webSocketTask: (URLSessionWebSocketTask)?
 
-    func connectToWebSocket(gameId: String, isPrivate: Bool) {
+    private func connectToWebSocket(gameId: String, isPrivate: Bool) {
         Task{
             let urlSession = URLSession(configuration: .default)
             guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost()))/subscribe/game/\(gameId)") else { return }
 
             webSocketTask = urlSession.webSocketTask(with: url)
-            webSocketTask?.delegate = WebSocketDelegateOnClose{[weak self] in
-                Task{[weak self] in
-                    await self?.setGameVar(to: nil)
+            await withCheckedContinuation{con in
+                webSocketTask?.delegate = WebSocketDelegateOnClose{
+                    con.resume()
+                } onClose: {[weak self] in
+                    Task{[weak self] in
+                        await self?.setGameVar(to: nil)
+                    }
                 }
+                webSocketTask?.resume()
             }
-            webSocketTask?.resume()
             receiveMessage()
         }
     }
@@ -202,22 +199,29 @@ final class ApiLayer: ObservableObject/*, BackendCommunicator*/ {
                 self?.receiveMessage() // Continue to receive next message
             default:
                 print("Error receiving message: \(result)")
+                Task{[weak self] in
+                    await self?.setGameVar(to: nil)
+                }
                 self?.disconnectWebSocket()
             }
         }
     }
 
-    func disconnectWebSocket() {
+    private func disconnectWebSocket() {
         webSocketTask?.cancel(with: .goingAway, reason: nil)
         webSocketTask = nil
     }
-    class WebSocketDelegateOnClose: NSObject, URLSessionWebSocketDelegate{
+    private class WebSocketDelegateOnClose: NSObject, URLSessionWebSocketDelegate{
         let onClose: ()->Void
+        let onOpen: ()->Void
 
-        init(onClose: @escaping () -> Void) {
+        init(onOpen: @escaping () -> Void, onClose: @escaping () -> Void) {
             self.onClose = onClose
+            self.onOpen = onOpen
         }
-
+        func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+            onOpen()
+        }
         func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
             onClose()
         }

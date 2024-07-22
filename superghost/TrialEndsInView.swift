@@ -15,7 +15,7 @@ struct TrialEndsInView: View {
         Group{
             Text("Trial ends in \(days, format: .number) days. \n")
                 .foregroundStyle(.orange)
-                .font(ApearanceManager.trialEndsIn)
+                .font(AppearanceManager.trialEndsIn)
                 .underline()
         }.onTapGesture {
             viewModel.showPaywall = true

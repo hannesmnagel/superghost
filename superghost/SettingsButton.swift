@@ -45,7 +45,7 @@ struct SettingsButton: View {
                     }
                     if let managementURL{Link("Manage subscription", destination: managementURL)}
                 }
-                .font(ApearanceManager.buttonsInSettings)
+                .font(AppearanceManager.buttonsInSettings)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .task{
                     managementURL = try? await Purchases.shared.restorePurchases().managementURL
