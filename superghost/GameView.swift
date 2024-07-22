@@ -74,7 +74,7 @@ struct GameView: View {
                         } else if game.challengingUserId != viewModel.currentUser.id{
                             Text(game.moves.last?.word ?? "")
                                 .font(ApearanceManager.wordInGame)
-                            SayTheWordButton()
+                            SayTheWordButton(isSuperghost: isSuperghost)
                             AsyncButton{
                                 viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
                                 try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
@@ -240,6 +240,7 @@ struct Definition: Codable, Hashable {
 
 struct SayTheWordButton: View {
     @EnvironmentObject var viewModel: GameViewModel
+    let isSuperghost: Bool
     @State private var isExpanded = false
     @State private var word = ""
     var body: some View {
@@ -248,7 +249,9 @@ struct SayTheWordButton: View {
         }
         AsyncButton {
             if isExpanded {
-                if try await isWord(word) && word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") {
+                if try await isWord(word) && (
+                    (viewModel.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") : word.hasPrefix(viewModel.game?.moves.last?.word ?? "")
+                ) {
                     viewModel.game?.moves.append(.init(isPlayer1: viewModel.isPlayerOne(), word: word))
                     viewModel.game!.winningPlayerId = viewModel.currentUser.id
                     try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
