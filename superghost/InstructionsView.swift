@@ -25,9 +25,9 @@ Every time you lose, you collect a letter of the word GHOST or SUPERGHOST. When 
 Get a winning streak of 10 online matches to earn a free day of superghost.
 """
     ]
-    #if os(watchOS)
+#if os(watchOS)
     @State var selection = "learn"
-    #else
+#else
     @State var selection = """
 Inspired by a game played on the chalk board, superghost is a word game where you have to add letters so that:
 
@@ -35,7 +35,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
 
 - It could become a word when adding more letters
 """
-    #endif
+#endif
 
     let next: ()->Void
 
@@ -48,23 +48,23 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
     @MainActor @ViewBuilder
     var content: some View{
         VStack{
-            #if !os(watchOS)
+#if !os(watchOS)
             Text("Learn How To Play")
-                .font(ApearanceManager.largeTitle.bold())
+                .font(ApearanceManager.howToPlayTitle)
                 .padding(.bottom)
 #endif
-            #if os(macOS)
+#if os(macOS)
             Text(instructions.joined(separator: "\n\n"))
                 .padding()
                 .lineLimit(nil)
-            #else
+#else
             TabView(selection: $selection){
-                #if os(watchOS)
+#if os(watchOS)
                 Text("Learn How To Play")
                     .font(ApearanceManager.howToPlayTitle)
                     .padding(.bottom)
                     .tag("learn")
-                #endif
+#endif
                 ForEach(instructions, id:\.self){instruction in
                     ViewThatFits{
                         Text(instruction)
@@ -72,39 +72,40 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                             Text(instruction)
                         }
                     }
-                        .task {
-                            do{
-                                try await Task.sleep(for: .seconds(6))
-                                guard let index = instructions.firstIndex(of: instruction) else {return}
-                                selection = instructions[(index + 1) % instructions.count]
-                            }catch{}
-                        }
-                        .tag(instruction)
-                        .tabItem { Circle() }
+                    .font(ApearanceManager.instructions)
+                    .task {
+                        do{
+                            try await Task.sleep(for: .seconds(6))
+                            guard let index = instructions.firstIndex(of: instruction) else {return}
+                            selection = instructions[(index + 1) % instructions.count]
+                        }catch{}
+                    }
+                    .tag(instruction)
+                    .tabItem { Circle() }
                 }
-
+#if !os(watchOS)
                 Button("Got it", action: next)
                     .buttonStyle(.bordered)
                     .tag("end")
+#endif
             }
-            #if os(watchOS)
+#if os(watchOS)
             .tabViewStyle(.verticalPage)
-            #else
+#else
             .tabViewStyle(.page)
-            #endif
+#endif
             .padding()
-            #endif
-            #if !os(watchOS)
+#endif
+#if !os(watchOS)
             Button("Got it", action: next)
                 .buttonStyle(.bordered)
-            #endif
+#endif
         }
-        .font(ApearanceManager.headline)
         .padding()
         .foregroundStyle(.white)
-        #if os(watchOS)
+#if os(watchOS)
         .ignoresSafeArea()
-        #endif
+#endif
     }
 }
 

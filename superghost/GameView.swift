@@ -34,7 +34,7 @@ struct GameView: View {
                 Text("Quit Game")
 #if os(watchOS)
                     .padding(-15)
-                    .font(.caption2)
+                    .font(ApearanceManager.quitGame)
 #endif
             }
 #if os(watchOS)
@@ -73,7 +73,7 @@ struct GameView: View {
                             }
                         } else if game.challengingUserId != viewModel.currentUser.id{
                             Text(game.moves.last?.word ?? "")
-                                .font(ApearanceManager.headline)
+                                .font(ApearanceManager.wordInGame)
                             SayTheWordButton()
                             AsyncButton{
                                 viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
@@ -123,11 +123,12 @@ struct LetterPicker: View {
                         .disabled(!trailingLetter.isEmpty)
                 }
                 Text(word)
+                    .font(ApearanceManager.wordInGame)
             }
             SingleLetterPicker(letter: $trailingLetter, allowedLetters: allowedLetters)
                 .disabled(!leadingLetter.isEmpty)
+                .font(ApearanceManager.letterPicker)
         }
-        .font(ApearanceManager.largeTitle)
 
         AsyncButton{
             try await viewModel.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)")
@@ -167,7 +168,6 @@ struct LetterPicker: View {
                     letter = newLetter.uppercased()
                 }
             }))
-            .font(.body)
 #endif
         }
     }
@@ -264,34 +264,6 @@ struct SayTheWordButton: View {
     }
 }
 
-struct ContentPlaceHolderView: View {
-    @State var title: String
-    @State var systemImage: String
-    @State var description: String
-
-
-    var body: some View {
-        if #available(iOS 17.0, *){
-            ContentUnavailableView(title, systemImage: systemImage, description: Text(description))
-        } else {
-            VStack{
-                Image(systemName: systemImage)
-                    .font(.system(size: 50))
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 7)
-                Text(title)
-                    .font(.title2.bold())
-                Text(description)
-                    .frame(width: 360)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            .padding(.bottom, 20)
-
-        }
-    }
-}
 func retry<R:Sendable>( _ action: () async throws ->R) async rethrows -> R {
     do {
         return try await action()

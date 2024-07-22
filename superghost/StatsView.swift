@@ -55,30 +55,34 @@ struct StatsView: View {
 #if os(macOS)
             VStack{
                 Text(wordToday)
+                    .font(ApearanceManager.statsValue)
                 Text("Word Today")
-                    .font(ApearanceManager.footnote)
+                    .font(ApearanceManager.statsLabel)
             }
             .frame(width: 100)
             Divider()
 #endif
             VStack{
                 Text(winningStreak, format: .number)
+                    .font(ApearanceManager.statsValue)
                 Text("Win Streak")
-                    .font(ApearanceManager.footnote)
+                    .font(ApearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
                 Text(winningRate, format: .percent.precision(.fractionLength(0)))
+                    .font(ApearanceManager.statsValue)
                 Text("Win Rate")
-                    .font(ApearanceManager.footnote)
+                    .font(ApearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
                 Text(winsToday, format: .number)
+                    .font(ApearanceManager.statsValue)
                 Text("Wins Today")
-                    .font(ApearanceManager.footnote)
+                    .font(ApearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
         }
@@ -98,11 +102,6 @@ struct StatsView: View {
             WidgetCenter.shared.reloadAllTimelines()
 #endif
         }
-#if os(watchOS)
-        .font(ApearanceManager.headline)
-#else
-        .font(ApearanceManager.title)
-#endif
         .multilineTextAlignment(.center)
         .listRowBackground(
             HStack{

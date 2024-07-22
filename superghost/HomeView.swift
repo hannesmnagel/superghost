@@ -70,7 +70,7 @@ struct HomeView: View {
                 }
                 Spacer()
                 SettingsButton(isSuperghost: isSuperghost)
-                    .font(ApearanceManager.title)
+                    .font(ApearanceManager.settingsButton)
                     .textCase(nil)
             }
             WaitingGhost()

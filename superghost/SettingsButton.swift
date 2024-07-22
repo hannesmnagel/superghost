@@ -43,13 +43,13 @@ struct SettingsButton: View {
                         }
                         #endif
                     }
-                    if let managementURL{Link("Manage subscription", destination: managementURL).font(.body)}
+                    if let managementURL{Link("Manage subscription", destination: managementURL)}
                 }
+                .font(ApearanceManager.buttonsInSettings)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .task{
                     managementURL = try? await Purchases.shared.restorePurchases().managementURL
                 }
-                .font(.body)
                 .navigationDestination(for: Destination.self) { selectedDestination in
                     switch selectedDestination {
                     case .learn:

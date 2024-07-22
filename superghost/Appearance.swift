@@ -24,13 +24,20 @@ class ApearanceManager {
     static let hostGame: Font = os == .watchOS ? .headline : .largeTitle
     static let startGame: Font = os == .watchOS ? .title : .largeTitle
     static let howToPlayTitle: Font = os == .watchOS ? .title2.bold() : .largeTitle.bold()
-    #if os(watchOS)
-    static let largeTitle = Font.title
-    #else
-    static let largeTitle = Font.largeTitle
-    #endif
-    static let title = Font.title2
-    static let headline = Font.headline
-    static let footnote = Font.footnote
-    static let body = Font.body
+    static let trialEndsIn: Font = os == .watchOS ? .headline : .largeTitle
+    static let instructions: Font = .headline
+    static let buttonsInSettings: Font = .body
+    static let quitGame: Font = .caption2
+    static let wordInGame: Font = .headline
+    static let letterPicker: Font = .headline
+    static let statsLabel: Font = .footnote
+    static let statsValue: Font = os == .watchOS ? .headline : .title
+    static let settingsButton: Font = .title
+    static let startUpSuperghost: Font = os == .watchOS ? .title : .largeTitle
+    static let startUpSuperghostTapToPlay: Font = os == .watchOS ? .headline : .subheadline
+    static let youWonOrLost: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
+    static let youWonOrLostSubtitle: Font = os == .watchOS ? .subheadline : .headline
+    static let synonyms: Font = .footnote
+    static let definitions: Font = .body
+    static let wordInDefinitionView: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
 }

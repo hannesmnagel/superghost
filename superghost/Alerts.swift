@@ -42,9 +42,9 @@ struct AlertView: View {
 
         VStack{
             Text(alertItem == .won ? "You won!" : "You lost!")
-                .font(ApearanceManager.largeTitle.bold())
+                .font(ApearanceManager.youWonOrLost)
             Text(alertItem == .won ? "Can you win another one?" : "Get revenge!")
-                .font(ApearanceManager.headline)
+                .font(ApearanceManager.youWonOrLostSubtitle)
                 .padding(.bottom)
             if alertItem == .playerLeft {
                 AsyncButton{
@@ -119,7 +119,7 @@ struct WordDefinitionView: View {
             Section{
                 Text(word)
                     .padding(.leading)
-                    .font(ApearanceManager.largeTitle.bold())
+                    .font(ApearanceManager.wordInDefinitionView)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .task {
                         definitions = (try? await define(word)) ?? []
@@ -130,6 +130,9 @@ struct WordDefinitionView: View {
                     .padding()
                     .padding(.vertical, 50)
                 #endif
+            }
+            if definitions.isEmpty{
+                ContentUnavailableView("Couldn't get definitions!", systemImage: "character.book.closed")
             }
             ForEach(definitions, id: \.self) { entry in
                 viewFor(entry: entry)
@@ -158,11 +161,6 @@ struct WordDefinitionView: View {
         #if os(watchOS)
         .scrollClipDisabled()
         #endif
-        .overlay{
-            if definitions.isEmpty{
-                ContentPlaceHolderView(title: "Couldn't get definitions!", systemImage: "character.book.closed", description: "")
-            }
-        }
     }
     @MainActor @ViewBuilder
     func viewFor(entry: WordEntry) -> some View {
@@ -172,11 +170,11 @@ struct WordDefinitionView: View {
                     GridRow{
                         VStack(alignment: .leading, spacing: 2) {
                             Text(definition.definition)
-                                .font(ApearanceManager.body)
+                                .font(ApearanceManager.definitions)
 
                             if !definition.synonyms.isEmpty {
                                 Text("Synonyms: \(definition.synonyms.joined(separator: ", "))")
-                                    .font(ApearanceManager.footnote)
+                                    .font(ApearanceManager.synonyms)
                                     .foregroundColor(.secondary)
                             }
                         }
