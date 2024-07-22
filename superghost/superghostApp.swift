@@ -12,7 +12,7 @@ import RevenueCat
 @main
 struct superghostApp: App {
     init(){
-        Purchases.logLevel = .debug
+        Purchases.logLevel = .error
         try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
     }
     var body: some Scene {
