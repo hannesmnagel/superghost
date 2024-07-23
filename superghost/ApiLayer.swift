@@ -182,6 +182,15 @@ final class ApiLayer: ObservableObject {
                 webSocketTask?.resume()
             }
             receiveMessage()
+
+            while let webSocketTask{
+                webSocketTask.sendPing{ error in
+                    if let error{
+                        print("Error receiving pong: \(error)")
+                    } else {print("received pong")}
+                }
+                try? await Task.sleep(for: .seconds(10))
+            }
         }
     }
 
