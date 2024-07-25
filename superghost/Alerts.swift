@@ -44,8 +44,8 @@ struct AlertView: View {
             if alertItem == .playerLeft {
                 Spacer()
                 AsyncButton{
-                    try await viewModel.quitGame()
                     isPresented = false
+                    try await viewModel.quitGame()
                 } label: {
                     Text("Quit")
                 }
@@ -58,8 +58,8 @@ struct AlertView: View {
                 HStack{
                     Spacer()
                     AsyncButton{
-                        try await viewModel.quitGame()
                         isPresented = false
+                        try await viewModel.quitGame()
                     } label: {
                         Text("   Quit    ")
                     }
