@@ -26,25 +26,45 @@ struct PaywallView: View {
                                 dismiss()
                             }
 #else
-                            RevenueCatUI.PaywallView(offering: offering)
+                        RevenueCatUI.PaywallView(offering: offering)
                             .contentMargins(.top, 10)
 #endif
-                        #else
+#else
                         if let package = offering.availablePackages.first {
-                            AsyncButton{
-                                let _ = try await Purchases.shared.purchase(package: package)
-                                dismiss()
-                            } label: {
-                                Text("Continue")
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .buttonBorderShape(.capsule)
-                            AsyncButton{
-                                let _ = try await Purchases.shared.restorePurchases()
-                                dismiss()
-                            } label: {
-                                Text("Restore Purchases")
-                            }
+                            Spacer()
+                            Text("Become a Superghost")
+                                .font(.largeTitle)
+                            Spacer()
+                            Text("For only \(package.storeProduct.localizedPriceString) per Month. ")
+                            Text("Auto-Renews. Cancel Anytime.")
+                            Spacer()
+                                .toolbar{
+                                    ToolbarItem(placement: .destructiveAction){
+                                        AsyncButton{
+                                            dismiss()
+                                        } label: {
+                                            Text("Cancel")
+                                        }
+                                    }
+                                    ToolbarItem(placement: .cancellationAction){
+                                        AsyncButton{
+                                            let _ = try await Purchases.shared.restorePurchases()
+                                            dismiss()
+                                        } label: {
+                                            Text("Restore Purchases")
+                                        }
+                                    }
+                                    ToolbarItem(placement: .confirmationAction){
+                                        AsyncButton{
+                                            let _ = try await Purchases.shared.purchase(package: package)
+                                            dismiss()
+                                        } label: {
+                                            Text("Continue")
+                                        }
+                                        .buttonStyle(.borderedProminent)
+                                        .buttonBorderShape(.capsule)
+                                    }
+                                }
                         }
                         #endif
                     } else {

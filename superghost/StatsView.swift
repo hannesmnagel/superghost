@@ -10,6 +10,7 @@ import SwiftData
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
+import UserNotifications
 
 struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
@@ -18,6 +19,7 @@ struct StatsView: View {
     @AppStorage("winStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
     @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
     @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
+    @AppStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
 
     @Binding var selection: GameStat?
     let isSuperghost : Bool
@@ -86,7 +88,12 @@ struct StatsView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .task(id: games.debugDescription) {
+        .onChange(of: winningStreak) { oldValue, newValue in
+            if Int(oldValue/5) < Int(newValue/5) {
+                superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
+            }
+        }
+        .task(id: games.debugDescription.appending(isSuperghost.description)) {
             winningRate = games.winningRate
             winningStreak = games.winningStreak
             let gamesToday = games.today
@@ -101,6 +108,41 @@ struct StatsView: View {
 #if canImport(WidgetKit)
             WidgetCenter.shared.reloadAllTimelines()
 #endif
+            if !games.isEmpty {
+                do{
+                    try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+
+                    UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
+                    let content = UNMutableNotificationContent()
+
+                    content.title = "Keep Your Streak Going!"
+                    content.body = "Play some Ghost"
+                    content.sound = .default
+
+                    try await UNUserNotificationCenter.current().add(
+                        UNNotificationRequest(
+                            identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
+                            content: content,
+                            trigger: trigger)
+                    )
+                    let fourDayTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(4 * 24 * 60 * 60), repeats: true)
+                    let fourDayContent = UNMutableNotificationContent()
+
+                    fourDayContent.title = "Keep Your Streak Going!"
+                    fourDayContent.body = "Play some Ghost"
+                    fourDayContent.sound = .default
+
+                    try await UNUserNotificationCenter.current().add(
+                        UNNotificationRequest(
+                            identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
+                            content: fourDayContent,
+                            trigger: fourDayTrigger)
+                    )
+                } catch {}
+            }
         }
         .multilineTextAlignment(.center)
         .listRowBackground(

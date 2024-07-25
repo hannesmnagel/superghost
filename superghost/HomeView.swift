@@ -20,14 +20,16 @@ struct HomeView: View {
             VStack {
                 List{
                     Section{
-                        StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
-                    } header: {
                         header
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(.none)
+                            .listItemTint(ListItemTint?.none)
+                            .listRowSeparator(.hidden)
+                    }
+                    Section{
+                        StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
                     }
                 }
-#if os(macOS)
-                .listStyle(.sidebar)
-#endif
                 .scrollContentBackground(.hidden)
             }
             .onOpenURL { url in
@@ -74,6 +76,7 @@ struct HomeView: View {
                     .font(AppearanceManager.settingsButton)
             }
             WaitingGhost()
+                .frame(maxHeight: 400)
 
             AsyncButton {
                 try await viewModel.getTheGame()

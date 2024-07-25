@@ -15,9 +15,21 @@ struct BlackOutTransition: Transition {
     }
 }
 
+extension Date: RawRepresentable{
+    public var rawValue: String {ISO8601Format()}
+    public init?(rawValue: String) {
+        if let decoded = ISO8601DateFormatter().date(from: rawValue){
+            self = decoded
+        } else {
+            return nil
+        }
+    }
+}
+
 struct ContentView: View {
     @AppStorage("isFirstUse") var isFirstUse = true
-    @AppStorage("lastPaywallView") var lastPaywallView = Date.distantPast.ISO8601Format()
+    @AppStorage("lastViewOfPaywall") var lastPaywallView = Date.distantPast
+    @AppStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @State var isGameViewPresented = false
     @StateObject var viewModel = GameViewModel()
     @State private var showTrialEndsIn : Int?
@@ -37,7 +49,7 @@ struct ContentView: View {
         .animation(.smooth, value: isFirstUse)
         .animation(.smooth, value: isGameViewPresented)
         .preferredColorScheme(.dark)
-        .task {
+        .task(id: superghostTrialEnd) {
             do{
                 try await fetchSubscription()
             } catch {
@@ -59,21 +71,22 @@ struct ContentView: View {
     func fetchSubscription() async throws {
         let info = try await Purchases.shared.restorePurchases()
         let subscriptions = info.activeSubscriptions
-        let timeSinceTrialEnd = (Calendar.current.date(byAdding: .day, value: -7, to: .now) ?? .now).timeIntervalSince(info.firstSeen)
+        let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
+        print(daysSinceTrialEnd)
         isSuperghost = subscriptions.contains("monthly.superghost") || timeSinceTrialEnd < 0
 
         //is in trial:
         if !subscriptions.contains("monthly.superghost") && timeSinceTrialEnd < 0 {
-            showTrialEndsIn = Int(-daysSinceTrialEnd)
+            showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
         } else {
             showTrialEndsIn = nil
         }
         //is not superghost, every 4 days:
-        let showedPaywallToday = Calendar.current.isDateInToday(ISO8601DateFormatter().date(from: lastPaywallView) ?? Date.distantPast)
+        let showedPaywallToday = Calendar.current.isDateInToday(lastPaywallView)
         if !showedPaywallToday && !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
             viewModel.showPaywall = true
-            lastPaywallView = Date().ISO8601Format()
+            lastPaywallView = Date()
         }
     }
 }

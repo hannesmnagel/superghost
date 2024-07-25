@@ -22,7 +22,7 @@ With ghost you can append letters to a word, with superghost you can also add th
 ""","""
 Every time you lose, you collect a letter of the word GHOST or SUPERGHOST. When the word is full you can't play for this day any longer.
 ""","""
-Get a winning streak of 10 online matches to earn a free day of superghost.
+Get a winning streak of 5 online matches to earn a free day of superghost.
 """
     ]
 #if os(watchOS)
