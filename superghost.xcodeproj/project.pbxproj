@@ -9,9 +9,38 @@
 /* Begin PBXBuildFile section */
 		381DE8352C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
+		3847ABF72C52E57400F50DC9 /* superghostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75072C1E094500DFB6A7 /* superghostApp.swift */; };
+		3847ABF82C52E57E00F50DC9 /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
+		3847ABF92C52E57E00F50DC9 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
+		3847ABFA2C52E57E00F50DC9 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
+		3847ABFB2C52E57E00F50DC9 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F862C425609000C0DDF /* SettingsButton.swift */; };
+		3847ABFC2C52E57E00F50DC9 /* WaitingGhost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F922C42B450000C0DDF /* WaitingGhost.swift */; };
+		3847ABFD2C52E57E00F50DC9 /* FirstUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F952C42B6E1000C0DDF /* FirstUseView.swift */; };
+		3847ABFE2C52E57E00F50DC9 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F832C418B21000C0DDF /* PaywallView.swift */; };
+		3847ABFF2C52E57E00F50DC9 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		3847AC002C52E57E00F50DC9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F8F2C42B422000C0DDF /* HomeView.swift */; };
+		3847AC012C52E57E00F50DC9 /* ApiLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753C2C1E0A9D00DFB6A7 /* ApiLayer.swift */; };
+		3847AC022C52E57E00F50DC9 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F892C425653000C0DDF /* StatsView.swift */; };
+		3847AC032C52E57E00F50DC9 /* PreviewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F982C42B876000C0DDF /* PreviewModifier.swift */; };
+		3847AC042C52E57E00F50DC9 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75362C1E0A2F00DFB6A7 /* GameViewModel.swift */; };
+		3847AC052C52E57E00F50DC9 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75382C1E0A4E00DFB6A7 /* GameView.swift */; };
+		3847AC062C52E57E00F50DC9 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F8C2C425693000C0DDF /* AsyncButton.swift */; };
+		3847AC072C52E57E00F50DC9 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */; };
+		3847AC082C52E57E00F50DC9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BADC2C3ECCC100E3E377 /* User.swift */; };
+		3847AC092C52E57E00F50DC9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753A2C1E0A6D00DFB6A7 /* LoadingView.swift */; };
+		3847AC0A2C52E57E00F50DC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75092C1E094500DFB6A7 /* ContentView.swift */; };
+		3847AC0B2C52E57E00F50DC9 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD62C3ECBC100E3E377 /* Game.swift */; };
+		3847AC0C2C52E58100F50DC9 /* superghosty.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F802C418760000C0DDF /* superghosty.storekit */; };
+		3847AC0D2C52E58900F50DC9 /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F9B2C42DC16000C0DDF /* InstructionsView.swift */; };
+		3847AC0E2C52E58D00F50DC9 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		3847AC0F2C52E58D00F50DC9 /* TrialEndsInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */; };
 		384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		384EA7022C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		388AEADE2C52E6730038CEA4 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 388AEADD2C52E6730038CEA4 /* RevenueCat */; };
+		388AEAE02C52E6730038CEA4 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 388AEADF2C52E6730038CEA4 /* RevenueCatUI */; };
+		388AEAE12C52E6730038CEA4 /* gamestatsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		388AEAE52C52E7A30038CEA4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7E2C418647000C0DDF /* StoreKit.framework */; };
 		38A46C3B2C46D123004950E3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38A46C3C2C46D123004950E3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A46C3E2C46D123004950E3 /* gamestats.swift */; };
@@ -42,8 +71,6 @@
 		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
-		38D1D85D2C52CF4C00652855 /* superghost_for_watchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D1D85C2C52CF4C00652855 /* superghost_for_watchApp.swift */; };
-		38D1D85F2C52CF4C00652855 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D1D85E2C52CF4C00652855 /* ContentView.swift */; };
 		38D1D8612C52CF4D00652855 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D1D8602C52CF4D00652855 /* Assets.xcassets */; };
 		38D1D8642C52CF4D00652855 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D1D8632C52CF4D00652855 /* Preview Assets.xcassets */; };
 		38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
@@ -63,6 +90,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		388AEAE22C52E6730038CEA4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38A46C392C46D123004950E3;
+			remoteInfo = gamestatsExtension;
+		};
 		38AF91A92C46D685003D100B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
@@ -81,6 +115,17 @@
 			files = (
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388AEAE42C52E6730038CEA4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				388AEAE12C52E6730038CEA4 /* gamestatsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		38AF91AF2C46D685003D100B /* Embed Foundation Extensions */ = {
@@ -133,8 +178,6 @@
 		38B1BADC2C3ECCC100E3E377 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		38B4B1562C52498400F17CEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		38D1D85A2C52CF4C00652855 /* superghost for watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "superghost for watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		38D1D85C2C52CF4C00652855 /* superghost_for_watchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = superghost_for_watchApp.swift; sourceTree = "<group>"; };
-		38D1D85E2C52CF4C00652855 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		38D1D8602C52CF4D00652855 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38D1D8632C52CF4D00652855 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		38D1D8682C52CF7000652855 /* superghost for watch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "superghost for watch Watch App.entitlements"; sourceTree = "<group>"; };
@@ -187,6 +230,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				388AEAE52C52E7A30038CEA4 /* StoreKit.framework in Frameworks */,
+				388AEAE02C52E6730038CEA4 /* RevenueCatUI in Frameworks */,
+				388AEADE2C52E6730038CEA4 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,8 +337,6 @@
 			children = (
 				38D1D8692C52CF7F00652855 /* superghost-for-watch-Watch-App-Info.plist */,
 				38D1D8682C52CF7000652855 /* superghost for watch Watch App.entitlements */,
-				38D1D85C2C52CF4C00652855 /* superghost_for_watchApp.swift */,
-				38D1D85E2C52CF4C00652855 /* ContentView.swift */,
 				38D1D8602C52CF4D00652855 /* Assets.xcassets */,
 				38D1D8622C52CF4D00652855 /* Preview Content */,
 			);
@@ -384,15 +428,22 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38D1D8652C52CF4D00652855 /* Build configuration list for PBXNativeTarget "superghost for watch Watch App" */;
 			buildPhases = (
+				3847AC102C52E59D00F50DC9 /* ShellScript */,
 				38D1D8562C52CF4C00652855 /* Sources */,
 				38D1D8572C52CF4C00652855 /* Frameworks */,
 				38D1D8582C52CF4C00652855 /* Resources */,
+				388AEAE42C52E6730038CEA4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				388AEAE32C52E6730038CEA4 /* PBXTargetDependency */,
 			);
 			name = "superghost for watch Watch App";
+			packageProductDependencies = (
+				388AEADD2C52E6730038CEA4 /* RevenueCat */,
+				388AEADF2C52E6730038CEA4 /* RevenueCatUI */,
+			);
 			productName = "superghost for watch Watch App";
 			productReference = 38D1D85A2C52CF4C00652855 /* superghost for watch Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -482,6 +533,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3847AC0C2C52E58100F50DC9 /* superghosty.storekit in Resources */,
+				3847AC0E2C52E58D00F50DC9 /* Localizable.xcstrings in Resources */,
+				3847ABF82C52E57E00F50DC9 /* revenuecatkey.txt in Resources */,
 				38D1D8642C52CF4D00652855 /* Preview Assets.xcassets in Resources */,
 				38D1D8612C52CF4D00652855 /* Assets.xcassets in Resources */,
 			);
@@ -510,6 +564,25 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"Running script to embed revenuecatkey...\"\n\n# Check if the environment variable is set\nif [ -z \"$revenuecatkey\" ]; then\n    echo \"Error: Environment variable 'revenuecatkey' is #not set.\"\n    exit 1\nfi\n\n# Write the environment variable to the file\necho \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n\n# Verify the file was created\nif [ ! -f \"${SRCROOT}/superghost/revenuecatkey.txt\" ]; then\n    echo \"Error: Failed to create revenuecatkey.txt\"\n    exit 1\nfi\n\necho \"Successfully wrote revenuecatkey to ${SRCROOT}/superghost/revenuecatkey.txt\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3847AC102C52E59D00F50DC9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${SRCROOT}/superghost/revenuecatkey.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Running script to embed revenuecatkey...\"\n\n# Check if the environment variable is set\nif [ -z \"$revenuecatkey\" ]; then\n    echo \"Error: Environment variable 'revenuecatkey' is #not set.\"\n    exit 1\nfi\n\n# Write the environment variable to the file\necho \"$revenuecatkey\" > \"${SRCROOT}/superghost/revenuecatkey.txt\"\n\n# Verify the file was created\nif [ ! -f \"${SRCROOT}/superghost/revenuecatkey.txt\" ]; then\n    echo \"Error: Failed to create revenuecatkey.txt\"\n    exit 1\nfi\n\necho \"Successfully wrote revenuecatkey to ${SRCROOT}/superghost/revenuecatkey.txt\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -570,14 +643,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38D1D85F2C52CF4C00652855 /* ContentView.swift in Sources */,
-				38D1D85D2C52CF4C00652855 /* superghost_for_watchApp.swift in Sources */,
+				3847ABF72C52E57400F50DC9 /* superghostApp.swift in Sources */,
+				3847ABF92C52E57E00F50DC9 /* Appearance.swift in Sources */,
+				3847AC0F2C52E58D00F50DC9 /* TrialEndsInView.swift in Sources */,
+				3847ABFA2C52E57E00F50DC9 /* GameStat.swift in Sources */,
+				3847ABFB2C52E57E00F50DC9 /* SettingsButton.swift in Sources */,
+				3847AC0D2C52E58900F50DC9 /* InstructionsView.swift in Sources */,
+				3847ABFC2C52E57E00F50DC9 /* WaitingGhost.swift in Sources */,
+				3847ABFD2C52E57E00F50DC9 /* FirstUseView.swift in Sources */,
+				3847ABFE2C52E57E00F50DC9 /* PaywallView.swift in Sources */,
+				3847ABFF2C52E57E00F50DC9 /* CloudStoragePropertyWrapper.swift in Sources */,
+				3847AC002C52E57E00F50DC9 /* HomeView.swift in Sources */,
+				3847AC012C52E57E00F50DC9 /* ApiLayer.swift in Sources */,
+				3847AC022C52E57E00F50DC9 /* StatsView.swift in Sources */,
+				3847AC032C52E57E00F50DC9 /* PreviewModifier.swift in Sources */,
+				3847AC042C52E57E00F50DC9 /* GameViewModel.swift in Sources */,
+				3847AC052C52E57E00F50DC9 /* GameView.swift in Sources */,
+				3847AC062C52E57E00F50DC9 /* AsyncButton.swift in Sources */,
+				3847AC072C52E57E00F50DC9 /* Alerts.swift in Sources */,
+				3847AC082C52E57E00F50DC9 /* User.swift in Sources */,
+				3847AC092C52E57E00F50DC9 /* LoadingView.swift in Sources */,
+				3847AC0A2C52E57E00F50DC9 /* ContentView.swift in Sources */,
+				3847AC0B2C52E57E00F50DC9 /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		388AEAE32C52E6730038CEA4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38A46C392C46D123004950E3 /* gamestatsExtension */;
+			targetProxy = 388AEAE22C52E6730038CEA4 /* PBXContainerItemProxy */;
+		};
 		38AF91AA2C46D685003D100B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilters = (
@@ -1055,6 +1153,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		388AEADD2C52E6730038CEA4 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
+		};
+		388AEADF2C52E6730038CEA4 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCatUI;
+		};
 		38D75F732C418629000C0DDF /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;
