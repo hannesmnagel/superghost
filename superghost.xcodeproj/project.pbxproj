@@ -44,6 +44,7 @@
 		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38D1D8342C52C69400652855 /* gamestatsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
 		38D75F742C418629000C0DDF /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F732C418629000C0DDF /* RevenueCat */; };
 		38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F752C418629000C0DDF /* RevenueCatUI */; };
@@ -68,6 +69,13 @@
 			remoteGlobalIDString = 38AF919A2C46D683003D100B;
 			remoteInfo = gamestatsWidgetExtension;
 		};
+		38D1D8352C52C69400652855 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38A46C392C46D123004950E3;
+			remoteInfo = gamestatsExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,6 +96,17 @@
 			dstSubfolderSpec = 13;
 			files = (
 				38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38D1D8372C52C69400652855 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				38D1D8342C52C69400652855 /* gamestatsExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,10 +331,12 @@
 				3808DB1F2C527307008939B4 /* Sources */,
 				3808DB202C527307008939B4 /* Frameworks */,
 				3808DB212C527307008939B4 /* Resources */,
+				38D1D8372C52C69400652855 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				38D1D8362C52C69400652855 /* PBXTargetDependency */,
 			);
 			name = "superghost Watch App";
 			productName = "superghost Watch App";
@@ -423,9 +444,9 @@
 			projectRoot = "";
 			targets = (
 				38AE75032C1E094500DFB6A7 /* superghost */,
-				38A46C392C46D123004950E3 /* gamestatsExtension */,
 				38AF919A2C46D683003D100B /* gamestatsWidgetExtension */,
 				3808DB222C527307008939B4 /* superghost Watch App */,
+				38A46C392C46D123004950E3 /* gamestatsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -567,6 +588,11 @@
 			);
 			target = 38AF919A2C46D683003D100B /* gamestatsWidgetExtension */;
 			targetProxy = 38AF91A92C46D685003D100B /* PBXContainerItemProxy */;
+		};
+		38D1D8362C52C69400652855 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38A46C392C46D123004950E3 /* gamestatsExtension */;
+			targetProxy = 38D1D8352C52C69400652855 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

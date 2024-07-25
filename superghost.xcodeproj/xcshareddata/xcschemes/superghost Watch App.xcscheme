@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38D498132C2F222B0006E080"
+               BlueprintIdentifier = "3808DB222C527307008939B4"
                BuildableName = "superghost Watch App.app"
                BlueprintName = "superghost Watch App"
                ReferencedContainer = "container:superghost.xcodeproj">
@@ -44,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38D498132C2F222B0006E080"
+            BlueprintIdentifier = "3808DB222C527307008939B4"
             BuildableName = "superghost Watch App.app"
             BlueprintName = "superghost Watch App"
             ReferencedContainer = "container:superghost.xcodeproj">
@@ -64,7 +64,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38D498132C2F222B0006E080"
+            BlueprintIdentifier = "3808DB222C527307008939B4"
             BuildableName = "superghost Watch App.app"
             BlueprintName = "superghost Watch App"
             ReferencedContainer = "container:superghost.xcodeproj">
