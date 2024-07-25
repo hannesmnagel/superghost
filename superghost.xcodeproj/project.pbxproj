@@ -242,6 +242,7 @@
 		38A46C3D2C46D123004950E3 /* gamestats */ = {
 			isa = PBXGroup;
 			children = (
+				38A46C4B2C46D164004950E3 /* gamestatsExtension.entitlements */,
 				38A46C3E2C46D123004950E3 /* gamestats.swift */,
 				38A46C402C46D123004950E3 /* AppIntent.swift */,
 				38A46C422C46D125004950E3 /* Assets.xcassets */,
@@ -253,7 +254,6 @@
 		38AE74FB2C1E094500DFB6A7 = {
 			isa = PBXGroup;
 			children = (
-				38A46C4B2C46D164004950E3 /* gamestatsExtension.entitlements */,
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
 				38AE75062C1E094500DFB6A7 /* superghost */,
 				38A46C3D2C46D123004950E3 /* gamestats */,

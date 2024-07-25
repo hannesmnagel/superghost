@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38AE75032C1E094500DFB6A7"
-               BuildableName = "superghost.app"
-               BlueprintName = "superghost"
+               BlueprintIdentifier = "38D1D8592C52CF4C00652855"
+               BuildableName = "superghost for watch Watch App.app"
+               BlueprintName = "superghost for watch Watch App"
                ReferencedContainer = "container:superghost.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,30 +29,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38AE75132C1E094700DFB6A7"
-               BuildableName = "superghostTests.xctest"
-               BlueprintName = "superghostTests"
-               ReferencedContainer = "container:superghost.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38AE751D2C1E094700DFB6A7"
-               BuildableName = "superghostUITests.xctest"
-               BlueprintName = "superghostUITests"
-               ReferencedContainer = "container:superghost.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -68,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38AE75032C1E094500DFB6A7"
-            BuildableName = "superghost.app"
-            BlueprintName = "superghost"
+            BlueprintIdentifier = "38D1D8592C52CF4C00652855"
+            BuildableName = "superghost for watch Watch App.app"
+            BlueprintName = "superghost for watch Watch App"
             ReferencedContainer = "container:superghost.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -88,9 +64,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38AE75032C1E094500DFB6A7"
-            BuildableName = "superghost.app"
-            BlueprintName = "superghost"
+            BlueprintIdentifier = "38D1D8592C52CF4C00652855"
+            BuildableName = "superghost for watch Watch App.app"
+            BlueprintName = "superghost for watch Watch App"
             ReferencedContainer = "container:superghost.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -88,15 +88,24 @@ struct AlertView: View {
                     let isPlayerOne = viewModel.isPlayerOne()
                     guard let game = viewModel.game else {return}
                     let playerId = isPlayerOne ? game.player1Id : game.player2Id
-                    context.insert(
-                        GameStat(
-                            player2: isPlayerOne ? game.player2Id : game.player1Id,
-                            withInvitation: viewModel.withInvitation,
-                            won: game.winningPlayerId == playerId,
-                            word: game.moves.last?.word.uppercased() ?? "",
-                            id: game.id
-                        )
+
+                    let id = UUID(uuidString: game.id) ?? UUID()
+                    var fetchDescriptor = FetchDescriptor<GameStat>(predicate: #Predicate{$0.id == id})
+                    fetchDescriptor.fetchLimit = 1
+                    let matchingGames = try? context.fetch(
+                        fetchDescriptor
                     )
+                    if matchingGames?.isEmpty ?? true{
+                        context.insert(
+                            GameStat(
+                                player2: isPlayerOne ? game.player2Id : game.player1Id,
+                                withInvitation: viewModel.withInvitation,
+                                won: game.winningPlayerId == playerId,
+                                word: game.moves.last?.word.uppercased() ?? "",
+                                id: game.id
+                            )
+                        )
+                    }
                 }
                 Spacer()
             }

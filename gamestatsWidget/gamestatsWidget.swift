@@ -89,6 +89,7 @@ struct gamestatsWidgetEntryView : View {
                     subtext
                         .font(.subheadline)
                 }
+                .foregroundStyle(.white)
             }
         }
         .multilineTextAlignment(.center)

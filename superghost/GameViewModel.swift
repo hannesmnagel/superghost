@@ -23,11 +23,11 @@ final class GameViewModel: ObservableObject {
     @CloudStorage("userData") private var userData: User = User()
 
     @Published var game: Game? {
-        didSet {
-            checkIfGameIsOver()
+        willSet {
+            checkIfGameIsOver(newValue: newValue)
             //check the game status
-            if let game {
-                game.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+            if let newValue {
+                newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
             } else {
                 updateGameStatus(.playerLeft)
             }
@@ -99,16 +99,16 @@ final class GameViewModel: ObservableObject {
     }
 
     @MainActor
-    func checkIfGameIsOver() {
+    func checkIfGameIsOver(newValue: Game?) {
 
-        guard game != nil else {
+        guard let newValue else {
             alertItem = nil
             return
         }
 
-        if game!.winningPlayerId != "" {
+        if newValue.winningPlayerId != "" {
 
-            if game!.winningPlayerId == currentUser.id {
+            if newValue.winningPlayerId == currentUser.id {
                 alertItem = .won
             } else {
                 alertItem = .lost
