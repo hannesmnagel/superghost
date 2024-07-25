@@ -15,11 +15,11 @@ import UserNotifications
 struct StatsView: View {
     @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
-    @AppStorage("winRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
-    @AppStorage("winStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
-    @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
-    @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
-    @AppStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
+    @CloudStorage("winRate") private var winningRate = 0.0
+    @CloudStorage("winStreak") private var winningStreak = 0
+    @CloudStorage("wordToday") private var wordToday = "-----"
+    @CloudStorage("winsToday") private var winsToday = 0
+    @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
 
     @Binding var selection: GameStat?
     let isSuperghost : Bool

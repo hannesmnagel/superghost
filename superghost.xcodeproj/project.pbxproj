@@ -10,6 +10,10 @@
 		381DE8352C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		381DE8362C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
+		384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		384EA7012C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		384EA7022C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		38A46C3B2C46D123004950E3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38A46C3C2C46D123004950E3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A46C3E2C46D123004950E3 /* gamestats.swift */; };
@@ -42,6 +46,10 @@
 		38B1BADB2C3ECC5B00E3E377 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
 		38B1BADD2C3ECCC100E3E377 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BADC2C3ECCC100E3E377 /* User.swift */; };
 		38B1BADE2C3ECCC100E3E377 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BADC2C3ECCC100E3E377 /* User.swift */; };
+		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38B4B1582C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38D4981A2C2F222B0006E080 /* superghostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D498192C2F222B0006E080 /* superghostApp.swift */; };
 		38D4981E2C2F222D0006E080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D4981D2C2F222D0006E080 /* Assets.xcassets */; };
 		38D498212C2F222D0006E080 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D498202C2F222D0006E080 /* Preview Assets.xcassets */; };
@@ -129,6 +137,7 @@
 		381DE8342C34648600E6CB04 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
+		384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoragePropertyWrapper.swift; sourceTree = "<group>"; };
 		38A46C1A2C466A3D004950E3 /* superghost Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "superghost Watch App.entitlements"; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -159,6 +168,7 @@
 		38B1BAD62C3ECBC100E3E377 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStat.swift; sourceTree = "<group>"; };
 		38B1BADC2C3ECCC100E3E377 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		38B4B1562C52498400F17CEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		38D498142C2F222B0006E080 /* superghost Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "superghost Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38D498192C2F222B0006E080 /* superghostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = superghostApp.swift; sourceTree = "<group>"; };
 		38D4981D2C2F222D0006E080 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -260,6 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */,
+				38B4B1562C52498400F17CEA /* Localizable.xcstrings */,
 				38D75F9B2C42DC16000C0DDF /* InstructionsView.swift */,
 				381D838B2C3D1D24000ED639 /* superghost.entitlements */,
 				383C66812C2DE99D003A62B3 /* Info.plist */,
@@ -268,6 +279,7 @@
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
 				38D75F8C2C425693000C0DDF /* AsyncButton.swift */,
 				38D75F892C425653000C0DDF /* StatsView.swift */,
+				384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */,
 				38AE75092C1E094500DFB6A7 /* ContentView.swift */,
 				38D75F952C42B6E1000C0DDF /* FirstUseView.swift */,
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
@@ -458,6 +470,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-HK",
 			);
 			mainGroup = 38AE74FB2C1E094500DFB6A7;
 			packageReferences = (
@@ -480,6 +493,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */,
 				38A46C432C46D125004950E3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -490,6 +504,7 @@
 			files = (
 				383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */,
 				38AE750F2C1E094700DFB6A7 /* Preview Assets.xcassets in Resources */,
+				38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */,
 				38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */,
 				38AE750C2C1E094700DFB6A7 /* Assets.xcassets in Resources */,
 				38D75F812C418760000C0DDF /* superghosty.storekit in Resources */,
@@ -500,6 +515,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */,
 				38AF91A62C46D685003D100B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38D75F822C418760000C0DDF /* superghosty.storekit in Resources */,
+				38B4B1582C52498400F17CEA /* Localizable.xcstrings in Resources */,
 				38D75F712C418577000C0DDF /* revenuecatkey.txt in Resources */,
 				38D498212C2F222D0006E080 /* Preview Assets.xcassets in Resources */,
 				38D4981E2C2F222D0006E080 /* Assets.xcassets in Resources */,
@@ -568,6 +585,7 @@
 			files = (
 				38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */,
 				38A46C4C2C46D185004950E3 /* GameStat.swift in Sources */,
+				384EA7022C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38A46C412C46D123004950E3 /* AppIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -576,6 +594,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38D75F932C42B450000C0DDF /* WaitingGhost.swift in Sources */,
 				38D75F9C2C42DC16000C0DDF /* InstructionsView.swift in Sources */,
 				38AE75372C1E0A2F00DFB6A7 /* GameViewModel.swift in Sources */,
@@ -607,6 +626,7 @@
 				38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */,
 				38AF91A22C46D683003D100B /* gamestatsWidget.swift in Sources */,
 				38AF91A42C46D683003D100B /* AppIntent.swift in Sources */,
+				384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38AF91B02C46D718003D100B /* GameStat.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -615,6 +635,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				384EA7012C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38D75F942C42B450000C0DDF /* WaitingGhost.swift in Sources */,
 				38D75F9D2C42DC16000C0DDF /* InstructionsView.swift in Sources */,
 				38D4981A2C2F222B0006E080 /* superghostApp.swift in Sources */,

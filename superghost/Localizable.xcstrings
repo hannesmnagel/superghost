@@ -1,0 +1,223 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "   Quit    " : {
+
+    },
+    " - " : {
+
+    },
+    "An error occured" : {
+
+    },
+    "Auto-Renews. Cancel Anytime." : {
+
+    },
+    "Become a Superghost" : {
+
+    },
+    "Button" : {
+
+    },
+    "Can you win another one?" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Configuration" : {
+
+    },
+    "Configure this complication" : {
+
+    },
+    "Confirm" : {
+
+    },
+    "Continue" : {
+
+    },
+    "Couldn't get definitions!" : {
+
+    },
+    "Display Your current win rate" : {
+
+    },
+    "Display Your current win streak" : {
+
+    },
+    "Display Your Progress today" : {
+
+    },
+    "Display Your Wins today" : {
+
+    },
+    "Done" : {
+
+    },
+    "For only %@ per Month. " : {
+
+    },
+    "Game started" : {
+
+    },
+    "Get revenge!" : {
+
+    },
+    "Got it" : {
+
+    },
+    "Host a Game" : {
+
+    },
+    "Launch Superghost" : {
+
+    },
+    "Learn How To Play" : {
+
+    },
+    "Less" : {
+
+    },
+    "Let's go" : {
+
+    },
+    "Letter" : {
+
+    },
+    "Manage subscription" : {
+
+    },
+    "More" : {
+
+    },
+    "No products found" : {
+
+    },
+    "Play a new game" : {
+
+    },
+    "Player left" : {
+
+    },
+    "Quit" : {
+
+    },
+    "Rematch" : {
+
+    },
+    "Restore Purchases" : {
+
+    },
+    "Send Invitation Link" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Show Paywall" : {
+
+    },
+    "Start" : {
+
+    },
+    "Submit Move" : {
+
+    },
+    "Subscribe to Superghost" : {
+
+    },
+    "Superghost" : {
+
+    },
+    "Superghost Icon" : {
+
+    },
+    "Synonyms: %@" : {
+
+    },
+    "Tap to play" : {
+
+    },
+    "There is a word" : {
+
+    },
+    "There is no such word" : {
+
+    },
+    "There is nothing available to purchase" : {
+
+    },
+    "This is an example widget." : {
+
+    },
+    "This is not a word" : {
+
+    },
+    "Trial ends in %lld days" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Trial ends in %lld day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "Trial ends in %lld days"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Waiting for Player" : {
+
+    },
+    "Waiting for player response..." : {
+
+    },
+    "What word did you think of?" : {
+
+    },
+    "Win Rate" : {
+
+    },
+    "Win Streak" : {
+
+    },
+    "Wins Today" : {
+
+    },
+    "Word Today" : {
+
+    },
+    "Yes, I lied" : {
+
+    },
+    "You can't upgrade right now" : {
+
+    },
+    "You lost against a friend on %@" : {
+
+    },
+    "You lost!" : {
+
+    },
+    "You won against a friend on %@" : {
+
+    },
+    "You won!" : {
+
+    }
+  },
+  "version" : "1.0"
+}

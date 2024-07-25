@@ -23,6 +23,7 @@ struct SettingsButton: View {
         } label: {
             Image(systemName: "gearshape")
         }
+        .font(AppearanceManager.settingsButton)
         .buttonStyle(.plain)
         .sheet(isPresented: $showingSettings){
             NavigationStack(path: .init(get: {destination == .none ? [] : [destination]}, set: { destinations in
@@ -59,6 +60,13 @@ struct SettingsButton: View {
                     }
                 }
                 .navigationTitle("Settings")
+                .toolbar{
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done"){
+                            showingSettings = false
+                        }
+                    }
+                }
             }
 #if os(macOS)
             .frame(minWidth: 500, minHeight: 500)

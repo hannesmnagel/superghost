@@ -10,11 +10,11 @@ import SwiftUI
 import SwiftData
 
 struct Provider: AppIntentTimelineProvider {
-    @AppStorage("isSuperghost", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var isSuperghost = false
-    @AppStorage("winningRate", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningRate = 0.0
-    @AppStorage("winningStreak", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winningStreak = 0
-    @AppStorage("wordToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var wordToday = "-----"
-    @AppStorage("winsToday", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var winsToday = 0
+    @CloudStorage("isSuperghost") private var isSuperghost = false
+    @CloudStorage("winningRate") private var winningRate = 0.0
+    @CloudStorage("winningStreak") private var winningStreak = 0
+    @CloudStorage("wordToday") private var wordToday = "-----"
+    @CloudStorage("winsToday") private var winsToday = 0
 
 
     func placeholder(in context: Context) -> SimpleEntry {

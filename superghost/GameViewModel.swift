@@ -20,7 +20,7 @@ private enum GameStatus {
 final class GameViewModel: ObservableObject {
 
     @Published var showPaywall = false
-    @AppStorage("user") private var userData: Data?
+    @CloudStorage("userData") private var userData: User = User()
 
     @Published var game: Game? {
         willSet {
@@ -43,10 +43,8 @@ final class GameViewModel: ObservableObject {
     var withInvitation = false
 
     init() {
-        retriveUser()
-        if currentUser == nil {
-            saveUser()
-        }
+        userData = userData
+        currentUser = userData
     }
 
 
@@ -154,27 +152,6 @@ final class GameViewModel: ObservableObject {
             alertItem = .won
         case .playerLeft:
             alertItem = .playerLeft
-        }
-    }
-
-    //MARK: - User object
-    func saveUser() {
-        currentUser = User()
-        do {
-            let data = try JSONEncoder().encode(currentUser)
-            userData = data
-        } catch {
-        }
-
-    }
-
-    func retriveUser() {
-
-        guard let userData = userData else { return }
-
-        do {
-            currentUser = try JSONDecoder().decode(User.self, from: userData)
-        } catch {
         }
     }
 }

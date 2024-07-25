@@ -27,13 +27,13 @@ extension Date: RawRepresentable{
 }
 
 struct ContentView: View {
-    @AppStorage("isFirstUse") var isFirstUse = true
-    @AppStorage("lastViewOfPaywall") var lastPaywallView = Date.distantPast
-    @AppStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
+    @CloudStorage("isFirstUse") var isFirstUse = true
+    @CloudStorage("lastViewOfPaywall") var lastPaywallView = Date.distantPast
+    @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @State var isGameViewPresented = false
     @StateObject var viewModel = GameViewModel()
     @State private var showTrialEndsIn : Int?
-    @AppStorage("isSuperghost", store: UserDefaults(suiteName: "group.com.nagel.superghost") ?? .standard) private var isSuperghost = false
+    @CloudStorage("isSuperghost") private var isSuperghost = false
 
     var body: some View {
         Group{

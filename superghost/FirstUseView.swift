@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FirstUseView: View {
+    @CloudStorage("isFirstUse") var isFirstUse = true
     @State var firstUseState = FirstUseState.tapToContinue
 
     enum FirstUseState: CaseIterable{
@@ -46,7 +47,9 @@ struct FirstUseView: View {
         }
     }
 
-    func finished(){UserDefaults.standard.set(false, forKey: "isFirstUse")}
+    func finished(){
+        isFirstUse = false
+    }
 }
 
 #Preview {

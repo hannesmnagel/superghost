@@ -73,7 +73,6 @@ struct HomeView: View {
                 }
                 Spacer()
                 SettingsButton(isSuperghost: isSuperghost)
-                    .font(AppearanceManager.settingsButton)
             }
             WaitingGhost()
                 .frame(maxHeight: 400)

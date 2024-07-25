@@ -180,8 +180,7 @@ struct WordDefinitionView: View {
                     #endif
 
                     VStack(alignment: alignment){
-                        if game.withInvitation {Text(game.won ? "You won against a friend at" : "You lost against a friend at")}
-                        Text(game.createdAt, format: .dateTime)
+                        if game.withInvitation {Text(game.won ? "You won against a friend on \(game.createdAt, format: .dateTime)" : "You lost against a friend on \(game.createdAt, format: .dateTime)")}
                     }
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)

@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 class GameStat: Hashable, Identifiable {
-    let player2: String
-    let won: Bool
-    let word: String
-    let withInvitation: Bool
-    let createdAt = Date()
-    @Attribute(.unique) public var id = UUID()
+    var player2: String = "no player"
+    var won: Bool = Bool.random()
+    var word: String = "sth went wrong"
+    var withInvitation: Bool = Bool.random()
+    var createdAt = Date()
+    public var id = UUID()
 
     init(player2: String, withInvitation: Bool, won: Bool, word: String, id: String) {
         self.id = UUID(uuidString: id) ?? UUID()
