@@ -20,11 +20,12 @@ struct StatsView: View {
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
+    @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
     @Binding var selection: GameStat?
     let isSuperghost : Bool
 
-    @State private var expandingList = false
+    @State private var expandingList = true
 
     var body: some View {
 #if os(macOS)
@@ -110,38 +111,43 @@ struct StatsView: View {
 #endif
             if !games.isEmpty {
                 do{
-                    try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
 
                     UNUserNotificationCenter.current().removeAllDeliveredNotifications()
                     UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
-                    let content = UNMutableNotificationContent()
-
-                    content.title = "Keep Your Streak Going!"
-                    content.body = "Play some Ghost"
-                    content.sound = .default
-
-                    try await UNUserNotificationCenter.current().add(
-                        UNNotificationRequest(
-                            identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
-                            content: content,
-                            trigger: trigger)
-                    )
-                    let fourDayTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(4 * 24 * 60 * 60), repeats: true)
-                    let fourDayContent = UNMutableNotificationContent()
-
-                    fourDayContent.title = "Keep Your Streak Going!"
-                    fourDayContent.body = "Play some Ghost"
-                    fourDayContent.sound = .default
-
-                    try await UNUserNotificationCenter.current().add(
-                        UNNotificationRequest(
-                            identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
-                            content: fourDayContent,
-                            trigger: fourDayTrigger)
-                    )
-                } catch {}
+                    if notificationsAllowed {
+                        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                        
+                        
+                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
+                        let content = UNMutableNotificationContent()
+                        
+                        content.title = "Keep Your Streak Going!"
+                        content.body = "Play some Ghost"
+                        content.sound = .default
+                        
+                        try await UNUserNotificationCenter.current().add(
+                            UNNotificationRequest(
+                                identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
+                                content: content,
+                                trigger: trigger)
+                        )
+                        let fourDayTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(4 * 24 * 60 * 60), repeats: true)
+                        let fourDayContent = UNMutableNotificationContent()
+                        
+                        fourDayContent.title = "Keep Your Streak Going!"
+                        fourDayContent.body = "Play some Ghost"
+                        fourDayContent.sound = .default
+                        
+                        try await UNUserNotificationCenter.current().add(
+                            UNNotificationRequest(
+                                identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
+                                content: fourDayContent,
+                                trigger: fourDayTrigger)
+                        )
+                    }
+                } catch {
+                    notificationsAllowed = false
+                }
             }
         }
         .multilineTextAlignment(.center)

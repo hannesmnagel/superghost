@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RevenueCat
+import UserNotifications
 
 struct SettingsButton: View {
     @EnvironmentObject var viewModel: GameViewModel
@@ -14,6 +15,7 @@ struct SettingsButton: View {
     @State private var managementURL: URL?
     @State private var showingSettings = false
     @State private var destination = Destination.none
+    @CloudStorage("notificationsAllowed") var notificationsAllowed = true
 
     enum Destination: String {case learn, none}
 
@@ -45,6 +47,34 @@ struct SettingsButton: View {
                         #endif
                     }
                     if let managementURL{Link("Manage subscription", destination: managementURL)}
+
+                    Toggle("Notifications", isOn: $notificationsAllowed)
+                        .onChange(of: notificationsAllowed) {
+                            Task{
+                                if notificationsAllowed{
+                                    do{
+                                        if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
+#if !os(macOS)
+                                            if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
+                                                await UIApplication.shared.open(settingsURL)
+                                            }
+#endif
+                                            notificationsAllowed = false
+                                        }
+                                    } catch {
+#if os(iOS)
+                                        if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
+                                            await UIApplication.shared.open(settingsURL)
+                                        } else {
+                                            notificationsAllowed = true
+                                        }
+#else
+                                        notificationsAllowed = false
+#endif
+                                    }
+                                }
+                            }
+                        }
                 }
                 .font(AppearanceManager.buttonsInSettings)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
