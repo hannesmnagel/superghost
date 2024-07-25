@@ -23,12 +23,13 @@ final class GameViewModel: ObservableObject {
     @CloudStorage("userData") private var userData: User = User()
 
     @Published var game: Game? {
-        willSet {
+        didSet {
             checkIfGameIsOver()
             //check the game status
-
-            if newValue == nil { updateGameStatus(.playerLeft) } else {
-                newValue?.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+            if let game {
+                game.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+            } else {
+                updateGameStatus(.playerLeft)
             }
         }
     }
@@ -90,7 +91,6 @@ final class GameViewModel: ObservableObject {
 
     func quitGame() async throws {
         try await ApiLayer.shared.quitGame(isPrivate: withInvitation)
-        alertItem = nil
     }
 
 
@@ -140,7 +140,7 @@ final class GameViewModel: ObservableObject {
     }
 
 
-    private func updateGameStatus(_ state: GameStatus) {
+    private func updateGameStatus(_ state: GameStatus?) {
         switch state{
         case .waitingForPlayer:
             gameStatusText = .waitingForPlayer
@@ -152,6 +152,8 @@ final class GameViewModel: ObservableObject {
             alertItem = .won
         case .playerLeft:
             alertItem = .playerLeft
+        case .none:
+            alertItem = nil
         }
     }
 }
