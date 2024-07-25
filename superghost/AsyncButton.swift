@@ -42,10 +42,8 @@ struct AsyncButton<Label:View>: View {
                 ProgressView()
             case .success:
                 Image(systemName: "checkmark")
-                    .foregroundStyle(.green)
             case .failed:
                 Image(systemName: "xmark")
-                    .foregroundStyle(.red)
             }
         }
         .disabled(state == .inProgress)
