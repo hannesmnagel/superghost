@@ -24,7 +24,9 @@ struct HomeView: View {
                             .listRowBackground(Color.clear)
                             .listRowInsets(.none)
                             .listItemTint(ListItemTint?.none)
+#if !os(watchOS)
                             .listRowSeparator(.hidden)
+#endif
                     }
                     Section{
                         StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
@@ -45,15 +47,18 @@ struct HomeView: View {
                 NavigationStack{
                     WordDefinitionView(word: gameStat.word, game: gameStat)
                         .padding(.top)
-#if !os(watchOS)
                         .toolbar{
                             ToolbarItem(placement: .cancellationAction){
+#if os(iOS)
                                 Button{gameStatSelection = nil} label: {
                                     Image(systemName: "xmark")
                                 }
+#elseif os(macOS)
+                                Button("Done"){gameStatSelection = nil}
+
+#endif
                             }
                         }
-#endif
                         .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())
 #if os(macOS)
                         .frame(minWidth: 500, minHeight: 500)

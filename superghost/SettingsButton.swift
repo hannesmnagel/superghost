@@ -54,7 +54,7 @@ struct SettingsButton: View {
                                 if notificationsAllowed{
                                     do{
                                         if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
-#if !os(macOS)
+#if !os(macOS) && !os(watchOS)
                                             if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
                                                 await UIApplication.shared.open(settingsURL)
                                             }
@@ -62,7 +62,7 @@ struct SettingsButton: View {
                                             notificationsAllowed = false
                                         }
                                     } catch {
-#if os(iOS)
+#if !os(macOS) && !os(watchOS)
                                         if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
                                             await UIApplication.shared.open(settingsURL)
                                         } else {

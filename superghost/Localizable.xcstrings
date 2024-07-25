@@ -115,6 +115,9 @@
     "Restore Purchases" : {
 
     },
+    "See Your Progress Today" : {
+
+    },
     "Send Invitation Link" : {
 
     },
@@ -184,6 +187,15 @@
           }
         }
       }
+    },
+    "View Your Winning Rate" : {
+
+    },
+    "View Your Winning Streak" : {
+
+    },
+    "View Your Wins Today" : {
+
     },
     "Waiting for Player" : {
 
