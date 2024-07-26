@@ -62,7 +62,7 @@ struct StatsView: View {
                 Text("Word Today")
                     .font(AppearanceManager.statsLabel)
             }
-            .frame(width: 100)
+            .frame(width: 200)
             Divider()
 #endif
             VStack{
