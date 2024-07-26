@@ -24,10 +24,18 @@ final class GameViewModel: ObservableObject {
 
     @Published var game: Game? {
         willSet {
-            checkIfGameIsOver(newValue: newValue)
             //check the game status
             if let newValue {
-                newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+                if newValue.winningPlayerId != "" {
+
+                    if newValue.winningPlayerId == currentUser.id {
+                        alertItem = .won
+                    } else {
+                        alertItem = .lost
+                    }
+                } else {
+                    newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+                }
             } else {
                 updateGameStatus(.playerLeft)
             }
@@ -98,24 +106,6 @@ final class GameViewModel: ObservableObject {
         return game != nil ? game!.player1Id == currentUser.id : false
     }
 
-    @MainActor
-    func checkIfGameIsOver(newValue: Game?) {
-
-        guard let newValue else {
-            alertItem = nil
-            return
-        }
-
-        if newValue.winningPlayerId != "" {
-
-            if newValue.winningPlayerId == currentUser.id {
-                alertItem = .won
-            } else {
-                alertItem = .lost
-            }
-        }
-    }
-
     func resetGame() async throws {
         guard game != nil else {
             alertItem = .playerLeft
@@ -144,8 +134,10 @@ final class GameViewModel: ObservableObject {
         switch state{
         case .waitingForPlayer:
             gameStatusText = .waitingForPlayer
+            alertItem = nil
         case .started:
             gameStatusText = .started
+            alertItem = nil
         case .lost:
             alertItem = .lost
         case .won:
