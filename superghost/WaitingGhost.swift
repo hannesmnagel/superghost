@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct WaitingGhost: View {
-    private let date = Date()
+    @Environment(\.launchDate) var date
+
     var body: some View {
         TimelineView(.animation){context in
 

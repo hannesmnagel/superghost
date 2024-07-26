@@ -14,5 +14,6 @@ struct PreviewModifier: ViewModifier {
             .fontDesign(.rounded)
             .modelContainer(for: GameStat.self, inMemory: false)
             .environmentObject(GameViewModel())
+            .environment(\.launchDate, Date())
     }
 }

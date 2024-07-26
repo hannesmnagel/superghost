@@ -22,6 +22,31 @@ struct superghostApp: App {
 #if os(macOS)
                 .frame(minHeight: 500)
 #endif
+                .environment(\.launchDate, Date())
         }
+#if os(macOS)
+        Settings {
+            SettingsView(isSuperghost: isSuperghost) {
+                NSApp.keyWindow?.close()
+                NSApp.mainWindow?.becomeFirstResponder()
+
+            }
+            .modelContainer(for: GameStat.self)
+            .environmentObject(viewModel)
+            .environment(\.launchDate, Date())
+
+        }
+#endif
+    }
+}
+
+private struct LaunchDateKey: EnvironmentKey {
+    static let defaultValue: Date = Date()
+}
+
+extension EnvironmentValues {
+    var launchDate: Date {
+        get { self[LaunchDateKey.self] }
+        set { self[LaunchDateKey.self] = newValue }
     }
 }

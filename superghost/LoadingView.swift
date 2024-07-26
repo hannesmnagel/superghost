@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingView: View {
-    let date = Date()
+    @Environment(\.launchDate) var date
 
     var body: some View {
 
