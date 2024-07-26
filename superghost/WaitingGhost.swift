@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WaitingGhost: View {
-    @Environment(\.launchDate) var date
+    let date = Date()
 
     var body: some View {
         TimelineView(.animation){context in
@@ -33,6 +33,7 @@ struct WaitingGhost: View {
                 .padding(.vertical, 60)
                 .padding(.bottom, 60)
         }
+        .notUpdating()
     }
 }
 

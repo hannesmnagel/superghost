@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingView: View {
-    @Environment(\.launchDate) var date
+    let date = Date()
 
     var body: some View {
 
@@ -39,6 +39,7 @@ struct LoadingView: View {
             }
         }
         .offset(y: 40)
+        .notUpdating()
     }
 }
 

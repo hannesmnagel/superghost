@@ -71,6 +71,8 @@
 		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C32F382C53AB47009D4E57 /* NotUpdating.swift */; };
+		38C32F3A2C53AB47009D4E57 /* NotUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C32F382C53AB47009D4E57 /* NotUpdating.swift */; };
 		38D1D8612C52CF4D00652855 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D1D8602C52CF4D00652855 /* Assets.xcassets */; };
 		38D1D8642C52CF4D00652855 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38D1D8632C52CF4D00652855 /* Preview Assets.xcassets */; };
 		38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
@@ -177,6 +179,7 @@
 		38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStat.swift; sourceTree = "<group>"; };
 		38B1BADC2C3ECCC100E3E377 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		38B4B1562C52498400F17CEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		38C32F382C53AB47009D4E57 /* NotUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotUpdating.swift; sourceTree = "<group>"; };
 		38D1D85A2C52CF4C00652855 /* superghost for watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "superghost for watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38D1D8602C52CF4D00652855 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38D1D8632C52CF4D00652855 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -284,6 +287,7 @@
 				381D838B2C3D1D24000ED639 /* superghost.entitlements */,
 				383C66812C2DE99D003A62B3 /* Info.plist */,
 				38AE75072C1E094500DFB6A7 /* superghostApp.swift */,
+				38C32F382C53AB47009D4E57 /* NotUpdating.swift */,
 				38D75F922C42B450000C0DDF /* WaitingGhost.swift */,
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
 				38D75F8C2C425693000C0DDF /* AsyncButton.swift */,
@@ -620,6 +624,7 @@
 				38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */,
 				38D75F8D2C425693000C0DDF /* AsyncButton.swift in Sources */,
 				38B1BADA2C3ECC5B00E3E377 /* GameStat.swift in Sources */,
+				38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */,
 				38D75F902C42B422000C0DDF /* HomeView.swift in Sources */,
 				38D75F8A2C425653000C0DDF /* StatsView.swift in Sources */,
 				38B1BADD2C3ECCC100E3E377 /* User.swift in Sources */,
@@ -661,6 +666,7 @@
 				3847AC052C52E57E00F50DC9 /* GameView.swift in Sources */,
 				3847AC062C52E57E00F50DC9 /* AsyncButton.swift in Sources */,
 				3847AC072C52E57E00F50DC9 /* Alerts.swift in Sources */,
+				38C32F3A2C53AB47009D4E57 /* NotUpdating.swift in Sources */,
 				3847AC082C52E57E00F50DC9 /* User.swift in Sources */,
 				3847AC092C52E57E00F50DC9 /* LoadingView.swift in Sources */,
 				3847AC0A2C52E57E00F50DC9 /* ContentView.swift in Sources */,
