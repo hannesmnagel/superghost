@@ -10,16 +10,14 @@ import RevenueCat
 import UserNotifications
 
 struct SettingsButton: View {
-    @EnvironmentObject var viewModel: GameViewModel
     let isSuperghost: Bool
-    @State private var managementURL: URL?
     @State private var showingSettings = false
-    @State private var destination = Destination.none
-    @CloudStorage("notificationsAllowed") var notificationsAllowed = true
 
-    enum Destination: String {case learn, none}
 
     var body: some View {
+        #if os(macOS)
+        SettingsLink{Image(systemName: "gearshape")}
+        #else
         Button{
             showingSettings = true
         } label: {
@@ -28,83 +26,102 @@ struct SettingsButton: View {
         .font(AppearanceManager.settingsButton)
         .buttonStyle(.plain)
         .sheet(isPresented: $showingSettings){
-            NavigationStack(path: .init(get: {destination == .none ? [] : [destination]}, set: { destinations in
-                destination = destinations.last ?? .none
-            })){
-                Form{
-                    NavigationLink("Learn How To Play", value: Destination.learn)
-                    if !isSuperghost{
-                        Button("Subscribe to Superghost"){
-                            showingSettings = false
-                            viewModel.showPaywall = true
-                        }
-                    } else {
-                        #if DEBUG
-                        Button("Show Paywall"){
-                            showingSettings = false
-                            viewModel.showPaywall = true
-                        }
-                        #endif
-                    }
-                    if let managementURL{Link("Manage subscription", destination: managementURL)}
+            SettingsView(isSuperghost: isSuperghost){showingSettings = false}
+        }
+        #endif
+    }
+}
 
-                    Toggle("Notifications", isOn: $notificationsAllowed)
-                        .onChange(of: notificationsAllowed) {
-                            Task{
-                                if notificationsAllowed{
-                                    do{
-                                        if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
-#if !os(macOS) && !os(watchOS)
-                                            if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
-                                                await UIApplication.shared.open(settingsURL)
-                                            }
+struct SettingsView: View {
+    @EnvironmentObject var viewModel: GameViewModel
+    @State private var destination = Destination.none
+    @CloudStorage("notificationsAllowed") var notificationsAllowed = true
+    @State private var managementURL: URL?
+
+    let isSuperghost: Bool
+
+    enum Destination: String {case learn, none}
+    let dismiss: ()->Void
+
+    var body: some View {
+        NavigationStack(path: .init(get: {destination == .none ? [] : [destination]}, set: { destinations in
+            destination = destinations.last ?? .none
+        })){
+            Form{
+                NavigationLink("Learn How To Play", value: Destination.learn)
+                if !isSuperghost{
+                    Button("Subscribe to Superghost"){
+                        dismiss()
+                        viewModel.showPaywall = true
+                    }
+                } else {
+#if DEBUG
+                    Button("Show Paywall"){
+                        dismiss()
+                        viewModel.showPaywall = true
+                    }
 #endif
-                                            notificationsAllowed = false
-                                        }
-                                    } catch {
+                }
+                if let managementURL{Link("Manage subscription", destination: managementURL)}
+
+                Toggle("Notifications", isOn: $notificationsAllowed)
+                    .onChange(of: notificationsAllowed) {
+                        Task{
+                            if notificationsAllowed{
+                                do{
+                                    if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
 #if !os(macOS) && !os(watchOS)
                                         if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
                                             await UIApplication.shared.open(settingsURL)
-                                        } else {
-                                            notificationsAllowed = true
                                         }
-#else
-                                        notificationsAllowed = false
 #endif
+                                        notificationsAllowed = false
                                     }
+                                } catch {
+#if !os(macOS) && !os(watchOS)
+                                    if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
+                                        await UIApplication.shared.open(settingsURL)
+                                    } else {
+                                        notificationsAllowed = true
+                                    }
+#else
+                                    notificationsAllowed = false
+#endif
                                 }
                             }
                         }
-                }
-                .font(AppearanceManager.buttonsInSettings)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .task{
-                    managementURL = try? await Purchases.shared.restorePurchases().managementURL
-                }
-                .navigationDestination(for: Destination.self) { selectedDestination in
-                    switch selectedDestination {
-                    case .learn:
-                        InstructionsView{destination = .none}
-                    case .none:
-                        EmptyView()
                     }
+            }
+            .font(AppearanceManager.buttonsInSettings)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .task{
+                managementURL = try? await Purchases.shared.restorePurchases().managementURL
+            }
+            .navigationDestination(for: Destination.self) { selectedDestination in
+                switch selectedDestination {
+                case .learn:
+                    InstructionsView{destination = .none}
+                case .none:
+                    EmptyView()
                 }
-                .navigationTitle("Settings")
-                .toolbar{
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Done"){
-                            showingSettings = false
-                        }
+            }
+            .navigationTitle("Settings")
+#if !os(macOS)
+            .toolbar{
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done"){
+                        dismiss()
                     }
                 }
             }
-#if os(macOS)
-            .frame(minWidth: 500, minHeight: 500)
-
 #endif
         }
+#if os(macOS)
+        .frame(minWidth: 300, minHeight: 300)
+#endif
     }
 }
+
 
 #Preview {
     SettingsButton(isSuperghost: true)
