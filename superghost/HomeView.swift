@@ -75,10 +75,12 @@ struct HomeView: View {
                 if let showTrialEndsIn {
                     Spacer()
                     TrialEndsInView(days: showTrialEndsIn)
+                        .transition(.move(edge: .top))
                 }
                 Spacer()
                 SettingsButton(isSuperghost: isSuperghost)
             }
+            .animation(.smooth, value: showTrialEndsIn)
             WaitingGhost()
                 .frame(maxHeight: 400)
 
