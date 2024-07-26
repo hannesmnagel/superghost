@@ -27,11 +27,11 @@ extension Date: RawRepresentable{
 }
 
 struct ContentView: View {
+    @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("isFirstUse") var isFirstUse = true
     @CloudStorage("lastViewOfPaywall") var lastPaywallView = Date.distantPast
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @State var isGameViewPresented = false
-    @StateObject var viewModel = GameViewModel()
     @State private var showTrialEndsIn : Int?
     @CloudStorage("isSuperghost") private var isSuperghost = false
 
