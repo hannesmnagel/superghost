@@ -25,7 +25,7 @@ struct StatsView: View {
     @Binding var selection: GameStat?
     let isSuperghost : Bool
 
-    @State private var expandingList = true
+    @State private var expandingList = false
 
     var body: some View {
 #if os(macOS)
