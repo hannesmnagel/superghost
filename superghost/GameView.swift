@@ -40,7 +40,7 @@ struct GameView: View {
                 Spacer()
                 AsyncButton{
                     isPresented = false
-                    try await viewModel.quitGame()
+                    try await viewModel.quitGame(isSuperghost: isSuperghost)
                 } label: {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                         .font(AppearanceManager.quitGame)
@@ -75,7 +75,7 @@ struct GameView: View {
                             AsyncButton{
                                 viewModel.game?.challengingUserId = viewModel.currentUser.id
                                 viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
-                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
+                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
                             } label: {
                                 Text("There is no such word")
                             }
@@ -87,7 +87,7 @@ struct GameView: View {
                         SayTheWordButton(isSuperghost: isSuperghost)
                         AsyncButton{
                             viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
-                            try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
+                            try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
                         } label: {
                             Text("Yes, I lied")
                         }
@@ -103,8 +103,8 @@ struct GameView: View {
             }
         }
         .sheet(item: $viewModel.alertItem) { alertItem in
-            AlertView(alertItem: alertItem, isPresented: $isPresented)
-#if os(macOS)
+            AlertView(alertItem: alertItem, isPresented: $isPresented, isSuperghost: isSuperghost)
+#if os(macOS) || os(visionOS)
                 .frame(minWidth: 500, minHeight: 500)
 #endif
         }
@@ -141,7 +141,7 @@ struct LetterPicker: View {
         }
 
         AsyncButton{
-            try await viewModel.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)")
+            try await viewModel.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)", isSuperghost: isSuperghost)
             trailingLetter = ""
             leadingLetter = ""
         } label: {
@@ -264,7 +264,7 @@ struct SayTheWordButton: View {
                 ) {
                     viewModel.game?.moves.append(.init(isPlayer1: viewModel.isPlayerOne(), word: word))
                     viewModel.game!.winningPlayerId = viewModel.currentUser.id
-                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation)
+                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
                 } else{
                     word = "This doesn't fit"
                 }

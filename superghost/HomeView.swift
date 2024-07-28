@@ -38,7 +38,7 @@ struct HomeView: View {
                 Task{
                     let gameId = url.lastPathComponent
 
-                    try await viewModel.joinGame(with: gameId)
+                    try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
                     gameStatSelection = nil
                     isGameViewPresented = true
                 }
@@ -49,7 +49,7 @@ struct HomeView: View {
                         .padding(.top)
                         .toolbar{
                             ToolbarItem(placement: .cancellationAction){
-#if os(iOS)
+#if os(iOS) || os(visionOS)
                                 Button{gameStatSelection = nil} label: {
                                     Image(systemName: "xmark")
                                 }
@@ -85,7 +85,7 @@ struct HomeView: View {
                 .frame(maxHeight: 400)
 
             AsyncButton {
-                try await viewModel.getTheGame()
+                try await viewModel.getTheGame(isSuperghost: isSuperghost)
                 isGameViewPresented = true
             } label: {
                 Text("Start")

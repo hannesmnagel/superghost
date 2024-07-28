@@ -13,45 +13,35 @@ import RevenueCat
 private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> String {
     "\(option.rawValue)://hannesnagel.com/\(isSuperghost ? "superghost" : "ghost")"
 }
-private func isSuperghost() async -> Bool {
-    do{
-        let info = try await Purchases.shared.restorePurchases()
-        let subscriptions = info.activeSubscriptions
-        let isSuperGhost = subscriptions.contains("monthly.superghost") || Calendar.current.date(byAdding: .day, value: -7, to: .now) ?? .now < info.firstSeen
-        return isSuperGhost
-    } catch {
-        return false
-    }
-}
 enum RequestType:String{case https, wss}
 final class ApiLayer: ObservableObject {
 
-    func startGame(with: String) async throws {
+    func startGame(with: String, isSuperghost: Bool) async throws {
         do{
-            try await setGameVar(to: findEmptyGame())
-            try await joinGame(with: with, in: game?.id ?? "", isPrivate: false)
+            try await setGameVar(to: findEmptyGame(isSuperghost: isSuperghost))
+            try await joinGame(with: with, in: game?.id ?? "", isPrivate: false, isSuperghost: isSuperghost)
         } catch {
-            try await setGameVar(to: createGame(userId: with, isPrivate: false))
-            connectToWebSocket(gameId: game?.id ?? "", isPrivate: false)
+            try await setGameVar(to: createGame(userId: with, isPrivate: false, isSuperghost: isSuperghost))
+            connectToWebSocket(gameId: game?.id ?? "", isPrivate: false, isSuperghost: isSuperghost)
         }
     }
 
-    func joinGame(with: String, in gameId: String, isPrivate: Bool) async throws {
-        try await setGameVar(to: joinGame(userId: with, gameId: gameId, isPrivate: isPrivate))
-        connectToWebSocket(gameId: gameId, isPrivate: isPrivate)
+    func joinGame(with: String, in gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws {
+        try await setGameVar(to: joinGame(userId: with, gameId: gameId, isPrivate: isPrivate, isSuperghost: isSuperghost))
+        connectToWebSocket(gameId: gameId, isPrivate: isPrivate, isSuperghost: isSuperghost)
     }
 
-    func hostGame(with: String) async throws {
-        try await setGameVar(to: createGame(userId: with, isPrivate: true))
-        connectToWebSocket(gameId: game?.id ?? "", isPrivate: true)
+    func hostGame(with: String, isSuperghost: Bool) async throws {
+        try await setGameVar(to: createGame(userId: with, isPrivate: true, isSuperghost: true))
+        connectToWebSocket(gameId: game?.id ?? "", isPrivate: true, isSuperghost: isSuperghost)
     }
 
-    func updateGame(_ game: Game, isPrivate: Bool) async throws {
-        try await setGameVar(to: updateGame(updatedGame: game, isPrivate: isPrivate))
+    func updateGame(_ game: Game, isPrivate: Bool, isSuperghost: Bool) async throws {
+        try await setGameVar(to: updateGame(updatedGame: game, isPrivate: isPrivate, isSuperghost: isSuperghost))
     }
 
-    func quitGame(isPrivate: Bool) async throws {
-        try await deleteGame(gameId: game?.id ?? "", isPrivate: isPrivate)
+    func quitGame(isPrivate: Bool, isSuperghost: Bool) async throws {
+        try await deleteGame(gameId: game?.id ?? "", isPrivate: isPrivate, isSuperghost: isSuperghost)
         await setGameVar(to: nil)
         disconnectWebSocket()
     }
@@ -59,8 +49,8 @@ final class ApiLayer: ObservableObject {
     static let shared = ApiLayer()
     @Published var game: Game?
 
-    func createGame(userId: String, isPrivate: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost()))/game/create")!
+    func createGame(userId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/create")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -74,16 +64,16 @@ final class ApiLayer: ObservableObject {
         return game
     }
 
-    func findEmptyGame() async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isSuperghost()))/game/findEmptyPlayer2Id")!
+    func findEmptyGame(isSuperghost: Bool) async throws -> Game {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isSuperghost))/game/findEmptyPlayer2Id")!
         let (data, _) = try await URLSession.shared.data(from: url)
         let game = try JSONDecoder().decode(Game.self, from: data)
 
         return game
     }
 
-    func joinGame(userId: String, gameId: String, isPrivate: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost()))/game/join/\(gameId)")!
+    func joinGame(userId: String, gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/join/\(gameId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -96,24 +86,24 @@ final class ApiLayer: ObservableObject {
         return game
     }
 
-    func getGame(gameId: String, isPrivate: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost()))/game/\(gameId)")!
+    func getGame(gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/\(gameId)")!
         let (data, _) = try await URLSession.shared.data(from: url)
         let game = try JSONDecoder().decode(Game.self, from: data)
 
         return game
     }
 
-    private func deleteGame(gameId: String, isPrivate: Bool) async throws {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost()))/game/\(gameId)")!
+    private func deleteGame(gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/\(gameId)")!
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
 
         let (_, _) = try await URLSession.shared.data(for: request)
     }
 
-    func updateGame(updatedGame: Game, isPrivate: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost()))/game")!
+    func updateGame(updatedGame: Game, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
+        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game")!
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -165,10 +155,10 @@ final class ApiLayer: ObservableObject {
     #else
     private var webSocketTask: (URLSessionWebSocketTask)?
 
-    private func connectToWebSocket(gameId: String, isPrivate: Bool) {
+    private func connectToWebSocket(gameId: String, isPrivate: Bool, isSuperghost: Bool) {
         Task{
             let urlSession = URLSession(configuration: .default)
-            guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost()))/subscribe/game/\(gameId)") else { return }
+            guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost))/subscribe/game/\(gameId)") else { return }
 
             webSocketTask = urlSession.webSocketTask(with: url)
             await withCheckedContinuation{con in

@@ -19,6 +19,7 @@ struct AlertView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @Binding var isPresented: Bool
     @Environment(\.dismiss) var dismiss
+    let isSuperghost: Bool
 
 
     @Query private var games : [GameStat]
@@ -45,7 +46,7 @@ struct AlertView: View {
                 Spacer()
                 AsyncButton{
                     isPresented = false
-                    try await viewModel.quitGame()
+                    try await viewModel.quitGame(isSuperghost: isSuperghost)
                 } label: {
                     Text("Quit")
                 }
@@ -59,7 +60,7 @@ struct AlertView: View {
                     Spacer()
                     AsyncButton{
                         isPresented = false
-                        try await viewModel.quitGame()
+                        try await viewModel.quitGame(isSuperghost: isSuperghost)
                     } label: {
                         Text("   Quit    ")
                     }
@@ -72,7 +73,7 @@ struct AlertView: View {
                         AsyncButton{
                             viewModel.game?.winningPlayerId.removeAll()
                             viewModel.alertItem = nil
-                            try await viewModel.resetGame()
+                            try await viewModel.resetGame(isSuperghost: isSuperghost)
                         } label: {
                             Text("Rematch")
                         }
@@ -232,14 +233,14 @@ struct WordDefinitionView: View {
 }
 
 #Preview{
-    AlertView(alertItem: .lost, isPresented: .constant(true))
+    AlertView(alertItem: .lost, isPresented: .constant(true), isSuperghost: true)
         .modifier(PreviewModifier())
 }
 #Preview{
-    AlertView(alertItem: .playerLeft, isPresented: .constant(true))
+    AlertView(alertItem: .playerLeft, isPresented: .constant(true), isSuperghost: true)
         .modifier(PreviewModifier())
 }
 #Preview{
-    AlertView(alertItem: .won, isPresented: .constant(true))
+    AlertView(alertItem: .won, isPresented: .constant(true), isSuperghost: true)
         .modifier(PreviewModifier())
 }

@@ -57,16 +57,16 @@ final class GameViewModel: ObservableObject {
     }
 
 
-    func getTheGame() async throws {
-        try await ApiLayer.shared.startGame(with: currentUser.id)
+    func getTheGame(isSuperghost: Bool) async throws {
+        try await ApiLayer.shared.startGame(with: currentUser.id, isSuperghost: isSuperghost)
 
         withInvitation = false
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
     }
-    func joinGame(with gameId: String) async throws {
-        try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId, isPrivate: true)
+    func joinGame(with gameId: String, isSuperghost: Bool) async throws {
+        try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId, isPrivate: true, isSuperghost: isSuperghost)
 
         withInvitation = true
         ApiLayer.shared.$game
@@ -74,7 +74,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     func hostGame() async throws {
-        try await ApiLayer.shared.hostGame(with: currentUser.id)
+        try await ApiLayer.shared.hostGame(with: currentUser.id, isSuperghost: true)
 
         withInvitation = true
         ApiLayer.shared.$game
@@ -82,7 +82,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func processPlayerMove(for letter: String) async throws {
+    func processPlayerMove(for letter: String, isSuperghost: Bool) async throws {
 
         guard game != nil else { return }
         game!.moves.append(Move(isPlayer1: isPlayerOne(), word: letter))
@@ -94,11 +94,11 @@ final class GameViewModel: ObservableObject {
             updateGameStatus(.lost)
         }
 
-        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation)
+        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
     }
 
-    func quitGame() async throws {
-        try await ApiLayer.shared.quitGame(isPrivate: withInvitation)
+    func quitGame(isSuperghost: Bool) async throws {
+        try await ApiLayer.shared.quitGame(isPrivate: withInvitation, isSuperghost: isSuperghost)
     }
 
 
@@ -106,7 +106,7 @@ final class GameViewModel: ObservableObject {
         return game != nil ? game!.player1Id == currentUser.id : false
     }
 
-    func resetGame() async throws {
+    func resetGame(isSuperghost: Bool) async throws {
         guard game != nil else {
             alertItem = .playerLeft
             return
@@ -126,7 +126,7 @@ final class GameViewModel: ObservableObject {
         game!.rematchPlayerId.append(currentUser.id)
         alertItem = nil
 
-        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation)
+        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
     }
 
 
