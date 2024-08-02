@@ -81,6 +81,7 @@ struct HomeView: View {
                 SettingsButton(isSuperghost: isSuperghost)
             }
             .animation(.smooth, value: showTrialEndsIn)
+            .zIndex(1)
             WaitingGhost()
                 .frame(maxHeight: 400)
 

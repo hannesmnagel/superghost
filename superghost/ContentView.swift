@@ -65,7 +65,7 @@ struct ContentView: View {
 #endif
         }
         .fontDesign(.rounded)
-        .environmentObject(viewModel)
+        .background(Color.black, ignoresSafeAreaEdges: .all)
     }
 
     func fetchSubscription() async throws {

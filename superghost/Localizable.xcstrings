@@ -19,9 +19,6 @@
     "Become a Superghost" : {
 
     },
-    "Button" : {
-
-    },
     "Can you win another one?" : {
 
     },
@@ -139,6 +136,28 @@
     "Superghost" : {
 
     },
+    "Superghost for %lld days" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Superghost for one more day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Superghost for %lld days"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Superghost Icon" : {
 
     },
@@ -165,28 +184,6 @@
     },
     "Today" : {
 
-    },
-    "Trial ends in %lld days" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Trial ends in %lld day"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "new",
-                  "value" : "Trial ends in %lld days"
-                }
-              }
-            }
-          }
-        }
-      }
     },
     "View Your Winning Rate" : {
 
