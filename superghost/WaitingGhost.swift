@@ -39,7 +39,7 @@ struct Video: View {
         self.player = AVPlayer(url: url)
         self.player.isMuted = true
 #if !os(macOS)
-        try? AVAudioSession.sharedInstance().setCategory(.ambient)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
 #endif
     }
 

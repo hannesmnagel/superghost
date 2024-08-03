@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		381DE8352C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
+		384497FA2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
+		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
+		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
+		384498002C5E8D1400DE24CF /* ambient.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FC2C5E8D1400DE24CF /* ambient.mp3 */; };
+		384498012C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */; };
+		384498022C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
+		384498032C5E8D1400DE24CF /* ambient.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FC2C5E8D1400DE24CF /* ambient.mp3 */; };
+		384498042C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */; };
 		3847ABF72C52E57400F50DC9 /* superghostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75072C1E094500DFB6A7 /* superghostApp.swift */; };
 		3847ABF82C52E57E00F50DC9 /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
 		3847ABF92C52E57E00F50DC9 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
@@ -149,6 +157,10 @@
 		381DE8342C34648600E6CB04 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
+		384497F92C5E88CE00DE24CF /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		384497FC2C5E8D1400DE24CF /* ambient.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient.mp3; sourceTree = "<group>"; };
+		384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = laughingGhost.mp3; sourceTree = "<group>"; };
+		384497FE2C5E8D1400DE24CF /* scream.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = scream.mp3; sourceTree = "<group>"; };
 		384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoragePropertyWrapper.swift; sourceTree = "<group>"; };
 		387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = waitingGhost.mov; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -284,12 +296,16 @@
 			isa = PBXGroup;
 			children = (
 				387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */,
+				384497FC2C5E8D1400DE24CF /* ambient.mp3 */,
+				384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */,
+				384497FE2C5E8D1400DE24CF /* scream.mp3 */,
 				38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */,
 				38B4B1562C52498400F17CEA /* Localizable.xcstrings */,
 				38D75F9B2C42DC16000C0DDF /* InstructionsView.swift */,
 				381D838B2C3D1D24000ED639 /* superghost.entitlements */,
 				383C66812C2DE99D003A62B3 /* Info.plist */,
 				38AE75072C1E094500DFB6A7 /* superghostApp.swift */,
+				384497F92C5E88CE00DE24CF /* SoundManager.swift */,
 				38C32F382C53AB47009D4E57 /* NotUpdating.swift */,
 				38D75F922C42B450000C0DDF /* WaitingGhost.swift */,
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
@@ -525,6 +541,9 @@
 				38AE750C2C1E094700DFB6A7 /* Assets.xcassets in Resources */,
 				387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,
 				38D75F812C418760000C0DDF /* superghosty.storekit in Resources */,
+				384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */,
+				384498002C5E8D1400DE24CF /* ambient.mp3 in Resources */,
+				384498012C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +560,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				384498022C5E8D1400DE24CF /* scream.mp3 in Resources */,
+				384498032C5E8D1400DE24CF /* ambient.mp3 in Resources */,
+				384498042C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */,
 				387CD6FD2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,
 				3847AC0C2C52E58100F50DC9 /* superghosty.storekit in Resources */,
 				3847AC0E2C52E58D00F50DC9 /* Localizable.xcstrings in Resources */,
@@ -628,6 +650,7 @@
 				38AE753F2C1E0B2400DFB6A7 /* Alerts.swift in Sources */,
 				38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */,
 				38D75F8D2C425693000C0DDF /* AsyncButton.swift in Sources */,
+				384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */,
 				38B1BADA2C3ECC5B00E3E377 /* GameStat.swift in Sources */,
 				38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */,
 				38D75F902C42B422000C0DDF /* HomeView.swift in Sources */,
@@ -666,6 +689,7 @@
 				3847AC012C52E57E00F50DC9 /* ApiLayer.swift in Sources */,
 				3847AC022C52E57E00F50DC9 /* StatsView.swift in Sources */,
 				3847AC032C52E57E00F50DC9 /* PreviewModifier.swift in Sources */,
+				384497FA2C5E88CE00DE24CF /* SoundManager.swift in Sources */,
 				3847AC042C52E57E00F50DC9 /* GameViewModel.swift in Sources */,
 				3847AC052C52E57E00F50DC9 /* GameView.swift in Sources */,
 				3847AC062C52E57E00F50DC9 /* AsyncButton.swift in Sources */,

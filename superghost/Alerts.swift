@@ -106,6 +106,7 @@ struct AlertView: View {
                                 id: game.id
                             )
                         )
+                        try? SoundManager.shared.play(game.winningPlayerId == playerId ? .laughingGhost : .scream, loop: false)
                     }
                 }
                 Spacer()

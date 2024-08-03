@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "D495E4E7",
   "nonRenewingSubscriptions" : [
 
@@ -10,7 +20,9 @@
     "_applicationInternalID" : "6517354718",
     "_developerTeamID" : "X5933694SW",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 742492012.36295795,
+    "_lastSynchronizedDate" : 744388450.02906096,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
     "_storeKitErrors" : [
       {
         "current" : null,
@@ -60,43 +72,10 @@
     ]
   },
   "subscriptionGroups" : [
-    {
-      "id" : "21510770",
-      "localizations" : [
 
-      ],
-      "name" : "Monthly superghost subscription",
-      "subscriptions" : [
-        {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "1.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6535690479",
-          "introductoryOffer" : null,
-          "localizations" : [
-            {
-              "description" : "Get Access to Superghost",
-              "displayName" : "superghost",
-              "locale" : "en_US"
-            }
-          ],
-          "productID" : "monthly.superghost",
-          "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "standard monthly superghost subscription",
-          "subscriptionGroupID" : "21510770",
-          "type" : "RecurringSubscription"
-        }
-      ]
-    }
   ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }
