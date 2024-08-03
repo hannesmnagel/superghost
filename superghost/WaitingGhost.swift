@@ -14,6 +14,7 @@ struct WaitingGhost: View {
 
         Video("waitingGhost")
             .notUpdating()
+            .padding()
             .visualEffect { content, geo in
                 content
                     .offset(y: -geo.frame(in: .scrollView).minY*0.8 + min(30, geo.size.height/2))

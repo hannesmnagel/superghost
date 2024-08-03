@@ -136,7 +136,7 @@
     "Superghost" : {
 
     },
-    "Superghost for %lld days" : {
+    "Superghost for %lld more days" : {
       "localizations" : {
         "en" : {
           "variations" : {
@@ -144,13 +144,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Superghost for one more day"
+                  "value" : "One more day of Superghost left"
                 }
               },
               "other" : {
                 "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Superghost for %lld days"
+                  "state" : "new",
+                  "value" : "Superghost for %lld more days"
                 }
               }
             }

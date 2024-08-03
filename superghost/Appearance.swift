@@ -26,7 +26,7 @@ class AppearanceManager {
     static let hostGame: Font = os == .watchOS ? .headline : .largeTitle
     static let startGame: Font = os == .watchOS ? .title : .largeTitle
     static let howToPlayTitle: Font = os == .watchOS ? .title2.bold() : .largeTitle.bold()
-    static let trialEndsIn: Font = os == .watchOS ? .headline : .title
+    static let trialEndsIn: Font = os == .watchOS ? .caption : .subheadline
     static let instructions: Font = .headline
     static let buttonsInSettings: Font = .body
     static let quitGame: Font = os == .watchOS ? .headline : .title
@@ -34,7 +34,7 @@ class AppearanceManager {
     static let letterPicker: Font = .headline
     static let statsLabel: Font = .footnote
     static let statsValue: Font = os == .watchOS ? .headline : .title
-    static let settingsButton: Font = .title
+    static let settingsButton: Font = .body
     static let startUpSuperghost: Font = os == .watchOS ? .title : .largeTitle
     static let startUpSuperghostTapToPlay: Font = os == .watchOS ? .headline : .subheadline
     static let youWonOrLost: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()

@@ -14,7 +14,6 @@
 		3847ABF92C52E57E00F50DC9 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		3847ABFA2C52E57E00F50DC9 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
 		3847ABFB2C52E57E00F50DC9 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F862C425609000C0DDF /* SettingsButton.swift */; };
-		3847ABFC2C52E57E00F50DC9 /* WaitingGhost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F922C42B450000C0DDF /* WaitingGhost.swift */; };
 		3847ABFD2C52E57E00F50DC9 /* FirstUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F952C42B6E1000C0DDF /* FirstUseView.swift */; };
 		3847ABFE2C52E57E00F50DC9 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F832C418B21000C0DDF /* PaywallView.swift */; };
 		3847ABFF2C52E57E00F50DC9 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
@@ -660,7 +659,6 @@
 				3847ABFA2C52E57E00F50DC9 /* GameStat.swift in Sources */,
 				3847ABFB2C52E57E00F50DC9 /* SettingsButton.swift in Sources */,
 				3847AC0D2C52E58900F50DC9 /* InstructionsView.swift in Sources */,
-				3847ABFC2C52E57E00F50DC9 /* WaitingGhost.swift in Sources */,
 				3847ABFD2C52E57E00F50DC9 /* FirstUseView.swift in Sources */,
 				3847ABFE2C52E57E00F50DC9 /* PaywallView.swift in Sources */,
 				3847ABFF2C52E57E00F50DC9 /* CloudStoragePropertyWrapper.swift in Sources */,

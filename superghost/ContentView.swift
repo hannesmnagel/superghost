@@ -15,7 +15,7 @@ struct BlackOutTransition: Transition {
     }
 }
 
-extension Date: RawRepresentable{
+extension Date: Swift.RawRepresentable{
     public var rawValue: String {ISO8601Format()}
     public init?(rawValue: String) {
         if let decoded = ISO8601DateFormatter().date(from: rawValue){

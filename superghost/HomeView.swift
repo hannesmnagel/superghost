@@ -31,6 +31,9 @@ struct HomeView: View {
                     Section{
                         StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
                     }
+                    Section{
+                        SettingsButton(isSuperghost: isSuperghost)
+                    }
                 }
                 .scrollContentBackground(.hidden)
             }
@@ -70,20 +73,9 @@ struct HomeView: View {
     var header: some View {
 
         VStack{
-
-            HStack{
-                if let showTrialEndsIn {
-                    Spacer()
-                    TrialEndsInView(days: showTrialEndsIn)
-                        .transition(.move(edge: .top))
-                }
-                Spacer()
-                SettingsButton(isSuperghost: isSuperghost)
-            }
-            .animation(.smooth, value: showTrialEndsIn)
-            .zIndex(1)
+#if !os(watchOS)
             WaitingGhost()
-                .frame(maxHeight: 400)
+#endif
 
             AsyncButton {
                 try await viewModel.getTheGame(isSuperghost: isSuperghost)
@@ -109,8 +101,15 @@ struct HomeView: View {
                 Text("Host a Game")
             }
             .buttonStyle(AppearanceManager.HostGame())
+
+
+                if let showTrialEndsIn {
+                    TrialEndsInView(days: showTrialEndsIn)
+                        .transition(.move(edge: .top))
+                        .animation(.smooth, value: showTrialEndsIn)
+                        .padding()
+                }
         }
-        .tint(.accent)
         .frame(maxWidth: .infinity)
         .padding(.bottom, 30)
         .textCase(nil)

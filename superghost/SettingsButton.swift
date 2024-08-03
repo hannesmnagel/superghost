@@ -16,12 +16,12 @@ struct SettingsButton: View {
 
     var body: some View {
         #if os(macOS)
-        SettingsLink{Image(systemName: "gearshape")}
+        SettingsLink{
+            Label("Settings", systemImage: "gearshape")
+        }
         #else
-        Button{
+        Button("Settings", systemImage: "gearshape"){
             showingSettings = true
-        } label: {
-            Image(systemName: "gearshape")
         }
         .font(AppearanceManager.settingsButton)
         .buttonStyle(.plain)

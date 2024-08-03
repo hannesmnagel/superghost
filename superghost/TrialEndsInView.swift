@@ -13,7 +13,7 @@ struct TrialEndsInView: View {
 
     var body: some View {
         Group{
-            Text("Superghost for \(days) days")
+            Text("Superghost for \(days) more days")
                 .foregroundStyle(.orange)
                 .font(AppearanceManager.trialEndsIn)
                 .underline()
