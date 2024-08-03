@@ -50,6 +50,8 @@
 		388AEAE02C52E6730038CEA4 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 388AEADF2C52E6730038CEA4 /* RevenueCatUI */; };
 		388AEAE12C52E6730038CEA4 /* gamestatsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		388AEAE52C52E7A30038CEA4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7E2C418647000C0DDF /* StoreKit.framework */; };
+		388D2A912C5ECC6600F1F0DE /* ambient2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */; };
+		388D2A922C5ECC6600F1F0DE /* ambient2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */; };
 		38A46C3B2C46D123004950E3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38A46C3C2C46D123004950E3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A46C3E2C46D123004950E3 /* gamestats.swift */; };
@@ -163,6 +165,7 @@
 		384497FE2C5E8D1400DE24CF /* scream.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = scream.mp3; sourceTree = "<group>"; };
 		384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoragePropertyWrapper.swift; sourceTree = "<group>"; };
 		387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = waitingGhost.mov; sourceTree = "<group>"; };
+		388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient2.mp3; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = gamestatsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -297,6 +300,7 @@
 			children = (
 				387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */,
 				384497FC2C5E8D1400DE24CF /* ambient.mp3 */,
+				388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */,
 				384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */,
 				384497FE2C5E8D1400DE24CF /* scream.mp3 */,
 				38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */,
@@ -540,6 +544,7 @@
 				38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */,
 				38AE750C2C1E094700DFB6A7 /* Assets.xcassets in Resources */,
 				387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,
+				388D2A922C5ECC6600F1F0DE /* ambient2.mp3 in Resources */,
 				38D75F812C418760000C0DDF /* superghosty.storekit in Resources */,
 				384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */,
 				384498002C5E8D1400DE24CF /* ambient.mp3 in Resources */,
@@ -561,6 +566,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				384498022C5E8D1400DE24CF /* scream.mp3 in Resources */,
+				388D2A912C5ECC6600F1F0DE /* ambient2.mp3 in Resources */,
 				384498032C5E8D1400DE24CF /* ambient.mp3 in Resources */,
 				384498042C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */,
 				387CD6FD2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,

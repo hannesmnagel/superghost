@@ -48,7 +48,7 @@ class SoundManager{
         player.numberOfLoops = loop ? -1 : 0
     }
     enum Sound: String {
-        case ambient, laughingGhost, scream
+        case ambient, ambient2, laughingGhost, scream
     }
 }
 enum SoundManagerError: Error {
