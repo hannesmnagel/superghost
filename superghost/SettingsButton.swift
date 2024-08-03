@@ -37,6 +37,7 @@ struct SettingsView: View {
     @State private var destination = Destination.none
     @CloudStorage("notificationsAllowed") var notificationsAllowed = true
     @State private var managementURL: URL?
+    @AppStorage("volume") var volume = 0.0
 
     let isSuperghost: Bool
 
@@ -91,6 +92,12 @@ struct SettingsView: View {
                             }
                         }
                     }
+                Section("Volume"){
+                    Slider(value: $volume, in: 0...2)
+                        .onChange(of: volume) {
+                            SoundManager.shared.setVolume(volume)
+                        }
+                }
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
