@@ -30,10 +30,12 @@ class SoundManager{
         else {
             throw SoundManagerError.couldntFindFile
         }
+#if !os(macOS)
         if !AVAudioSession.sharedInstance().isOtherAudioPlaying{
             try AVAudioSession.sharedInstance().setActive(true)
         }
         try AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
+#endif
         let player = try AVAudioPlayer(contentsOf: url)
         players[sound] = player
         player.prepareToPlay()
