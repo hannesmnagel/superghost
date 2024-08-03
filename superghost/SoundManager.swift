@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 
 class SoundManager{
-    @AppStorage("volume") private var volume = 0.0
+    @AppStorage("volume") private var volume = 1.0
 
     private var players = [Sound:AVAudioPlayer]()
 
@@ -24,18 +24,22 @@ class SoundManager{
         }
     }
 
-    func play(_ sound: Sound, loop: Bool) throws {
-        guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3"),
-              let url = URL(string: string)
-        else {
-            throw SoundManagerError.couldntFindFile
-        }
+    func setActive() throws {
 #if !os(macOS)
         if !AVAudioSession.sharedInstance().isOtherAudioPlaying{
             try AVAudioSession.sharedInstance().setActive(true)
         }
         try AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
 #endif
+    }
+
+    func play(_ sound: Sound, loop: Bool) throws {
+        guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3"),
+              let url = URL(string: string)
+        else {
+            throw SoundManagerError.couldntFindFile
+        }
+        try setActive()
         let player = try AVAudioPlayer(contentsOf: url)
         players[sound] = player
         player.prepareToPlay()

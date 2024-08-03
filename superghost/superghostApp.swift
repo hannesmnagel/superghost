@@ -25,6 +25,9 @@ struct superghostApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear{
+                    try? SoundManager.shared.setActive()
+                }
                 .modelContainer(modelContainer)
                 .environmentObject(viewModel)
 #if os(macOS)

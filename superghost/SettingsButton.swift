@@ -37,7 +37,7 @@ struct SettingsView: View {
     @State private var destination = Destination.none
     @CloudStorage("notificationsAllowed") var notificationsAllowed = true
     @State private var managementURL: URL?
-    @AppStorage("volume") var volume = 0.0
+    @AppStorage("volume") var volume = 1.0
 
     let isSuperghost: Bool
 

@@ -75,6 +75,7 @@ struct HomeView: View {
         VStack{
 #if !os(watchOS)
             WaitingGhost()
+                .frame(maxHeight: 300)
 #endif
 
             AsyncButton {
