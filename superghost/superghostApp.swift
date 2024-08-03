@@ -12,17 +12,19 @@ import RevenueCat
 @main
 struct superghostApp: App {
     init(){
+        modelContainer = try! ModelContainer(for: GameStat.self)
         Purchases.logLevel = .error
         try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
     }
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
     @StateObject var viewModel = GameViewModel()
+    let modelContainer: ModelContainer
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: GameStat.self)
+                .modelContainer(modelContainer)
                 .environmentObject(viewModel)
 #if os(macOS)
                 .frame(minHeight: 500)
@@ -35,7 +37,7 @@ struct superghostApp: App {
                 NSApp.mainWindow?.becomeFirstResponder()
 
             }
-            .modelContainer(for: GameStat.self)
+            .modelContainer(modelContainer)
             .environmentObject(viewModel)
 
         }

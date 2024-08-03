@@ -37,6 +37,8 @@
 		384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		384EA7022C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
+		387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */; };
+		387CD6FD2C5DB0D200DF79DD /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */; };
 		388AEADE2C52E6730038CEA4 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 388AEADD2C52E6730038CEA4 /* RevenueCat */; };
 		388AEAE02C52E6730038CEA4 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 388AEADF2C52E6730038CEA4 /* RevenueCatUI */; };
 		388AEAE12C52E6730038CEA4 /* gamestatsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -68,8 +70,6 @@
 		38B1BAD72C3ECBC100E3E377 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD62C3ECBC100E3E377 /* Game.swift */; };
 		38B1BADA2C3ECC5B00E3E377 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
 		38B1BADD2C3ECCC100E3E377 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BADC2C3ECCC100E3E377 /* User.swift */; };
-		38B32A8C2C5D9B03008D19EB /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 38B32A8B2C5D9B03008D19EB /* waitingGhost.mov */; };
-		38B32A8D2C5D9B03008D19EB /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 38B32A8B2C5D9B03008D19EB /* waitingGhost.mov */; };
 		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B1592C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
@@ -151,6 +151,7 @@
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoragePropertyWrapper.swift; sourceTree = "<group>"; };
+		387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = waitingGhost.mov; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = gamestatsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,7 +181,6 @@
 		38B1BAD62C3ECBC100E3E377 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStat.swift; sourceTree = "<group>"; };
 		38B1BADC2C3ECCC100E3E377 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		38B32A8B2C5D9B03008D19EB /* waitingGhost.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = waitingGhost.mov; sourceTree = "<group>"; };
 		38B4B1562C52498400F17CEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		38C32F382C53AB47009D4E57 /* NotUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotUpdating.swift; sourceTree = "<group>"; };
 		38D1D85A2C52CF4C00652855 /* superghost for watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "superghost for watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -261,7 +261,6 @@
 			isa = PBXGroup;
 			children = (
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
-				38B32A8B2C5D9B03008D19EB /* waitingGhost.mov */,
 				38AE75062C1E094500DFB6A7 /* superghost */,
 				38A46C3D2C46D123004950E3 /* gamestats */,
 				38AF919E2C46D683003D100B /* gamestatsWidget */,
@@ -285,6 +284,7 @@
 		38AE75062C1E094500DFB6A7 /* superghost */ = {
 			isa = PBXGroup;
 			children = (
+				387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */,
 				38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */,
 				38B4B1562C52498400F17CEA /* Localizable.xcstrings */,
 				38D75F9B2C42DC16000C0DDF /* InstructionsView.swift */,
@@ -522,9 +522,9 @@
 				383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */,
 				38AE750F2C1E094700DFB6A7 /* Preview Assets.xcassets in Resources */,
 				38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */,
-				38B32A8D2C5D9B03008D19EB /* waitingGhost.mov in Resources */,
 				38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */,
 				38AE750C2C1E094700DFB6A7 /* Assets.xcassets in Resources */,
+				387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,
 				38D75F812C418760000C0DDF /* superghosty.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -542,9 +542,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				387CD6FD2C5DB0D200DF79DD /* waitingGhost.mov in Resources */,
 				3847AC0C2C52E58100F50DC9 /* superghosty.storekit in Resources */,
 				3847AC0E2C52E58D00F50DC9 /* Localizable.xcstrings in Resources */,
-				38B32A8C2C5D9B03008D19EB /* waitingGhost.mov in Resources */,
 				3847ABF82C52E57E00F50DC9 /* revenuecatkey.txt in Resources */,
 				38D1D8642C52CF4D00652855 /* Preview Assets.xcassets in Resources */,
 				38D1D8612C52CF4D00652855 /* Assets.xcassets in Resources */,
@@ -919,6 +919,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -960,6 +961,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};

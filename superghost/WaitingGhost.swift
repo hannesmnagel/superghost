@@ -45,9 +45,7 @@ struct Video: View {
     private let player: AVPlayer
 
     init(_ named: String) {
-        guard let url = Bundle.main.url(forResource: named, withExtension: "mov") else {
-            fatalError("Video file \(named).mov not found in bundle.")
-        }
+        let url = Bundle.main.resourceURL!.appending(path: "\(named).mov")
         self.player = AVPlayer(url: url)
         self.player.isMuted = true
 #if !os(macOS)

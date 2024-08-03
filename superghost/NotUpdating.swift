@@ -10,16 +10,19 @@ import SwiftUI
 extension View{
     @ViewBuilder
     func notUpdating() -> some View {
-        NotUpdatingView{
-            self
-        }
+        EquatableView(content:
+            NotUpdatingView{
+                self
+            }
+        )
     }
 }
 private struct NotUpdatingView<Content: View>: View, Equatable {
-    @ViewBuilder let content: () -> Content
+    @ViewBuilder let content: Content
+
+    static func == (lhs: NotUpdatingView, rhs: NotUpdatingView) -> Bool {true}
 
     var body: some View{
-        content()
+        content
     }
-    static func == (lhs: NotUpdatingView, rhs: NotUpdatingView) -> Bool {true}
 }
