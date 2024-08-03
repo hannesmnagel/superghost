@@ -39,7 +39,7 @@ struct Video: View {
         self.player = AVPlayer(url: url)
         self.player.isMuted = true
 #if !os(macOS)
-        try? AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
 #endif
     }
 
@@ -53,7 +53,17 @@ struct Video: View {
                     self.player.seek(to: .zero)
                     self.player.play()
                 }
+                Task{
+                    await playAfter500ms()
+                }
             }
+    }
+    func playAfter500ms() async {
+        try? await Task.sleep(for: .milliseconds(500))
+        player.play()
+        Task{
+            await playAfter500ms()
+        }
     }
 }
 #if os(macOS)

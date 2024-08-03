@@ -15,10 +15,7 @@ struct superghostApp: App {
         modelContainer = try! ModelContainer(for: GameStat.self)
         Purchases.logLevel = .error
         try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
-        Task{
-            try? await Task.sleep(for: .seconds(1))
-            try! SoundManager.shared.play(.ambient, loop: true)
-        }
+        try? SoundManager.shared.play(.ambient, loop: true)
     }
 
     @CloudStorage("isSuperghost") private var isSuperghost = false

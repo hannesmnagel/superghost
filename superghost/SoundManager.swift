@@ -5,10 +5,12 @@
 //  Created by Hannes Nagel on 8/3/24.
 //
 
-import Foundation
+import SwiftUI
 import AVFoundation
 
 class SoundManager{
+    @AppStorage("volume") var volume = 0.0
+
     private var players = [Sound:AVAudioPlayer]()
 
     private init(){}
@@ -21,14 +23,13 @@ class SoundManager{
         else {
             throw SoundManagerError.couldntFindFile
         }
-        try AVAudioSession.sharedInstance().setActive(true)
-        try AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
+        try AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
         let player = try AVAudioPlayer(contentsOf: url)
         players[sound] = player
         player.prepareToPlay()
         player.setVolume(1, fadeDuration: 1)
         player.play()
-        player.numberOfLoops = loop ? -1 : 1
+        player.numberOfLoops = loop ? -1 : 0
     }
     enum Sound: String {
         case ambient, laughingGhost, scream
