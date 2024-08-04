@@ -8,6 +8,7 @@
 import SwiftUI
 import RevenueCat
 import BackgroundTasks
+import UserNotifications
 
 @main
 struct superghostApp: App {

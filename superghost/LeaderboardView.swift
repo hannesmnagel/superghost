@@ -44,30 +44,7 @@ struct LeaderboardView: View {
                         }
                 }
             }
-            ForEach(entries, id: \.rank) { entry in
-                Button{
-                    if #available(iOS 18.0, *) {
-                        GKAccessPoint.shared.trigger(player: entry.player)
-                    } else {
-                        if entry.player == GKLocalPlayer.local{
-                            GKAccessPoint.shared.trigger(state: .localPlayerProfile) {}
-                        } else {
-                            selectedScore = entry
-                        }
-                    }
-                } label: {
-                    HStack{
-                        Text("\(entry.rank).")
-                        entry.player.asyncImage(.small)
-                            .frame(width: 40, height: 40)
-                        Text(entry.player.alias)
-                        Spacer()
-                        Text(entry.formattedScore)
-                    }
-                    .contentShape(.rect)
-                }
-                .buttonStyle(.plain)
-            }
+            inlineLeaderboard
             if image != nil {
                 Button{
                     GKAccessPoint.shared.trigger(state: .leaderboards) {}
@@ -95,9 +72,9 @@ struct LeaderboardView: View {
     }
     @ViewBuilder @MainActor
     func scoreDetail(for entry: GKLeaderboard.Entry) -> some View{
-        if #available(iOS 18.0, *){
-            GameCenterView(viewController: GKGameCenterViewController(player: entry.player))
-        } else {
+//        if #available(iOS 18.0, macOS 15.0, *){
+//            GameCenterView(viewController: GKGameCenterViewController(player: entry.player))
+//        } else {
             NavigationStack{
                 entry.player.asyncImage(.normal)
                     .frame(maxWidth: 200, maxHeight: 200)
@@ -129,7 +106,7 @@ struct LeaderboardView: View {
                     }
                 }
             }
-        }
+//        }
     }
     func loadData() async throws {
 
@@ -143,6 +120,33 @@ struct LeaderboardView: View {
         let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
         myScore = entries.0
         self.entries = entries.1
+    }
+    @ViewBuilder @MainActor
+    var inlineLeaderboard: some View {
+        ForEach(entries, id: \.rank) { entry in
+            Button{
+//                if #available(iOS 18.0, macOS 15.0, *) {
+//                    GKAccessPoint.shared.trigger(player: entry.player)
+//                } else {
+                    if entry.player == GKLocalPlayer.local{
+                        GKAccessPoint.shared.trigger(state: .localPlayerProfile) {}
+                    } else {
+                        selectedScore = entry
+                    }
+//                }
+            } label: {
+                HStack{
+                    Text("\(entry.rank).")
+                    entry.player.asyncImage(.small)
+                        .frame(width: 40, height: 40)
+                    Text(entry.player.alias)
+                    Spacer()
+                    Text(entry.formattedScore)
+                }
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+        }
     }
 }
 extension GKPlayer {

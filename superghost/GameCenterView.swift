@@ -20,7 +20,34 @@ struct GameCenterView: View {
         GameCenterDismissView(viewController: viewController){dismiss()}
     }
 }
+#if os(macOS)
+struct GameCenterDismissView: NSViewControllerRepresentable {
+    let viewController: GKGameCenterViewController
+    let dismiss: () -> Void
 
+    public init(viewController: GKGameCenterViewController = .init(), dismiss: @escaping () -> Void) {
+        self.viewController = viewController
+        self.dismiss = dismiss
+    }
+
+    public func makeNSViewController(context: Context) -> GKGameCenterViewController {
+        let gkVC = viewController
+        gkVC.gameCenterDelegate = context.coordinator
+        return gkVC
+    }
+
+    public func updateNSViewController(_ nsViewController: GKGameCenterViewController, context: Context) {}
+
+    public func makeCoordinator() -> GKCoordinator {
+        return GKCoordinator(self, dismiss: dismiss)
+    }
+}
+extension Image{
+    init(uiImage: NSImage) {
+        self.init(nsImage: uiImage)
+    }
+}
+#else
 struct GameCenterDismissView: UIViewControllerRepresentable {
     let viewController: GKGameCenterViewController
     let dismiss: ()->Void
@@ -44,6 +71,7 @@ struct GameCenterDismissView: UIViewControllerRepresentable {
         return GKCoordinator(self, dismiss: dismiss)
     }
 }
+#endif
 
 public class GKCoordinator: NSObject, GKGameCenterControllerDelegate {
     var view: GameCenterDismissView
