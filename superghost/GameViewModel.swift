@@ -39,7 +39,7 @@ final class GameViewModel: ObservableObject {
                             id: newValue.id
                         )
                         try? stat.save()
-                        games.append(stat)
+                        games.insert(stat, at: 0)
                         try? SoundManager.shared.play(.laughingGhost, loop: false)
                     } else {
                         alertItem = .lost
@@ -52,7 +52,7 @@ final class GameViewModel: ObservableObject {
                             id: newValue.id
                         )
                         try? stat.save()
-                        games.append(stat)
+                        games.insert(stat, at: 0)
                         try? SoundManager.shared.play(.scream, loop: false)
                     }
                     if (newValue.moves.last?.word.count ?? 0) > 5 {
@@ -89,7 +89,7 @@ final class GameViewModel: ObservableObject {
         }
         currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
         Task{
-            games = (try? await GameStat.loadAll()) ?? []
+            games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
         }
     }
 
