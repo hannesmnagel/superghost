@@ -111,7 +111,16 @@ struct LeaderboardView: View {
             return
         }
         title = leaderboard.title ?? ""
-        image = try await Image(uiImage: leaderboard.loadImage())
+        image = try? await withCheckedThrowingContinuation{con in
+            leaderboard.loadImage { image, error in
+                if let image {
+                    con.resume(returning: Image(uiImage: image))
+                } else {
+                    con.resume(throwing: error!)
+                }
+            }
+
+        }
         let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
         myScore = entries.0
         self.entries = entries.1
