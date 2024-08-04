@@ -91,7 +91,7 @@ struct StatsView: View {
             .frame(maxWidth: .infinity)
         }
         .onChange(of: winningStreak) { oldValue, newValue in
-            if Int(oldValue/5) < Int(newValue/5) {
+            if Int(oldValue/5) < Int(newValue/5) && (oldValue + 1) == newValue {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
             }
         }

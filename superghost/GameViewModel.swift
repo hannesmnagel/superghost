@@ -27,43 +27,44 @@ final class GameViewModel: ObservableObject {
             //check the game status
             if let newValue {
                 if newValue.winningPlayerId != "" {
+                    if game?.winningPlayerId != newValue.winningPlayerId {
+                        if newValue.winningPlayerId == currentUser.id {
+                            alertItem = .won
 
-                    if newValue.winningPlayerId == currentUser.id {
-                        alertItem = .won
+                            let stat = GameStat(
+                                player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                                withInvitation: withInvitation,
+                                won: true,
+                                word: newValue.moves.last?.word.uppercased() ?? "",
+                                id: newValue.id
+                            )
+                            try? stat.save()
+                            games.insert(stat, at: 0)
+                            try? SoundManager.shared.play(.laughingGhost, loop: false)
+                        } else {
+                            alertItem = .lost
 
-                        let stat = GameStat(
-                            player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
-                            withInvitation: withInvitation,
-                            won: true,
-                            word: newValue.moves.last?.word.uppercased() ?? "",
-                            id: newValue.id
-                        )
-                        try? stat.save()
-                        games.insert(stat, at: 0)
-                        try? SoundManager.shared.play(.laughingGhost, loop: false)
-                    } else {
-                        alertItem = .lost
-
-                        let stat = GameStat(
-                            player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
-                            withInvitation: withInvitation,
-                            won: false,
-                            word: newValue.moves.last?.word.uppercased() ?? "",
-                            id: newValue.id
-                        )
-                        try? stat.save()
-                        games.insert(stat, at: 0)
-                        try? SoundManager.shared.play(.scream, loop: false)
-                    }
-                    if (newValue.moves.last?.word.count ?? 0) > 5 {
-                        let achievement = GKAchievement(identifier: "word.long")
-                        achievement.percentComplete = 100
-                        GKAchievement.report([achievement])
-//                        if #available(iOS 18.0, *) {
-//                            GKAccessPoint.shared.trigger(achievementID: "word.long")
-//                        } else {
+                            let stat = GameStat(
+                                player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                                withInvitation: withInvitation,
+                                won: false,
+                                word: newValue.moves.last?.word.uppercased() ?? "",
+                                id: newValue.id
+                            )
+                            try? stat.save()
+                            games.insert(stat, at: 0)
+                            try? SoundManager.shared.play(.scream, loop: false)
+                        }
+                        if (newValue.moves.last?.word.count ?? 0) > 5 {
+                            let achievement = GKAchievement(identifier: "word.long")
+                            achievement.percentComplete = 100
+                            GKAchievement.report([achievement])
+                            //                        if #available(iOS 18.0, *) {
+                            //                            GKAccessPoint.shared.trigger(achievementID: "word.long")
+                            //                        } else {
                             GKAccessPoint.shared.trigger(state: .achievements){}
-//                        }
+                            //                        }
+                        }
                     }
                 } else {
                     if newValue.rematchPlayerId.count != 1 {
@@ -132,7 +133,6 @@ final class GameViewModel: ObservableObject {
 
         if try await isWord(letter){
             game?.winningPlayerId = isPlayerOne() ? game!.player2Id : game!.player1Id
-            updateGameStatus(.lost)
         }
 
         try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
