@@ -52,6 +52,14 @@
 		388AEAE52C52E7A30038CEA4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7E2C418647000C0DDF /* StoreKit.framework */; };
 		388D2A912C5ECC6600F1F0DE /* ambient2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */; };
 		388D2A922C5ECC6600F1F0DE /* ambient2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */; };
+		388D2A942C5F4F9D00F1F0DE /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
+		388D2A952C5F4F9D00F1F0DE /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
+		388D2A962C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
+		388D2A972C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
+		388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */; };
+		388D2A9A2C5F725F00F1F0DE /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */; };
+		388D2A9C2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */; };
+		388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */; };
 		38A46C3B2C46D123004950E3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38A46C3C2C46D123004950E3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A46C3E2C46D123004950E3 /* gamestats.swift */; };
@@ -166,6 +174,9 @@
 		384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStoragePropertyWrapper.swift; sourceTree = "<group>"; };
 		387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = waitingGhost.mov; sourceTree = "<group>"; };
 		388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ambient2.mp3; sourceTree = "<group>"; };
+		388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFuncs.swift; sourceTree = "<group>"; };
+		388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		38A46C3A2C46D123004950E3 /* gamestatsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = gamestatsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -313,6 +324,8 @@
 				38C32F382C53AB47009D4E57 /* NotUpdating.swift */,
 				38D75F922C42B450000C0DDF /* WaitingGhost.swift */,
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
+				388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */,
+				388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */,
 				38D75F8C2C425693000C0DDF /* AsyncButton.swift */,
 				38D75F892C425653000C0DDF /* StatsView.swift */,
 				384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */,
@@ -326,6 +339,7 @@
 				38B1BADC2C3ECCC100E3E377 /* User.swift */,
 				38B1BAD62C3ECBC100E3E377 /* Game.swift */,
 				38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */,
+				388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */,
 				38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */,
 				38AE75382C1E0A4E00DFB6A7 /* GameView.swift */,
 				38AE753A2C1E0A6D00DFB6A7 /* LoadingView.swift */,
@@ -629,6 +643,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38A46C3F2C46D123004950E3 /* gamestats.swift in Sources */,
+				388D2A972C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				38A46C4C2C46D185004950E3 /* GameStat.swift in Sources */,
 				384EA7022C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38A46C412C46D123004950E3 /* AppIntent.swift in Sources */,
@@ -651,13 +666,16 @@
 				38D75F872C42560A000C0DDF /* SettingsButton.swift in Sources */,
 				381DE8352C34648600E6CB04 /* Appearance.swift in Sources */,
 				38AE753B2C1E0A6D00DFB6A7 /* LoadingView.swift in Sources */,
+				388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */,
 				38D75F992C42B876000C0DDF /* PreviewModifier.swift in Sources */,
 				38AE753D2C1E0A9D00DFB6A7 /* ApiLayer.swift in Sources */,
 				38AE753F2C1E0B2400DFB6A7 /* Alerts.swift in Sources */,
 				38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */,
+				388D2A942C5F4F9D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				38D75F8D2C425693000C0DDF /* AsyncButton.swift in Sources */,
 				384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */,
 				38B1BADA2C3ECC5B00E3E377 /* GameStat.swift in Sources */,
+				388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */,
 				38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */,
 				38D75F902C42B422000C0DDF /* HomeView.swift in Sources */,
 				38D75F8A2C425653000C0DDF /* StatsView.swift in Sources */,
@@ -670,6 +688,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				388D2A962C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */,
 				38AF91A22C46D683003D100B /* gamestatsWidget.swift in Sources */,
 				38AF91A42C46D683003D100B /* AppIntent.swift in Sources */,
@@ -682,15 +701,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				388D2A952C5F4F9D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				3847ABF72C52E57400F50DC9 /* superghostApp.swift in Sources */,
 				3847ABF92C52E57E00F50DC9 /* Appearance.swift in Sources */,
 				3847AC0F2C52E58D00F50DC9 /* TrialEndsInView.swift in Sources */,
 				3847ABFA2C52E57E00F50DC9 /* GameStat.swift in Sources */,
 				3847ABFB2C52E57E00F50DC9 /* SettingsButton.swift in Sources */,
 				3847AC0D2C52E58900F50DC9 /* InstructionsView.swift in Sources */,
+				388D2A9C2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */,
 				3847ABFD2C52E57E00F50DC9 /* FirstUseView.swift in Sources */,
 				3847ABFE2C52E57E00F50DC9 /* PaywallView.swift in Sources */,
 				3847ABFF2C52E57E00F50DC9 /* CloudStoragePropertyWrapper.swift in Sources */,
+				388D2A9A2C5F725F00F1F0DE /* LeaderboardView.swift in Sources */,
 				3847AC002C52E57E00F50DC9 /* HomeView.swift in Sources */,
 				3847AC012C52E57E00F50DC9 /* ApiLayer.swift in Sources */,
 				3847AC022C52E57E00F50DC9 /* StatsView.swift in Sources */,

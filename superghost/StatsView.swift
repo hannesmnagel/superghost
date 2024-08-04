@@ -6,19 +6,18 @@
 //
 
 import SwiftUI
-import SwiftData
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
 import UserNotifications
 
 struct StatsView: View {
-    @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
     @CloudStorage("winRate") private var winningRate = 0.0
     @CloudStorage("winStreak") private var winningStreak = 0
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
+    @CloudStorage("score") private var score = 0
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
@@ -26,6 +25,8 @@ struct StatsView: View {
     let isSuperghost : Bool
 
     @State private var expandingList = false
+
+    @EnvironmentObject var viewModel: GameViewModel
 
     var body: some View {
 #if os(macOS)
@@ -36,7 +37,7 @@ struct StatsView: View {
 #else
         summary
 #endif
-        ForEach(games.prefix(expandingList ? .max : 5)){game in
+        ForEach(viewModel.games.prefix(expandingList ? .max : 5)){game in
             Button{selection = game} label: {
                 HStack{
                     Text(game.word)
@@ -48,7 +49,7 @@ struct StatsView: View {
             .buttonStyle(.plain)
             .listRowBackground(game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
         }
-        if games.count > 5 {
+        if viewModel.games.count > 5 {
             Button(expandingList ? "Less" : "More"){withAnimation(.smooth){expandingList.toggle()}}
         }
     }
@@ -94,10 +95,10 @@ struct StatsView: View {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
             }
         }
-        .task(id: games.debugDescription.appending(isSuperghost.description)) {
-            winningRate = games.winningRate
-            winningStreak = games.winningStreak
-            let gamesToday = games.today
+        .task(id: viewModel.games.debugDescription.appending(isSuperghost.description)) {
+            winningRate = viewModel.games.winningRate
+            winningStreak = viewModel.games.winningStreak
+            let gamesToday = viewModel.games.today
             winsToday = gamesToday.won.count
             let gamesLostToday = gamesToday.lost
 
@@ -106,44 +107,31 @@ struct StatsView: View {
             let placeHolders = Array(repeating: "-", count: word.count).joined()
             let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
             wordToday = lettersOfWord.appending(actualPlaceHolders)
+
+            let recentGames = viewModel.games.recent
+            let recentWinningRate = recentGames.winningRate
+            let recentWins = recentGames.won.count
+            let totalWins = viewModel.games.won.count
+
+            let baseScore = 1000
+            let totalWinRateFactor = Int(500 * winningRate)
+            let recentWinRateFactor = Int(500 * recentWinningRate)
+            let recentWinCountFactor = 10 * recentWins
+            let totalWinCountFactor = 1 * totalWins
+
+            score = baseScore + totalWinRateFactor + recentWinRateFactor + recentWinCountFactor + totalWinCountFactor
+
+            Task{
+                try? await GameStat.submitScore(score)
+            }
 #if canImport(WidgetKit)
             WidgetCenter.shared.reloadAllTimelines()
 #endif
-            if !games.isEmpty {
-                do{
 
-                    UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            if !viewModel.games.isEmpty {
+                do{
                     if notificationsAllowed {
-                        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-                        
-                        
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
-                        let content = UNMutableNotificationContent()
-                        
-                        content.title = "Keep Your Streak Going!"
-                        content.body = "Play some Ghost"
-                        content.sound = .default
-                        
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
-                                content: content,
-                                trigger: trigger)
-                        )
-                        let fourDayTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(4 * 24 * 60 * 60), repeats: true)
-                        let fourDayContent = UNMutableNotificationContent()
-                        
-                        fourDayContent.title = "Keep Your Streak Going!"
-                        fourDayContent.body = "Play some Ghost"
-                        fourDayContent.sound = .default
-                        
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: Calendar.current.startOfDay(for: Date()).ISO8601Format(),
-                                content: fourDayContent,
-                                trigger: fourDayTrigger)
-                        )
+                        guard try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) else {notificationsAllowed = false; return}
                     }
                 } catch {
                     notificationsAllowed = false
@@ -156,15 +144,15 @@ struct StatsView: View {
                 GeometryReader{geo in
 #if os(watchOS)
                     UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
-                        .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
+                        .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
                         )
 #else
                     Rectangle()
-                        .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
+                        .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
                         )
 #endif
                 }
@@ -182,15 +170,15 @@ struct StatsView: View {
                     GeometryReader{geo in
 #if os(watchOS)
                         UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 10)
-                            .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
+                            .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
                             )
 #else
                         Rectangle()
-                            .fill(.red.opacity(0.5 + 0.1 * Double(games.today.lost.count)))
+                            .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
                             .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(games.today.lost.count) / CGFloat(wordToday.count)
+                                    geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
                             )
 #endif
                     }

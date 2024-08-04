@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct HomeView: View {
     let isSuperghost: Bool
@@ -14,7 +13,6 @@ struct HomeView: View {
     @State private var gameStatSelection: GameStat?
     @EnvironmentObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
-    @Query(sort: [SortDescriptor(\GameStat.createdAt, order: .reverse)]) var games : [GameStat]
 
     var body: some View {
             VStack {
@@ -29,10 +27,15 @@ struct HomeView: View {
 #endif
                     }
                     Section{
+                        LeaderboardView(isSuperghost: isSuperghost)
+                    }
+                    Section{
                         StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
                     }
                     Section{
                         SettingsButton(isSuperghost: isSuperghost)
+                            .listRowBackground(Color.clear)
+                            .frame(maxWidth: .infinity)
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -84,9 +87,9 @@ struct HomeView: View {
             } label: {
                 Text("Start")
             }
-            .disabled(games.today.lost.count >= (isSuperghost ? 10 : 5))
+            .disabled(viewModel.games.today.lost.count >= (isSuperghost ? 10 : 5))
             .onTapGesture {
-                if !isSuperghost && games.today.lost.count >= 5{
+                if !isSuperghost && viewModel.games.today.lost.count >= 5{
                     viewModel.showPaywall = true
                 }
             }

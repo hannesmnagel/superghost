@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import SwiftData
 import RevenueCat
+import BackgroundTasks
 
 @main
 struct superghostApp: App {
     init(){
-        modelContainer = try! ModelContainer(for: GameStat.self)
         Purchases.logLevel = .error
         try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
         Task{
@@ -23,8 +22,10 @@ struct superghostApp: App {
     }
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
+    @CloudStorage("notificationsAllowed") var notificationsAllowed = false
+    
     @StateObject var viewModel = GameViewModel()
-    let modelContainer: ModelContainer
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -32,12 +33,34 @@ struct superghostApp: App {
                 .onAppear{
                     try? SoundManager.shared.setActive()
                 }
-                .modelContainer(modelContainer)
                 .environmentObject(viewModel)
 #if os(macOS)
                 .frame(minHeight: 500)
 #endif
         }
+        .onChange(of: scenePhase){
+            if scenePhase == .background{
+                Task{
+                    do{
+                        if notificationsAllowed{
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
+                            let content = UNMutableNotificationContent()
+
+                            content.title = "Keep Your Streak Going!"
+                            content.body = "Play some Ghost"
+                            content.sound = .default
+                            try await UNUserNotificationCenter.current().add(
+                                UNNotificationRequest(
+                                    identifier: Calendar.current.startOfDay(for: Date().addingTimeInterval(1 * 24 * 60 * 60)).ISO8601Format(),
+                                    content: content,
+                                    trigger: trigger)
+                            )
+                        }
+                    } catch{}
+                }
+            }
+        }
+
 #if os(macOS)
         Settings {
             SettingsView(isSuperghost: isSuperghost) {
@@ -45,7 +68,6 @@ struct superghostApp: App {
                 NSApp.mainWindow?.becomeFirstResponder()
 
             }
-            .modelContainer(modelContainer)
             .environmentObject(viewModel)
 
         }

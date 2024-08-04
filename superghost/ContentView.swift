@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RevenueCat
+import GameKit
 
 struct BlackOutTransition: Transition {
     func body(content: Content, phase: TransitionPhase) -> some View {

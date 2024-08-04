@@ -9,4 +9,8 @@ import Foundation
 
 struct User: Codable {
     var id = UUID().uuidString
+
+    init(id: String = UUID().uuidString) {
+        self.id = id
+    }
 }

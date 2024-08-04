@@ -7,7 +7,6 @@
 
 import WidgetKit
 import SwiftUI
-import SwiftData
 
 struct Provider: AppIntentTimelineProvider {
     @CloudStorage("isSuperghost") private var isSuperghost = false

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 enum AlertItem: String, Equatable, Identifiable {
     var id: String {self.rawValue}
@@ -20,10 +19,6 @@ struct AlertView: View {
     @Binding var isPresented: Bool
     @Environment(\.dismiss) var dismiss
     let isSuperghost: Bool
-
-
-    @Query private var games : [GameStat]
-    @Environment(\.modelContext) var context
 
     var body: some View {
         ViewThatFits{
@@ -84,30 +79,6 @@ struct AlertView: View {
                     }
 
                     Spacer()
-                }
-                .onAppear{
-                    let isPlayerOne = viewModel.isPlayerOne()
-                    guard let game = viewModel.game else {return}
-                    let playerId = isPlayerOne ? game.player1Id : game.player2Id
-
-                    let id = UUID(uuidString: game.id) ?? UUID()
-                    var fetchDescriptor = FetchDescriptor<GameStat>(predicate: #Predicate{$0.id == id})
-                    fetchDescriptor.fetchLimit = 1
-                    let matchingGames = try? context.fetch(
-                        fetchDescriptor
-                    )
-                    if matchingGames?.isEmpty ?? true{
-                        context.insert(
-                            GameStat(
-                                player2: isPlayerOne ? game.player2Id : game.player1Id,
-                                withInvitation: viewModel.withInvitation,
-                                won: game.winningPlayerId == playerId,
-                                word: game.moves.last?.word.uppercased() ?? "",
-                                id: game.id
-                            )
-                        )
-                        try? SoundManager.shared.play(game.winningPlayerId == playerId ? .laughingGhost : .scream, loop: false)
-                    }
                 }
                 Spacer()
             }

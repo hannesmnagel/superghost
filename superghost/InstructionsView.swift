@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct InstructionsView: View {
+    @Environment(\.dismiss) var dismiss
     let instructions = ["""
 Inspired by a game played on the chalk board, superghost is a word game where you have to add letters so that:
 
@@ -84,7 +85,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
                     .tabItem { Circle() }
                 }
 #if os(watchOS)
-                Button("Got it", action: next)
+                Button("Got it"){next(); dismiss()}
                     .buttonStyle(.bordered)
                     .tag("end")
 #endif
@@ -97,7 +98,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
             .padding()
 #endif
 #if !os(watchOS)
-            Button("Got it", action: next)
+            Button("Got it"){next(); dismiss()}
                 .buttonStyle(.bordered)
 #endif
         }

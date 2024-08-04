@@ -10,6 +10,12 @@
     " - " : {
 
     },
+    "%lld." : {
+
+    },
+    "A friend of yours ranked at %lld" : {
+
+    },
     "An error occured" : {
 
     },
@@ -104,6 +110,9 @@
 
     },
     "Quit" : {
+
+    },
+    "Rank: %lld" : {
 
     },
     "Rematch" : {
@@ -219,6 +228,9 @@
 
     },
     "Yes, I lied" : {
+
+    },
+    "You are rank %lld" : {
 
     },
     "You can't upgrade right now" : {

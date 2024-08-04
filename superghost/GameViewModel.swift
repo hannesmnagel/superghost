@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import SwiftData
+import GameKit
 
 enum GameStatusText {
     case waitingForPlayer, started
@@ -18,9 +18,9 @@ private enum GameStatus {
 
 @MainActor
 final class GameViewModel: ObservableObject {
+    @Published var games = [GameStat]()
 
     @Published var showPaywall = false
-    @CloudStorage("userData") private var userData: User = User()
 
     @Published var game: Game? {
         willSet {
@@ -30,11 +30,37 @@ final class GameViewModel: ObservableObject {
 
                     if newValue.winningPlayerId == currentUser.id {
                         alertItem = .won
+
+                        try? GameStat(
+                            player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                            withInvitation: withInvitation,
+                            won: true,
+                            word: newValue.moves.last?.word.uppercased() ?? "",
+                            id: newValue.id
+                        ).save()
+                        try? SoundManager.shared.play(.laughingGhost, loop: false)
                     } else {
                         alertItem = .lost
+
+                        try? GameStat(
+                            player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                            withInvitation: withInvitation,
+                            won: false,
+                            word: newValue.moves.last?.word.uppercased() ?? "",
+                            id: newValue.id
+                        ).save()
+                        try? SoundManager.shared.play(.scream, loop: false)
+                    }
+                    if (newValue.moves.last?.word.count ?? 0) > 5 {
+                        let achievement = GKAchievement(identifier: "word.long")
+                        achievement.showsCompletionBanner = true
+                        achievement.percentComplete = 100
+                        GKAchievement.report([achievement])
                     }
                 } else {
-                    newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+                    if newValue.rematchPlayerId.count != 1 {
+                        newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
+                    }
                 }
             } else {
                 updateGameStatus(.playerLeft)
@@ -43,7 +69,7 @@ final class GameViewModel: ObservableObject {
     }
 
     @Published var gameStatusText = GameStatusText.waitingForPlayer
-    @Published var currentUser: User!
+    @Published var currentUser: User
     @Published var alertItem: AlertItem?
 
 
@@ -52,8 +78,15 @@ final class GameViewModel: ObservableObject {
     var withInvitation = false
 
     init() {
-        userData = userData
-        currentUser = userData
+        GKLocalPlayer.local.authenticateHandler = {vc, error in
+            if let error{
+                print(error)
+            }
+        }
+        currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
+        Task{
+            games = (try? await GameStat.loadAll()) ?? []
+        }
     }
 
 

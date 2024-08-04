@@ -6,10 +6,9 @@
 //
 
 import Foundation
-import SwiftData
+import GameKit
 
-@Model
-class GameStat: Hashable, Identifiable {
+struct GameStat: Codable, Hashable, Identifiable {
     var player2: String = "no player"
     var won: Bool = Bool.random()
     var word: String = "sth went wrong"
@@ -24,6 +23,29 @@ class GameStat: Hashable, Identifiable {
         self.word = word
         self.withInvitation = withInvitation
     }
+    func save() throws {
+        let data = try JSONEncoder().encode(self)
+        GKLocalPlayer.local.saveGameData(data, withName: id.uuidString)
+    }
+    static func loadAll() async throws -> [GameStat] {
+        let games = try await GKLocalPlayer.local.fetchSavedGames().concurrentMap {
+            do{
+                let data = try await $0.loadData()
+                let decoded = try? JSONDecoder().decode(Self.self, from: data)
+                return decoded
+            } catch {
+                return nil
+            }
+        }
+        return games.compactMap{$0}
+    }
+
+    static func submitScore(_ score: Int) async throws {
+        let leaderboards = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"])
+        for leaderboard in leaderboards{
+            try await leaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local)
+        }
+    }
 }
 
 extension Array where Element == GameStat {
@@ -34,6 +56,7 @@ extension Array where Element == GameStat {
     }
     var winningStreak : Int { sorted{$0.createdAt > $1.createdAt}.firstIndex(where: {!$0.won}) ?? count}
     var today: Self {filter{Calendar.current.isDateInToday($0.createdAt)}}
+    var recent: Self {filter{Calendar.current.isDate($0.createdAt, equalTo: Date(), toGranularity: .month)}}
     var withInvitation: Self {filter{$0.withInvitation}}
 
 }

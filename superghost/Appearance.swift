@@ -42,6 +42,8 @@ class AppearanceManager {
     static let synonyms: Font = .footnote
     static let definitions: Font = .body
     static let wordInDefinitionView: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
+    static let leaderboardTitle: Font = os == .watchOS ? .title3.bold() : .title.bold()
+    static let playerViewTitle: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
 
     struct QuitRematch: ButtonStyle {
         let isPrimary: Bool
