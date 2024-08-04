@@ -8,11 +8,9 @@
 import SwiftUI
 
 private enum OS{
-    case watchOS, iOS, macOS, visionOS
+    case iOS, macOS, visionOS
 }
-#if os(watchOS)
-private let os = OS.watchOS
-#elseif os(iOS)
+#if os(iOS)
 private let os = OS.iOS
 #elseif os(macOS)
 private let os = OS.macOS
@@ -23,27 +21,27 @@ private let os = OS.visionOS
 class AppearanceManager {
     private init(){}
 
-    static let hostGame: Font = os == .watchOS ? .headline : .largeTitle
-    static let startGame: Font = os == .watchOS ? .title : .largeTitle
-    static let howToPlayTitle: Font = os == .watchOS ? .title2.bold() : .largeTitle.bold()
-    static let trialEndsIn: Font = os == .watchOS ? .caption : .subheadline
+    static let hostGame: Font = .largeTitle
+    static let startGame: Font = .largeTitle
+    static let howToPlayTitle: Font = .largeTitle.bold()
+    static let trialEndsIn: Font = .subheadline
     static let instructions: Font = .headline
     static let buttonsInSettings: Font = .body
-    static let quitGame: Font = os == .watchOS ? .headline : .title
+    static let quitGame: Font = .title
     static let wordInGame: Font = .headline
     static let letterPicker: Font = .headline
     static let statsLabel: Font = .footnote
-    static let statsValue: Font = os == .watchOS ? .headline : .title
+    static let statsValue: Font = .title
     static let settingsButton: Font = .body
-    static let startUpSuperghost: Font = os == .watchOS ? .title : .largeTitle
-    static let startUpSuperghostTapToPlay: Font = os == .watchOS ? .headline : .subheadline
-    static let youWonOrLost: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
-    static let youWonOrLostSubtitle: Font = os == .watchOS ? .subheadline : .headline
+    static let startUpSuperghost: Font = .largeTitle
+    static let startUpSuperghostTapToPlay: Font = .subheadline
+    static let youWonOrLost: Font = .largeTitle.bold()
+    static let youWonOrLostSubtitle: Font = .headline
     static let synonyms: Font = .footnote
     static let definitions: Font = .body
-    static let wordInDefinitionView: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
-    static let leaderboardTitle: Font = os == .watchOS ? .title3.bold() : .title.bold()
-    static let playerViewTitle: Font = os == .watchOS ? .title.bold() : .largeTitle.bold()
+    static let wordInDefinitionView: Font = .largeTitle.bold()
+    static let leaderboardTitle: Font = .title.bold()
+    static let playerViewTitle: Font = .largeTitle.bold()
 
     struct QuitRematch: ButtonStyle {
         let isPrimary: Bool

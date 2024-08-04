@@ -31,24 +31,28 @@ final class GameViewModel: ObservableObject {
                     if newValue.winningPlayerId == currentUser.id {
                         alertItem = .won
 
-                        try? GameStat(
+                        let stat = GameStat(
                             player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
                             withInvitation: withInvitation,
                             won: true,
                             word: newValue.moves.last?.word.uppercased() ?? "",
                             id: newValue.id
-                        ).save()
+                        )
+                        try? stat.save()
+                        games.append(stat)
                         try? SoundManager.shared.play(.laughingGhost, loop: false)
                     } else {
                         alertItem = .lost
 
-                        try? GameStat(
+                        let stat = GameStat(
                             player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
                             withInvitation: withInvitation,
                             won: false,
                             word: newValue.moves.last?.word.uppercased() ?? "",
                             id: newValue.id
-                        ).save()
+                        )
+                        try? stat.save()
+                        games.append(stat)
                         try? SoundManager.shared.play(.scream, loop: false)
                     }
                     if (newValue.moves.last?.word.count ?? 0) > 5 {

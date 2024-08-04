@@ -60,9 +60,7 @@ struct AlertView: View {
                         Text("   Quit    ")
                     }
                     .buttonStyle(AppearanceManager.QuitRematch(isPrimary: viewModel.game?.player2Id == "botPlayer"))
-#if !os(watchOS)
                     .keyboardShortcut(.cancelAction)
-#endif
                     if viewModel.game?.player2Id != "botPlayer"{
                         Spacer()
                         AsyncButton{
@@ -73,9 +71,7 @@ struct AlertView: View {
                             Text("Rematch")
                         }
                         .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
-#if !os(watchOS)
                         .keyboardShortcut(.defaultAction)
-#endif
                     }
 
                     Spacer()
@@ -120,32 +116,24 @@ struct WordDefinitionView: View {
                     }
                     .listRowInsets(.init())
                     .listRowBackground(Color.clear)
-                #if !os(watchOS)
                     .padding()
                     .padding(.vertical, 50)
                     .listRowSeparator(.hidden)
-                #endif
             }
             switch definitions {
             case .failed:
                 ContentUnavailableView("Couldn't get definitions!", systemImage: "network.slash")
                     .listRowBackground(Color.clear)
-#if !os(watchOS)
                     .listRowSeparator(.hidden)
-#endif
             case .loading:
                 ProgressView()
                     .listRowBackground(Color.clear)
-#if !os(watchOS)
                     .listRowSeparator(.hidden)
-#endif
             case .success(let definitions):
                 if definitions.isEmpty{
                     ContentUnavailableView("This is not a word", systemImage: "character.book.closed")
                         .listRowBackground(Color.clear)
-#if !os(watchOS)
                         .listRowSeparator(.hidden)
-#endif
                 } else {
                     ForEach(definitions, id: \.self) { entry in
                         viewFor(entry: entry)
@@ -155,28 +143,17 @@ struct WordDefinitionView: View {
 
             if let game{
                 Section{
-                    #if os(watchOS)
-                    let alignment = HorizontalAlignment.leading
-                    #else
-                    let alignment = HorizontalAlignment.center
-                    #endif
-
-                    VStack(alignment: alignment){
+                    VStack(alignment: .center){
                         if game.withInvitation {Text(game.won ? "You won against a friend on \(game.createdAt, format: .dateTime)" : "You lost against a friend on \(game.createdAt, format: .dateTime)")}
                     }
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
-                    #if !os(watchOS)
                     .listRowSeparator(.hidden)
                     .padding(.top, 30)
-                    #endif
                 }
             }
         }
         .listStyle(.plain)
-        #if os(watchOS)
-        .scrollClipDisabled()
-        #endif
     }
     @MainActor @ViewBuilder
     func viewFor(entry: WordEntry) -> some View {

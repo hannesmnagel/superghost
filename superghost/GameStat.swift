@@ -41,6 +41,7 @@ struct GameStat: Codable, Hashable, Identifiable {
     }
 
     static func submitScore(_ score: Int) async throws {
+        try? await Task.sleep(for: .seconds(0.5))
         let leaderboards = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"])
         for leaderboard in leaderboards{
             try await leaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local)

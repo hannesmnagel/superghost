@@ -23,6 +23,7 @@ struct LeaderboardView: View {
     @State private var myScore : GKLeaderboard.Entry?
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
+    @EnvironmentObject var viewModel: GameViewModel
 
     var body: some View {
         VStack{
@@ -31,17 +32,6 @@ struct LeaderboardView: View {
                     .font(AppearanceManager.leaderboardTitle)
                 if let image{
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)
-                } else if title.isEmpty {
-                    ProgressView()
-                        .task{
-                            try? await Task.sleep(for: .seconds(1))
-                            if GKLocalPlayer.local.isAuthenticated{
-                                try? await loadData()
-                            } else {
-                                try? await Task.sleep(for: .seconds(2))
-                                try? await loadData()
-                            }
-                        }
                 }
             }
             inlineLeaderboard
@@ -59,6 +49,12 @@ struct LeaderboardView: View {
                 .buttonBorderShape(.capsule)
                 .padding()
             }
+        }
+        .task(id: viewModel.games){
+            if !GKLocalPlayer.local.isAuthenticated{
+                try? await Task.sleep(for: .seconds(2))
+            }
+            try? await loadData()
         }
         .animation(.bouncy, value: myScore)
         .animation(.bouncy, value: selectedScore)
@@ -112,7 +108,6 @@ struct LeaderboardView: View {
 
         guard let leaderboard = try? await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first
         else {
-            title = "Couldn't load leaderboard"
             return
         }
         title = leaderboard.title ?? ""
@@ -150,15 +145,26 @@ struct LeaderboardView: View {
     }
 }
 extension GKPlayer {
+    @MainActor
     func asyncImage(_ size: PhotoSize) -> some View {
         AsyncView {
-            try? await Image(uiImage: self.loadPhoto(for: size)).resizable().scaledToFit().clipShape(.circle)
+            try? await withCheckedThrowingContinuation{con in
+
+                self.loadPhoto(for: size) { image, error in
+                    if let image {
+                        con.resume(returning: Image(uiImage: image))
+                    } else {
+                        con.resume(throwing: error!)
+                    }
+                }
+
+            }
+            .resizable().scaledToFit().clipShape(.circle)
         } loading: {
             ProgressView()
         }
     }
 }
-
 private struct AsyncView<Content: View, Loading: View>: View {
     @State var content: Content?
     @ViewBuilder let loading: Loading

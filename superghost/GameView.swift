@@ -13,17 +13,6 @@ struct GameView: View {
     let isSuperghost: Bool
 
     var body: some View {
-#if os(watchOS)
-        ScrollView{
-            content
-        }
-#else
-        content
-#endif
-    }
-
-    @ViewBuilder @MainActor
-    var content: some View {
 
         VStack {
             HStack{
@@ -45,9 +34,7 @@ struct GameView: View {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                         .font(AppearanceManager.quitGame)
                 }
-#if !os(watchOS)
                 .keyboardShortcut(.cancelAction)
-#endif
                 .buttonStyle(.plain)
             }
 
@@ -55,11 +42,7 @@ struct GameView: View {
 
             //MARK: Private Game Share Link Screen
             if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
-                #if !os(watchOS)
                 LoadingView()
-                #else
-                Spacer(minLength: 30)
-                #endif
                 if viewModel.game?.player2Id == "privateGame"{
                     if let url = URL(string: "https://hannesnagel.com/superghost/private/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
@@ -126,7 +109,7 @@ struct LetterPicker: View {
 
     var body: some View {
         let word = viewModel.game?.moves.last?.word ?? ""
-        VStackWatch{
+        HStack{
             if !word.isEmpty {
                 if viewModel.withInvitation || isSuperghost{
                     SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
@@ -147,9 +130,7 @@ struct LetterPicker: View {
         } label: {
             Text("Submit Move")
         }
-        #if !os(watchOS)
         .keyboardShortcut(.defaultAction)
-        #endif
         .disabled(leadingLetter.isEmpty && trailingLetter.isEmpty)
     }
     struct SingleLetterPicker: View {
@@ -165,10 +146,6 @@ struct LetterPicker: View {
                 }
             }
             .pickerStyle(.wheel)
-
-#if os(watchOS)
-            .frame(minHeight: 50)
-#endif
 #else
             TextField("Letter", text: .init(get: {
                 letter
@@ -180,18 +157,6 @@ struct LetterPicker: View {
             }))
 #endif
         }
-    }
-}
-
-struct VStackWatch<Content: View>: View {
-    @ViewBuilder let content: Content
-
-    var body: some View{
-        #if os(watchOS)
-        VStack{content}
-        #else
-        HStack{content}
-        #endif
     }
 }
 

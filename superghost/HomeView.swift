@@ -22,9 +22,7 @@ struct HomeView: View {
                             .listRowBackground(Color.clear)
                             .listRowInsets(.none)
                             .listItemTint(ListItemTint?.none)
-#if !os(watchOS)
                             .listRowSeparator(.hidden)
-#endif
                     }
                     Section{
                         LeaderboardView(isSuperghost: isSuperghost)
@@ -76,10 +74,8 @@ struct HomeView: View {
     var header: some View {
 
         VStack{
-#if !os(watchOS)
             WaitingGhost()
                 .frame(maxHeight: 300)
-#endif
 
             AsyncButton {
                 try await viewModel.getTheGame(isSuperghost: isSuperghost)
@@ -93,9 +89,7 @@ struct HomeView: View {
                     viewModel.showPaywall = true
                 }
             }
-#if !os(watchOS)
             .keyboardShortcut(.defaultAction)
-#endif
             .buttonStyle(AppearanceManager.StartGame())
 
             AsyncButton {

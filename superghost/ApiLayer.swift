@@ -123,36 +123,6 @@ final class ApiLayer: ObservableObject {
         }
     }
     //MARK: WebSocket
-#if os(watchOS)
-    var subscribedToGameId : String?
-
-    func connectToWebSocket(gameId: String, isPrivate: Bool, isSuperghost: Bool) {
-        subscribedToGameId = gameId
-        Task{
-            do{
-                try await receive(isPrivate: isPrivate, isSuperghost: isSuperghost)
-            } catch {
-                subscribedToGameId = nil
-                Task{[weak self] in
-                    await self?.setGameVar(to: nil)
-                }
-            }
-        }
-    }
-    private func receive(isPrivate: Bool, isSuperghost: Bool) async throws {
-        if let subscribedToGameId {
-            try await setGameVar(to: self.getGame(gameId: subscribedToGameId, isPrivate: isPrivate, isSuperghost: isSuperghost))
-            try? await Task.sleep(for: .seconds(1))
-            try await receive(isPrivate: isPrivate, isSuperghost: isSuperghost)
-        } else {
-            await setGameVar(to: nil)
-        }
-    }
-    func disconnectWebSocket() {
-        subscribedToGameId = nil
-    }
-
-    #else
     private var webSocketTask: (URLSessionWebSocketTask)?
 
     private func connectToWebSocket(gameId: String, isPrivate: Bool, isSuperghost: Bool) {
@@ -225,5 +195,4 @@ final class ApiLayer: ObservableObject {
             onClose()
         }
     }
-    #endif
 }
