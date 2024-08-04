@@ -31,6 +31,7 @@ struct superghostApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modifier(Messagable())
                 .onAppear{
                     try? SoundManager.shared.setActive()
                 }

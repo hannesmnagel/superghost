@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		381DE8352C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
+		38219AB42C601E34001A7C4F /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB32C601E34001A7C4F /* Messages.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
 		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
@@ -98,6 +99,7 @@
 /* Begin PBXFileReference section */
 		381D838B2C3D1D24000ED639 /* superghost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = superghost.entitlements; sourceTree = "<group>"; };
 		381DE8342C34648600E6CB04 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
+		38219AB32C601E34001A7C4F /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		384497F92C5E88CE00DE24CF /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */,
 				38AE75092C1E094500DFB6A7 /* ContentView.swift */,
 				38D75F952C42B6E1000C0DDF /* FirstUseView.swift */,
+				38219AB32C601E34001A7C4F /* Messages.swift */,
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
 				38D75F862C425609000C0DDF /* SettingsButton.swift */,
 				38D75F832C418B21000C0DDF /* PaywallView.swift */,
@@ -433,6 +436,7 @@
 				38AE753D2C1E0A9D00DFB6A7 /* ApiLayer.swift in Sources */,
 				38AE753F2C1E0B2400DFB6A7 /* Alerts.swift in Sources */,
 				38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */,
+				38219AB42C601E34001A7C4F /* Messages.swift in Sources */,
 				388D2A942C5F4F9D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				38D75F8D2C425693000C0DDF /* AsyncButton.swift in Sources */,
 				384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */,

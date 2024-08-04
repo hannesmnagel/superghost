@@ -77,6 +77,8 @@ struct ContentView: View {
         print(daysSinceTrialEnd)
         isSuperghost = subscriptions.contains("monthly.superghost") || timeSinceTrialEnd < 0
 
+        let showedPaywallToday = Calendar.current.isDateInToday(lastPaywallView)
+
         //is in trial:
         if !subscriptions.contains("monthly.superghost") && timeSinceTrialEnd < 0 {
             showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
@@ -84,9 +86,11 @@ struct ContentView: View {
             showTrialEndsIn = nil
         }
         //is not superghost, every 4 days:
-        let showedPaywallToday = Calendar.current.isDateInToday(lastPaywallView)
         if !showedPaywallToday && !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
             viewModel.showPaywall = true
+            lastPaywallView = Date()
+        } else if !showedPaywallToday && Int.random(in: 0...3) == 0{
+            showMessage("Add some friends and challenge them!")
             lastPaywallView = Date()
         }
     }

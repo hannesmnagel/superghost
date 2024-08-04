@@ -39,7 +39,8 @@ struct FirstUseView: View {
             Text("Let's go")
                 .font(AppearanceManager.startUpSuperghost)
                 .task{
-                    try? await Task.sleep(for: .milliseconds(500))
+                    showMessage("You can change the sound volume in settings")
+                    try? await Task.sleep(for: .seconds(7))
                     finished()
                 }
                 .tag(FirstUseState.end)

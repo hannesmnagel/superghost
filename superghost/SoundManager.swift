@@ -34,6 +34,7 @@ class SoundManager{
     }
 
     func play(_ sound: Sound, loop: Bool) throws {
+        guard volume > 0 else {return}
         guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3"),
               let url = URL(string: string)
         else {
