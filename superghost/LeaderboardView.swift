@@ -90,38 +90,42 @@ struct LeaderboardView: View {
         .animation(.bouncy, value: image)
         .animation(.bouncy, value: title)
         .sheet(item: $selectedScore) { entry in
-            if #available(iOS 18.0, *){
-                GameCenterView(viewController: GKGameCenterViewController(player: entry.player))
-            } else {
-                NavigationStack{
-                    entry.player.asyncImage(.normal)
-                        .frame(maxWidth: 200, maxHeight: 200)
-                    Text(entry.player.displayName)
-                        .font(AppearanceManager.playerViewTitle)
-                    Text(entry.formattedScore).bold()
+            scoreDetail(for: entry)
+        }
+    }
+    @ViewBuilder @MainActor
+    func scoreDetail(for entry: GKLeaderboard.Entry) -> some View{
+        if #available(iOS 18.0, *){
+            GameCenterView(viewController: GKGameCenterViewController(player: entry.player))
+        } else {
+            NavigationStack{
+                entry.player.asyncImage(.normal)
+                    .frame(maxWidth: 200, maxHeight: 200)
+                Text(entry.player.displayName)
+                    .font(AppearanceManager.playerViewTitle)
+                Text(entry.formattedScore).bold()
 
-                    AsyncView {
-                        let friends = try? await GKLocalPlayer.local.loadFriends()
-                        if friends?.contains(entry.player) ?? false {
-                            Text("A friend of yours ranked at \(entry.rank)")
-                        } else if entry.player == GKLocalPlayer.local {
-                            Text("You are rank \(entry.rank)")
-                        } else {
-                            Text("Rank: \(entry.rank)")
-                        }
-                    } loading: {
-                        ProgressView()
+                AsyncView {
+                    let friends = try? await GKLocalPlayer.local.loadFriends()
+                    if friends?.contains(entry.player) ?? false {
+                        Text("A friend of yours ranked at \(entry.rank)")
+                    } else if entry.player == GKLocalPlayer.local {
+                        Text("You are rank \(entry.rank)")
+                    } else {
+                        Text("Rank: \(entry.rank)")
                     }
-                    .toolbar{
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button{
-                                selectedScore = nil
-                            } label: {
-                                Image(systemName: "xmark")
-                            }
-                            .buttonStyle(.bordered)
-                            .buttonBorderShape(.circle)
+                } loading: {
+                    ProgressView()
+                }
+                .toolbar{
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button{
+                            selectedScore = nil
+                        } label: {
+                            Image(systemName: "xmark")
                         }
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.circle)
                     }
                 }
             }
