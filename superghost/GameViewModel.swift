@@ -57,9 +57,13 @@ final class GameViewModel: ObservableObject {
                     }
                     if (newValue.moves.last?.word.count ?? 0) > 5 {
                         let achievement = GKAchievement(identifier: "word.long")
-                        achievement.showsCompletionBanner = true
                         achievement.percentComplete = 100
                         GKAchievement.report([achievement])
+//                        if #available(iOS 18.0, *) {
+//                            GKAccessPoint.shared.trigger(achievementID: "word.long")
+//                        } else {
+                            GKAccessPoint.shared.trigger(state: .achievements){}
+//                        }
                     }
                 } else {
                     if newValue.rematchPlayerId.count != 1 {
