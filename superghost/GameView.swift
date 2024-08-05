@@ -11,6 +11,7 @@ struct GameView: View {
     @EnvironmentObject var viewModel : GameViewModel
     @Binding var isPresented: Bool
     let isSuperghost: Bool
+    let appearingDate = Date()
 
     var body: some View {
 
@@ -37,7 +38,9 @@ struct GameView: View {
                 .keyboardShortcut(.cancelAction)
                 .buttonStyle(.plain)
             }
-
+            if viewModel.gameStatusText == .waitingForPlayer{
+                Text(appearingDate, style: .timer) + Text(" elapsed - ETA:") + Text(appearingDate.addingTimeInterval(.random(in: 13...17)), style: .relative)
+            }
             Spacer()
 
             //MARK: Private Game Share Link Screen
