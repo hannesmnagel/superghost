@@ -9,8 +9,9 @@ import SwiftUI
 import Combine
 
 extension View{
+    @_disfavoredOverload
     @ViewBuilder
-    func bcOnChange<Value: Equatable>(of value: Value, perform action: @escaping (Value, Value) -> Void) -> some View {
+    func onChange<Value: Equatable>(of value: Value, perform action: @escaping (Value, Value) -> Void) -> some View {
         if #available(iOS 17, tvOS 17, macOS 14, watchOS 7, *) {
             self.onChange(of: value) { oldValue, newValue in
                 action(oldValue, newValue)
