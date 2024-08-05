@@ -33,12 +33,10 @@ struct Messagable: ViewModifier {
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)).combined(with: .opacity))
-                        .onAppear{
-                            Task{
-                                try? await Task.sleep(for: .seconds(5))
-                                model.message.removeFirst()
+                        .task(id: message){
+                                try? await Task.sleep(for: .seconds(1))
+                                model.message = Array(model.message.dropFirst())
                             }
-                        }
                     }
                 }
                 .animation(.smooth, value: model.message)

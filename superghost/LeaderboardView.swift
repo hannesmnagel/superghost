@@ -52,10 +52,14 @@ struct LeaderboardView: View {
                 .padding()
             }
         }
-        .task(id: viewModel.games.debugDescription.appending(score.description)){
+        .task(id: viewModel.games){
             if !GKLocalPlayer.local.isAuthenticated{
                 try? await Task.sleep(for: .seconds(2))
             }
+            try? await loadData()
+        }
+        .task(id: score){
+            try? await Task.sleep(for: .seconds(5))
             try? await loadData()
         }
         .animation(.bouncy, value: myScore)
@@ -125,13 +129,12 @@ struct LeaderboardView: View {
 //        }
     }
     func loadData() async throws {
-
         guard let leaderboard = try? await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first
         else {
             return
         }
-        title = leaderboard.title ?? ""
-        image = try? await withCheckedThrowingContinuation{con in
+        let title = leaderboard.title ?? ""
+        let image = try? await withCheckedThrowingContinuation{con in
             leaderboard.loadImage { image, error in
                 if let image {
                     con.resume(returning: Image(uiImage: image))
@@ -142,9 +145,13 @@ struct LeaderboardView: View {
 
         }
         let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
-        myScore = entries.0
-        rank = myScore?.rank ?? -1
-        self.entries = entries.1
+        await MainActor.run{
+            self.myScore = entries.0
+            self.rank = myScore?.rank ?? -1
+            self.entries = entries.1
+            self.title = title
+            self.image = image
+        }
     }
     @ViewBuilder @MainActor
     var inlineLeaderboard: some View {

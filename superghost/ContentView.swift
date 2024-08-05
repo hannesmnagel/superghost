@@ -8,7 +8,9 @@
 import SwiftUI
 import RevenueCat
 import GameKit
-
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 extension Date: Swift.RawRepresentable{
     public var rawValue: String {ISO8601Format()}
@@ -29,6 +31,14 @@ struct ContentView: View {
     @State var isGameViewPresented = false
     @State private var showTrialEndsIn : Int?
     @CloudStorage("isSuperghost") private var isSuperghost = false
+
+    @CloudStorage("winRate") private var winningRate = 0.0
+    @CloudStorage("winStreak") private var winningStreak = 0
+    @CloudStorage("wordToday") private var wordToday = "-----"
+    @CloudStorage("winsToday") private var winsToday = 0
+    @CloudStorage("score") private var score = 0
+    @CloudStorage("rank") private var rank = -1
+    @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
     var body: some View {
         Group{
@@ -61,6 +71,11 @@ struct ContentView: View {
         }
         .fontDesign(.rounded)
         .background(Color.black, ignoresSafeAreaEdges: .all)
+
+        .task(id: viewModel.games.debugDescription.appending(isSuperghost.description)) {
+            await refreshScore()
+            await requestNotification()
+        }
     }
 
     func fetchSubscription() async throws {
@@ -86,6 +101,70 @@ struct ContentView: View {
         } else if !showedPaywallToday && Int.random(in: 0...3) == 0{
             showMessage("Add some friends and challenge them!")
             lastPaywallView = Date()
+        }
+    }
+
+    nonisolated func refreshScore() async {
+        await MainActor.run{
+            winningRate = viewModel.games.winningRate
+            winningStreak = viewModel.games.winningStreak
+        }
+        let gamesToday = await viewModel.games.today
+        await MainActor.run{
+            winsToday = gamesToday.won.count
+        }
+        let gamesLostToday = gamesToday.lost
+
+        let word = await isSuperghost ? "SUPERGHOST" : "GHOST"
+        let lettersOfWord = word.prefix(gamesLostToday.count)
+        let placeHolders = Array(repeating: "-", count: word.count).joined()
+        let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
+        await MainActor.run{
+            wordToday = lettersOfWord.appending(actualPlaceHolders)
+        }
+
+        let recentGames = await viewModel.games.recent
+        let recentWinningRate = recentGames.winningRate
+        let recentWins = recentGames.won.count
+        let recentLosses = recentGames.won.count
+        let totalWins = await viewModel.games.won.count
+
+        let baseScore = 1000
+        let totalWinRateFactor = await Int(100 * winningRate)
+        let recentWinRateFactor = Int(200 * recentWinningRate)
+        let recentWinCountFactor = 40 * recentWins
+        let totalWinCountFactor = 10 * totalWins
+        let recentLostCountFactor = 10 * recentLosses
+
+        let newScore = baseScore + totalWinRateFactor + recentWinRateFactor + recentWinCountFactor + totalWinCountFactor - recentLostCountFactor
+
+        Task{
+            try? await GameStat.submitScore(newScore)
+            await MainActor.run{
+                score = newScore
+            }
+        }
+#if canImport(WidgetKit)
+        WidgetCenter.shared.reloadAllTimelines()
+#endif
+    }
+
+    nonisolated func requestNotification() async {
+        if await !viewModel.games.isEmpty {
+            do{
+                if await notificationsAllowed {
+                    guard try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) else {
+                        await MainActor.run{
+                            notificationsAllowed = false
+                        }
+                        return
+                    }
+                }
+            } catch {
+                await MainActor.run{
+                    notificationsAllowed = false
+                }
+            }
         }
     }
 }
