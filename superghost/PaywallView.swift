@@ -63,10 +63,10 @@ struct PaywallView: View {
                         }
                         #endif
                     } else {
-                        ContentUnavailableView("There is nothing available to purchase", systemImage: "questionmark.folder", description: Text("No products found"))
+                        ContentPlaceHolderView("There is nothing available to purchase", systemImage: "questionmark.folder", description: "No products found")
                     }
                 case .failure(_):
-                    ContentUnavailableView("You can't upgrade right now", systemImage: "network.slash", description: Text("An error occured"))
+                    ContentPlaceHolderView("You can't upgrade right now", systemImage: "network.slash", description: "An error occured")
                 }
             }
         }

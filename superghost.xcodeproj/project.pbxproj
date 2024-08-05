@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		381DE8352C34648600E6CB04 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
 		38219AB42C601E34001A7C4F /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB32C601E34001A7C4F /* Messages.swift */; };
+		38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
+		38219AB82C60C604001A7C4F /* CircleButtonBorderStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */; };
+		38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
 		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
@@ -100,6 +103,9 @@
 		381D838B2C3D1D24000ED639 /* superghost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = superghost.entitlements; sourceTree = "<group>"; };
 		381DE8342C34648600E6CB04 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		38219AB32C601E34001A7C4F /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
+		38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlaceHolderView.swift; sourceTree = "<group>"; };
+		38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButtonBorderStyle.swift; sourceTree = "<group>"; };
+		38219AB92C60C9B3001A7C4F /* onChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = onChange.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		384497F92C5E88CE00DE24CF /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
@@ -178,6 +184,7 @@
 		38AE74FB2C1E094500DFB6A7 = {
 			isa = PBXGroup;
 			children = (
+				38219AB92C60C9B3001A7C4F /* onChange.swift */,
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
 				38AE75062C1E094500DFB6A7 /* superghost */,
 				38AF919E2C46D683003D100B /* gamestatsWidget */,
@@ -214,6 +221,7 @@
 				38D75F922C42B450000C0DDF /* WaitingGhost.swift */,
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
 				388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */,
+				38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */,
 				388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */,
 				38D75F8C2C425693000C0DDF /* AsyncButton.swift */,
 				38D75F892C425653000C0DDF /* StatsView.swift */,
@@ -224,6 +232,7 @@
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
 				38D75F862C425609000C0DDF /* SettingsButton.swift */,
 				38D75F832C418B21000C0DDF /* PaywallView.swift */,
+				38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */,
 				381DE8342C34648600E6CB04 /* Appearance.swift */,
 				38AE75362C1E0A2F00DFB6A7 /* GameViewModel.swift */,
 				38B1BADC2C3ECCC100E3E377 /* User.swift */,
@@ -429,10 +438,12 @@
 				38AE750A2C1E094500DFB6A7 /* ContentView.swift in Sources */,
 				38AE75392C1E0A4F00DFB6A7 /* GameView.swift in Sources */,
 				38D75F872C42560A000C0DDF /* SettingsButton.swift in Sources */,
+				38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */,
 				381DE8352C34648600E6CB04 /* Appearance.swift in Sources */,
 				38AE753B2C1E0A6D00DFB6A7 /* LoadingView.swift in Sources */,
 				388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */,
 				38D75F992C42B876000C0DDF /* PreviewModifier.swift in Sources */,
+				38219AB82C60C604001A7C4F /* CircleButtonBorderStyle.swift in Sources */,
 				38AE753D2C1E0A9D00DFB6A7 /* ApiLayer.swift in Sources */,
 				38AE753F2C1E0B2400DFB6A7 /* Alerts.swift in Sources */,
 				38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */,
@@ -441,6 +452,7 @@
 				38D75F8D2C425693000C0DDF /* AsyncButton.swift in Sources */,
 				384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */,
 				38B1BADA2C3ECC5B00E3E377 /* GameStat.swift in Sources */,
+				38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */,
 				388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */,
 				38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */,
 				38D75F902C42B422000C0DDF /* HomeView.swift in Sources */,
@@ -618,12 +630,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nagel.superghost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -660,12 +672,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nagel.superghost;
 				PRODUCT_NAME = "$(TARGET_NAME)";

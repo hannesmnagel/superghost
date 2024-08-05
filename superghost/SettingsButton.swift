@@ -72,9 +72,9 @@ struct SettingsView: View {
                     if let managementURL{Link("Manage subscription", destination: managementURL)}
 
                     Toggle("Notifications", isOn: $notificationsAllowed)
-                        .onChange(of: notificationsAllowed) {
+                        .onChange(of: notificationsAllowed) {newValue in
                             Task{
-                                if notificationsAllowed{
+                                if newValue{
                                     do{
                                         if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
 #if !os(macOS)
@@ -101,8 +101,8 @@ struct SettingsView: View {
                 }
                 Section("Volume"){
                     Slider(value: $volume, in: 0...2)
-                        .onChange(of: volume) {
-                            SoundManager.shared.setVolume(volume)
+                        .onChange(of: volume) {newVal in
+                            SoundManager.shared.setVolume(newVal)
                         }
                 }
             }
@@ -121,7 +121,7 @@ struct SettingsView: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(.bordered)
-                    .buttonBorderShape(.circle)
+                    .buttonBorderShape(.bcCircle)
                 }
             }
 #endif

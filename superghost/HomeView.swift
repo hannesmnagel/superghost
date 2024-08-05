@@ -13,6 +13,7 @@ struct HomeView: View {
     @State private var gameStatSelection: GameStat?
     @EnvironmentObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
+    @CloudStorage("wordToday") private var wordToday = "-----"
 
     var body: some View {
             VStack {
@@ -23,6 +24,18 @@ struct HomeView: View {
                             .listRowInsets(.none)
                             .listItemTint(ListItemTint?.none)
                             .listRowSeparator(.hidden)
+                    }
+                    Section{
+                        {
+                            var resultingText = Text("")
+                            for letter in wordToday {
+                                resultingText = resultingText + ((letter == "-") ? Text(String(letter)).foregroundColor(.secondary) : Text(String(letter)).foregroundColor(.accent))
+                            }
+                            return resultingText
+                        }()
+                            .font(.largeTitle.bold())
+                            .textCase(.uppercase)
+                            .frame(maxWidth: .infinity)
                     }
                     Section{
                         LeaderboardView(isSuperghost: isSuperghost)

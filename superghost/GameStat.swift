@@ -46,6 +46,14 @@ struct GameStat: Codable, Hashable, Identifiable {
         for leaderboard in leaderboards{
             try await leaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local)
         }
+        let low = GKAchievement(identifier: "score.low")    //2000
+        low.percentComplete = Double(score)/2000.0 * 100
+        let mid = GKAchievement(identifier: "score.mid")    //2500
+        mid.percentComplete = Double(score)/2500.0 * 100
+        let high = GKAchievement(identifier: "score.high")  //3000
+        high.percentComplete = Double(score)/3000.0 * 100
+
+        try await GKAchievement.report([low, mid, high])
     }
 }
 

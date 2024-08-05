@@ -122,7 +122,7 @@ struct WordDefinitionView: View {
             }
             switch definitions {
             case .failed:
-                ContentUnavailableView("Couldn't get definitions!", systemImage: "network.slash")
+                ContentPlaceHolderView("Couldn't get definitions!", systemImage: "network.slash")
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
             case .loading:
@@ -131,7 +131,7 @@ struct WordDefinitionView: View {
                     .listRowSeparator(.hidden)
             case .success(let definitions):
                 if definitions.isEmpty{
-                    ContentUnavailableView("This is not a word", systemImage: "character.book.closed")
+                    ContentPlaceHolderView("This is not a word", systemImage: "character.book.closed")
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                 } else {

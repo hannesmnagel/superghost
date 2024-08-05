@@ -24,6 +24,8 @@ struct LeaderboardView: View {
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
     @EnvironmentObject var viewModel: GameViewModel
+    @CloudStorage("score") private var score = 0
+    @CloudStorage("rank") private var rank = -1
 
     var body: some View {
         VStack{
@@ -50,7 +52,7 @@ struct LeaderboardView: View {
                 .padding()
             }
         }
-        .task(id: viewModel.games){
+        .task(id: viewModel.games.debugDescription.appending(score.description)){
             if !GKLocalPlayer.local.isAuthenticated{
                 try? await Task.sleep(for: .seconds(2))
             }
@@ -68,9 +70,6 @@ struct LeaderboardView: View {
     }
     @ViewBuilder @MainActor
     func scoreDetail(for entry: GKLeaderboard.Entry) -> some View{
-//        if #available(iOS 18.0, macOS 15.0, *){
-//            GameCenterView(viewController: GKGameCenterViewController(player: entry.player))
-//        } else {
             NavigationStack{
                 entry.player.asyncImage(.normal)
                     .frame(maxWidth: 200, maxHeight: 200)
@@ -82,8 +81,29 @@ struct LeaderboardView: View {
                     let friends = try? await GKLocalPlayer.local.loadFriends()
                     if friends?.contains(entry.player) ?? false {
                         Text("A friend of yours ranked at \(entry.rank)")
+//                        if #available(iOS 18.0, macOS 15.0, *){
+//                            Button("View your profile"){
+//                                selectedScore = nil
+//
+//                                DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
+//                                    GKAccessPoint.shared.trigger(player: entry.player)
+//                                }
+//                            }
+//                            .buttonStyle(.bordered)
+//                            .buttonBorderShape(.capsule)
+//                        }
+
                     } else if entry.player == GKLocalPlayer.local {
                         Text("You are rank \(entry.rank)")
+                        Button("View your profile"){
+                            selectedScore = nil
+
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
+                                GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.capsule)
                     } else {
                         Text("Rank: \(entry.rank)")
                     }
@@ -98,7 +118,7 @@ struct LeaderboardView: View {
                             Image(systemName: "xmark")
                         }
                         .buttonStyle(.bordered)
-                        .buttonBorderShape(.circle)
+                        .buttonBorderShape(.bcCircle)
                     }
                 }
             }
@@ -123,21 +143,18 @@ struct LeaderboardView: View {
         }
         let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
         myScore = entries.0
+        rank = myScore?.rank ?? -1
         self.entries = entries.1
     }
     @ViewBuilder @MainActor
     var inlineLeaderboard: some View {
         ForEach(entries, id: \.rank) { entry in
             Button{
-//                if #available(iOS 18.0, macOS 15.0, *) {
-//                    GKAccessPoint.shared.trigger(player: entry.player)
-//                } else {
-                    if entry.player == GKLocalPlayer.local{
-                        GKAccessPoint.shared.trigger(state: .localPlayerProfile) {}
-                    } else {
-                        selectedScore = entry
-                    }
-//                }
+                //                if #available(iOS 18.0, macOS 15.0, *) {
+                //                    GKAccessPoint.shared.trigger(player: entry.player)
+                //                } else {
+                selectedScore = entry
+                //                }
             } label: {
                 HStack{
                     Text("\(entry.rank).")

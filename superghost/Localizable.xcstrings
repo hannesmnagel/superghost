@@ -97,6 +97,9 @@
     "More" : {
 
     },
+    "No" : {
+
+    },
     "No products found" : {
 
     },
@@ -112,6 +115,9 @@
     "Quit" : {
 
     },
+    "Rank" : {
+
+    },
     "Rank: %lld" : {
 
     },
@@ -119,6 +125,9 @@
 
     },
     "Restore Purchases" : {
+
+    },
+    "Score" : {
 
     },
     "Send Invitation Link" : {
@@ -188,7 +197,7 @@
     "This is not a word" : {
 
     },
-    "Today" : {
+    "View your profile" : {
 
     },
     "Volume" : {

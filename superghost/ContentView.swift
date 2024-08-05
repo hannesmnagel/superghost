@@ -9,12 +9,6 @@ import SwiftUI
 import RevenueCat
 import GameKit
 
-struct BlackOutTransition: Transition {
-    func body(content: Content, phase: TransitionPhase) -> some View {
-        content
-            .blur(radius: phase == .identity ? 0 : 10)
-    }
-}
 
 extension Date: Swift.RawRepresentable{
     public var rawValue: String {ISO8601Format()}
@@ -40,7 +34,7 @@ struct ContentView: View {
         Group{
             if isFirstUse{
                 FirstUseView()
-                    .transition(BlackOutTransition())
+                    .transition(.opacity)
             } else if isGameViewPresented{
                 GameView(isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
             } else {

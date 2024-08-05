@@ -12,15 +12,21 @@ struct WaitingGhost: View {
     
     var body: some View {
 
-        Video("waitingGhost")
-            .notUpdating()
-            .padding()
-            .visualEffect { content, geo in
-                content
-                    .offset(y: -geo.frame(in: .scrollView).minY*0.8 + min(30, geo.size.height/2))
-                    .scaleEffect(0.8+geo.frame(in: .scrollView).minY/1000)
-            }
-            .notUpdating()
+        if #available(iOS 17.0, *) {
+            Video("waitingGhost")
+                .notUpdating()
+                .padding()
+                .visualEffect { content, geo in
+                    content
+                        .offset(y: -geo.frame(in: .scrollView).minY*0.8 + min(30, geo.size.height/2))
+                        .scaleEffect(0.8+geo.frame(in: .scrollView).minY/1000)
+                }
+                .notUpdating()
+        } else {
+            Video("waitingGhost")
+                .notUpdating()
+                .padding()
+        }
     }
 }
 

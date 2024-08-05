@@ -57,7 +57,7 @@ final class GameViewModel: ObservableObject {
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
                             let achievement = GKAchievement(identifier: "word.long")
-                            achievement.percentComplete = 100
+                            achievement.percentComplete += 100
                             GKAchievement.report([achievement])
                             //                        if #available(iOS 18.0, *) {
                             //                            GKAccessPoint.shared.trigger(achievementID: "word.long")

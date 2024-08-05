@@ -18,6 +18,7 @@ struct StatsView: View {
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("score") private var score = 0
+    @CloudStorage("rank") private var rank = -1
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
@@ -50,7 +51,18 @@ struct StatsView: View {
             .listRowBackground(game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
         }
         if viewModel.games.count > 5 {
-            Button(expandingList ? "Less" : "More"){withAnimation(.smooth){expandingList.toggle()}}
+            Button{
+                withAnimation(.smooth){expandingList.toggle()}
+            } label: {
+                HStack{
+                    Text(expandingList ? "Less" : "More")
+                    Image(systemName: "ellipsis")
+                }
+                .contentShape(.rect)
+            }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .frame(maxWidth: .infinity)
         }
     }
     @ViewBuilder @MainActor
@@ -89,8 +101,29 @@ struct StatsView: View {
                     .font(AppearanceManager.statsLabel)
             }
             .frame(maxWidth: .infinity)
+            Divider()
+            VStack{
+                Text(score, format: .number)
+                    .font(AppearanceManager.statsValue)
+                Text("Score")
+                    .font(AppearanceManager.statsLabel)
+            }
+            .frame(maxWidth: .infinity)
+            Divider()
+            VStack{
+                if rank >= 0{
+                    Text(rank, format: .number)
+                        .font(AppearanceManager.statsValue)
+                } else {
+                    Text("No")
+                        .font(AppearanceManager.statsValue)
+                }
+                Text("Rank")
+                    .font(AppearanceManager.statsLabel)
+            }
+            .frame(maxWidth: .infinity)
         }
-        .onChange(of: winningStreak) { oldValue, newValue in
+        .bcOnChange(of: winningStreak) { newValue, oldValue in
             if Int(oldValue/5) < Int(newValue/5) && (oldValue + 1) == newValue {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
             }
@@ -114,10 +147,10 @@ struct StatsView: View {
             let totalWins = viewModel.games.won.count
 
             let baseScore = 1000
-            let totalWinRateFactor = Int(500 * winningRate)
-            let recentWinRateFactor = Int(500 * recentWinningRate)
-            let recentWinCountFactor = 10 * recentWins
-            let totalWinCountFactor = 1 * totalWins
+            let totalWinRateFactor = Int(200 * winningRate)
+            let recentWinRateFactor = Int(400 * recentWinningRate)
+            let recentWinCountFactor = 17 * recentWins
+            let totalWinCountFactor = 5 * totalWins
 
             score = baseScore + totalWinRateFactor + recentWinRateFactor + recentWinCountFactor + totalWinCountFactor
 
@@ -154,24 +187,6 @@ struct StatsView: View {
                 .background(Color.green.opacity(0.5))
         )
         .clipped()
-
-#if !os(macOS)
-        LabeledContent("Today", value: wordToday)
-            .listRowBackground(
-                HStack{
-                    GeometryReader{geo in
-                        Rectangle()
-                            .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
-                            .frame(width:
-                                    geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
-                            )
-                    }
-                }
-                    .coordinateSpace(name: "rowbackground")
-                    .ignoresSafeArea()
-                    .background(Color.green.opacity(0.5))
-            )
-#endif
     }
 }
 

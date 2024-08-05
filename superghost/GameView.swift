@@ -248,7 +248,7 @@ func retry<R:Sendable>(count: Int = 3, _ action: () async throws ->R) async reth
     } catch {
         guard count > 0 else {throw error}
         return try await retry(count: count-1){
-            try? await Task.sleep(nanoseconds: 700000000)
+            try? await Task.sleep(for: .seconds(1))
             return try await action()
         }
 

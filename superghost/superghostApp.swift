@@ -40,7 +40,7 @@ struct superghostApp: App {
                 .frame(minHeight: 500)
 #endif
         }
-        .onChange(of: scenePhase){
+        .onChange(of: scenePhase){newValue in
             if scenePhase == .background{
                 Task{
                     do{
