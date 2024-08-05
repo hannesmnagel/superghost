@@ -184,7 +184,6 @@
 		38AE74FB2C1E094500DFB6A7 = {
 			isa = PBXGroup;
 			children = (
-				38219AB92C60C9B3001A7C4F /* onChange.swift */,
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
 				38AE75062C1E094500DFB6A7 /* superghost */,
 				38AF919E2C46D683003D100B /* gamestatsWidget */,
@@ -232,6 +231,7 @@
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
 				38D75F862C425609000C0DDF /* SettingsButton.swift */,
 				38D75F832C418B21000C0DDF /* PaywallView.swift */,
+				38219AB92C60C9B3001A7C4F /* onChange.swift */,
 				38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */,
 				381DE8342C34648600E6CB04 /* Appearance.swift */,
 				38AE75362C1E0A2F00DFB6A7 /* GameViewModel.swift */,
