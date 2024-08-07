@@ -11,6 +11,7 @@ import GameKit
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
+import UserNotifications
 
 extension Date: Swift.RawRepresentable{
     public var rawValue: String {ISO8601Format()}

@@ -20,7 +20,7 @@ struct ContentPlaceHolderView: View {
 
 
     var body: some View {
-        if #available(iOS 17.0, *){
+        if #available(macOS 14.0, iOS 17.0, *){
             if let description{
                 ContentUnavailableView(title, systemImage: systemImage, description: Text(description))
             } else {

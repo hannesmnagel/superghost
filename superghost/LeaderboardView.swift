@@ -48,7 +48,7 @@ struct LeaderboardView: View {
                     .contentShape(.rect)
                 }
                 .buttonStyle(.bordered)
-                .buttonBorderShape(.capsule)
+                .buttonBorderShape(.bcCapsule)
                 .padding()
             }
         }
@@ -107,7 +107,7 @@ struct LeaderboardView: View {
                             }
                         }
                         .buttonStyle(.bordered)
-                        .buttonBorderShape(.capsule)
+                        .buttonBorderShape(.bcCapsule)
                     } else {
                         Text("Rank: \(entry.rank)")
                     }

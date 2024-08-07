@@ -57,7 +57,6 @@ struct PaywallView: View {
                                             Text("Continue")
                                         }
                                         .buttonStyle(.borderedProminent)
-                                        .buttonBorderShape(.capsule)
                                     }
                                 }
                         }

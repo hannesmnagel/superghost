@@ -16,8 +16,16 @@ struct SettingsButton: View {
 
     var body: some View {
         #if os(macOS)
-        SettingsLink{
-            Label("Settings", systemImage: "gearshape")
+        if #available(macOS 14.0, *){
+            SettingsLink{
+                Label("Settings", systemImage: "gearshape")
+            }
+        } else {
+            Button{
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            } label: {
+                Label("Settings", systemImage: "gearshape")
+            }
         }
         #else
         Button{

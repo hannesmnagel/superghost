@@ -12,13 +12,14 @@ enum AlertItem: String, Equatable, Identifiable {
     case won, lost, playerLeft
 }
 
-
 struct AlertView: View {
     @State var alertItem: AlertItem
-    @EnvironmentObject var viewModel: GameViewModel
-    @Binding var isPresented: Bool
-    @Environment(\.dismiss) var dismiss
+    let dismissParent: (() -> Void)?
     let isSuperghost: Bool
+    let quitGame: (() async throws -> Void)?
+    let rematch: (() async throws -> Void)?
+    let word: String
+    let player2Id: String
 
     var body: some View {
         ViewThatFits{
@@ -38,35 +39,36 @@ struct AlertView: View {
                 .font(AppearanceManager.youWonOrLostSubtitle)
                 .padding(.bottom)
             if alertItem == .playerLeft {
-                Spacer()
-                AsyncButton{
-                    isPresented = false
-                    try await viewModel.quitGame(isSuperghost: isSuperghost)
-                } label: {
-                    Text("Quit")
-                }
-                .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
-                Spacer()
-            } else {
-                Spacer()
-                let word = viewModel.game?.moves.last?.word.uppercased() ?? ""
-                WordDefinitionView(word: word)
-                HStack{
+                if let quitGame{
                     Spacer()
                     AsyncButton{
-                        isPresented = false
-                        try await viewModel.quitGame(isSuperghost: isSuperghost)
+                        dismissParent?()
+                        try await quitGame()
                     } label: {
-                        Text("   Quit    ")
+                        Text("Quit")
                     }
-                    .buttonStyle(AppearanceManager.QuitRematch(isPrimary: viewModel.game?.player2Id == "botPlayer"))
-                    .keyboardShortcut(.cancelAction)
-                    if viewModel.game?.player2Id != "botPlayer"{
+                    .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
+                    Spacer()
+                }
+            } else {
+                Spacer()
+                WordDefinitionView(word: word)
+                HStack{
+                    if let quitGame{
                         Spacer()
                         AsyncButton{
-                            viewModel.game?.winningPlayerId.removeAll()
-                            viewModel.alertItem = nil
-                            try await viewModel.resetGame(isSuperghost: isSuperghost)
+                            dismissParent?()
+                            try await quitGame()
+                        } label: {
+                            Text("   Quit    ")
+                        }
+                        .buttonStyle(AppearanceManager.QuitRematch(isPrimary: player2Id == "botPlayer"))
+                        .keyboardShortcut(.cancelAction)
+                    }
+                    if let rematch {
+                        Spacer()
+                        AsyncButton{
+                            try await rematch()
                         } label: {
                             Text("Rematch")
                         }
@@ -81,7 +83,7 @@ struct AlertView: View {
         }
         .padding()
         .buttonStyle(.bordered)
-        .interactiveDismissDisabled(viewModel.alertItem != nil)
+        .interactiveDismissDisabled()
     }
 }
 
@@ -182,14 +184,11 @@ struct WordDefinitionView: View {
 }
 
 #Preview{
-    AlertView(alertItem: .lost, isPresented: .constant(true), isSuperghost: true)
-        .modifier(PreviewModifier())
+    AlertView(alertItem: .lost, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }
 #Preview{
-    AlertView(alertItem: .playerLeft, isPresented: .constant(true), isSuperghost: true)
-        .modifier(PreviewModifier())
+    AlertView(alertItem: .playerLeft, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }
 #Preview{
-    AlertView(alertItem: .won, isPresented: .constant(true), isSuperghost: true)
-        .modifier(PreviewModifier())
+    AlertView(alertItem: .won, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }

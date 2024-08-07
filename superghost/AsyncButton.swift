@@ -58,5 +58,4 @@ struct AsyncButton<Label:View>: View {
         Text("Button")
     }
     .buttonStyle(.bordered)
-    .modifier(PreviewModifier())
 }

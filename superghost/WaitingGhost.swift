@@ -12,7 +12,7 @@ struct WaitingGhost: View {
     
     var body: some View {
 
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17.0, macOS 14.0, *) {
             Video("waitingGhost")
                 .notUpdating()
                 .padding()
