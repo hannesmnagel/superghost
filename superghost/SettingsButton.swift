@@ -172,7 +172,7 @@ struct AppIconPickerView: View {
                         UIApplication.shared.setAlternateIconName(icon)
                         dismiss()
                     } label: {
-                        Image(icon)
+                        Image(icon.appending(".image"))
                             .resizable()
                             .scaledToFit()
                             .clipShape(.rect(cornerRadius: 10))
