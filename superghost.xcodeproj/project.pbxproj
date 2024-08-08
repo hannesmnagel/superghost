@@ -20,6 +20,7 @@
 		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
 		384498002C5E8D1400DE24CF /* ambient.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FC2C5E8D1400DE24CF /* ambient.mp3 */; };
 		384498012C5E8D1400DE24CF /* laughingGhost.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */; };
+		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */; };
@@ -79,6 +80,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		38474C7A2C64AC27006FCDB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38B790ED2C6495A400AC9BE2;
+			remoteInfo = "Messages Extension";
+		};
 		38AF91A92C46D685003D100B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
@@ -106,6 +114,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */,
+				38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -346,6 +355,7 @@
 			);
 			dependencies = (
 				38AF91AA2C46D685003D100B /* PBXTargetDependency */,
+				38474C7B2C64AC27006FCDB4 /* PBXTargetDependency */,
 			);
 			name = superghost;
 			packageProductDependencies = (
@@ -570,6 +580,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		38474C7B2C64AC27006FCDB4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 38B790ED2C6495A400AC9BE2 /* Messages Extension */;
+			targetProxy = 38474C7A2C64AC27006FCDB4 /* PBXContainerItemProxy */;
+		};
 		38AF91AA2C46D685003D100B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilters = (
