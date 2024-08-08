@@ -79,6 +79,9 @@
     "Host a Game" : {
 
     },
+    "Icon" : {
+
+    },
     "Launch Superghost" : {
 
     },
@@ -124,6 +127,9 @@
     "Rank: %lld" : {
 
     },
+    "Red" : {
+
+    },
     "Rematch" : {
 
     },
@@ -149,6 +155,12 @@
 
     },
     "Subscribe to Superghost" : {
+
+    },
+    "Super Red" : {
+
+    },
+    "Super Yellow" : {
 
     },
     "Superghost" : {
@@ -225,6 +237,9 @@
 
     },
     "Word Today" : {
+
+    },
+    "Yellow" : {
 
     },
     "Yes, I lied" : {

@@ -113,6 +113,11 @@ struct SettingsView: View {
                             SoundManager.shared.setVolume(newVal)
                         }
                 }
+#if os(iOS)
+                Section("Icon"){
+                    AppIconPickerView(isSuperghost: isSuperghost)
+                }
+#endif
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -140,8 +145,52 @@ struct SettingsView: View {
     }
 }
 
+#if os(iOS)
+struct AppIconPickerView: View {
+    let isSuperghost: Bool
+    var body: some View {
+        Button("Standard"){
+            UIApplication.shared.setAlternateIconName("AppIcon")
+        }
+        Button("Super Yellow"){
+            UIApplication.shared.setAlternateIconName("AppIcon.yellow.super.yellow")
+        }
+        Button("Yellow"){
+            UIApplication.shared.setAlternateIconName("AppIcon.yellow")
+        }
+        Button("Super Red"){
+            UIApplication.shared.setAlternateIconName("AppIcon.red.super.red")
+        }
+        Button("Red"){
+            UIApplication.shared.setAlternateIconName("AppIcon.red")
+        }
+        Button("Super Purple"){
+            UIApplication.shared.setAlternateIconName("AppIcon.purple.super.purple")
+        }
+        Button("Purple"){
+            UIApplication.shared.setAlternateIconName("AppIcon.purple")
+        }
+        Button("Super Blue"){
+            UIApplication.shared.setAlternateIconName("AppIcon.blue.super.blue")
+        }
+        Button("Blue"){
+            UIApplication.shared.setAlternateIconName("AppIcon.blue")
+        }
+        Button("Super Gray"){
+            UIApplication.shared.setAlternateIconName("AppIcon.gray.super.gray")
+        }
+        Button("Gray"){
+            UIApplication.shared.setAlternateIconName("AppIcon.gray")
+        }
+    }
+}
+#endif
 
 #Preview {
     SettingsButton(isSuperghost: true)
+        .modifier(PreviewModifier())
+}
+#Preview {
+    SettingsView(isSuperghost: true) {}
         .modifier(PreviewModifier())
 }
