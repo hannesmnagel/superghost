@@ -12,6 +12,10 @@
 		38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
 		38219AB82C60C604001A7C4F /* CircleButtonBorderStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */; };
 		38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
+		383C30002C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
+		383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
+		383C30032C649CDD005A1DB9 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C30022C649CDD005A1DB9 /* LetterPicker.swift */; };
+		383C30042C649CDD005A1DB9 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C30022C649CDD005A1DB9 /* LetterPicker.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
 		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
@@ -56,8 +60,6 @@
 		38B791002C6496F900AC9BE2 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F8C2C425693000C0DDF /* AsyncButton.swift */; };
 		38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */; };
 		38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
-		38B791042C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */; };
-		38B791052C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */; };
 		38B791062C64981500AC9BE2 /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
 		38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
 		38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C32F382C53AB47009D4E57 /* NotUpdating.swift */; };
@@ -118,6 +120,8 @@
 		38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlaceHolderView.swift; sourceTree = "<group>"; };
 		38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButtonBorderStyle.swift; sourceTree = "<group>"; };
 		38219AB92C60C9B3001A7C4F /* onChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = onChange.swift; sourceTree = "<group>"; };
+		383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLetterPicker.swift; sourceTree = "<group>"; };
+		383C30022C649CDD005A1DB9 /* LetterPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterPicker.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		384497F92C5E88CE00DE24CF /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
@@ -160,7 +164,6 @@
 		38B790F72C6495A600AC9BE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38B790F92C6495A600AC9BE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38B790FD2C64960400AC9BE2 /* Messages Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Messages Extension.entitlements"; sourceTree = "<group>"; };
-		38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SingleLetterPicker.swift; path = ../../xcode16/superghost/superghost/SingleLetterPicker.swift; sourceTree = "<group>"; };
 		38C32F382C53AB47009D4E57 /* NotUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotUpdating.swift; sourceTree = "<group>"; };
 		38D75F6F2C418577000C0DDF /* revenuecatkey.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = revenuecatkey.txt; sourceTree = "<group>"; };
 		38D75F7C2C418643000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS1.2.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -248,6 +251,7 @@
 				38C32F382C53AB47009D4E57 /* NotUpdating.swift */,
 				38D75F922C42B450000C0DDF /* WaitingGhost.swift */,
 				38D75F8F2C42B422000C0DDF /* HomeView.swift */,
+				383C30022C649CDD005A1DB9 /* LetterPicker.swift */,
 				388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */,
 				38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */,
 				388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */,
@@ -259,7 +263,7 @@
 				38219AB32C601E34001A7C4F /* Messages.swift */,
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
 				38D75F862C425609000C0DDF /* SettingsButton.swift */,
-				38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */,
+				383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */,
 				38D75F832C418B21000C0DDF /* PaywallView.swift */,
 				38219AB92C60C9B3001A7C4F /* onChange.swift */,
 				38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */,
@@ -502,8 +506,8 @@
 				384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38D75F932C42B450000C0DDF /* WaitingGhost.swift in Sources */,
 				38D75F9C2C42DC16000C0DDF /* InstructionsView.swift in Sources */,
-				38B791042C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */,
 				38AE75372C1E0A2F00DFB6A7 /* GameViewModel.swift in Sources */,
+				383C30002C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */,
 				38A7259E2C4D24EF0031E9A5 /* TrialEndsInView.swift in Sources */,
 				38D75F842C418B21000C0DDF /* PaywallView.swift in Sources */,
 				38B1BAD72C3ECBC100E3E377 /* Game.swift in Sources */,
@@ -511,6 +515,7 @@
 				38AE75392C1E0A4F00DFB6A7 /* GameView.swift in Sources */,
 				38D75F872C42560A000C0DDF /* SettingsButton.swift in Sources */,
 				38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */,
+				383C30042C649CDD005A1DB9 /* LetterPicker.swift in Sources */,
 				381DE8352C34648600E6CB04 /* Appearance.swift in Sources */,
 				38AE753B2C1E0A6D00DFB6A7 /* LoadingView.swift in Sources */,
 				388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */,
@@ -554,12 +559,13 @@
 				38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */,
 				38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */,
 				38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */,
+				383C30032C649CDD005A1DB9 /* LetterPicker.swift in Sources */,
 				38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */,
 				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,
+				383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */,
 				38B791062C64981500AC9BE2 /* onChange.swift in Sources */,
 				38B791002C6496F900AC9BE2 /* AsyncButton.swift in Sources */,
 				38B790FE2C6496E200AC9BE2 /* Appearance.swift in Sources */,
-				38B791052C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,7 +870,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X5933694SW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Messages Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
@@ -892,7 +898,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X5933694SW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Messages Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
