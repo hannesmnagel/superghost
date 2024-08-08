@@ -211,7 +211,6 @@ struct GameView: View {
 
     var body: some View {
         VStack{
-            Text("hdt")
             if let conversation = appState.conversation{
                 if let lastMove = appState.lastMove {
                     if !lastMove.player1Id.isEmpty && !lastMove.player2Id.isEmpty {
@@ -299,7 +298,7 @@ struct GameView: View {
                                     )
                                 )
                             }
-                            Link("Learn how to play", destination: URL(string: "https://hannesnagel.com")!)
+                            Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/superghost/private")!)
                         }
                     }
                 } else {
@@ -314,7 +313,7 @@ struct GameView: View {
                             )
                         )
                     }
-                    Link("Learn how to play", destination: URL(string: "https://hannesnagel.com")!)
+                    Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/superghost/private")!)
                 }
             }
         }
