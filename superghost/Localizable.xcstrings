@@ -127,9 +127,6 @@
     "Rank: %lld" : {
 
     },
-    "Red" : {
-
-    },
     "Rematch" : {
 
     },
@@ -137,6 +134,9 @@
 
     },
     "Score" : {
+
+    },
+    "Select AppIcon" : {
 
     },
     "Send Invitation Link" : {
@@ -155,12 +155,6 @@
 
     },
     "Subscribe to Superghost" : {
-
-    },
-    "Super Red" : {
-
-    },
-    "Super Yellow" : {
 
     },
     "Superghost" : {
@@ -237,9 +231,6 @@
 
     },
     "Word Today" : {
-
-    },
-    "Yellow" : {
 
     },
     "Yes, I lied" : {

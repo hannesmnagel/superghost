@@ -115,7 +115,7 @@ struct SettingsView: View {
                 }
 #if os(iOS)
                 Section("Icon"){
-                    AppIconPickerView(isSuperghost: isSuperghost)
+                    NavigationLink("Select AppIcon", destination: AppIconPickerView(isSuperghost: isSuperghost))
                 }
 #endif
             }
@@ -147,40 +147,38 @@ struct SettingsView: View {
 
 #if os(iOS)
 struct AppIconPickerView: View {
+    @Environment(\.dismiss) var dismiss
     let isSuperghost: Bool
+    let icons = [
+        "AppIcon.standard",
+        "AppIcon.blue",
+        "AppIcon.blue.super.blue",
+        "AppIcon.gray",
+        "AppIcon.gray.super.gray",
+        "AppIcon.yellow",
+        "AppIcon.yellow.super.yellow",
+        "AppIcon.yellow.super.purple",
+        "AppIcon.purple",
+        "AppIcon.purple.super.purple",
+        "AppIcon.red",
+        "AppIcon.red.super.red",
+        "AppIcon.red.super.green"
+    ]
     var body: some View {
-        Button("Standard"){
-            UIApplication.shared.setAlternateIconName("AppIcon")
-        }
-        Button("Super Yellow"){
-            UIApplication.shared.setAlternateIconName("AppIcon.yellow.super.yellow")
-        }
-        Button("Yellow"){
-            UIApplication.shared.setAlternateIconName("AppIcon.yellow")
-        }
-        Button("Super Red"){
-            UIApplication.shared.setAlternateIconName("AppIcon.red.super.red")
-        }
-        Button("Red"){
-            UIApplication.shared.setAlternateIconName("AppIcon.red")
-        }
-        Button("Super Purple"){
-            UIApplication.shared.setAlternateIconName("AppIcon.purple.super.purple")
-        }
-        Button("Purple"){
-            UIApplication.shared.setAlternateIconName("AppIcon.purple")
-        }
-        Button("Super Blue"){
-            UIApplication.shared.setAlternateIconName("AppIcon.blue.super.blue")
-        }
-        Button("Blue"){
-            UIApplication.shared.setAlternateIconName("AppIcon.blue")
-        }
-        Button("Super Gray"){
-            UIApplication.shared.setAlternateIconName("AppIcon.gray.super.gray")
-        }
-        Button("Gray"){
-            UIApplication.shared.setAlternateIconName("AppIcon.gray")
+        ScrollView{
+            LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 400))]) {
+                ForEach(icons, id: \.self) { icon in
+                    Button{
+                        UIApplication.shared.setAlternateIconName(icon)
+                        dismiss()
+                    } label: {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(.rect(cornerRadius: 10))
+                    }
+                }
+            }
         }
     }
 }
