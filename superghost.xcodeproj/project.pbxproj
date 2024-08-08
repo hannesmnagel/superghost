@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,18 +12,6 @@
 		38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
 		38219AB82C60C604001A7C4F /* CircleButtonBorderStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */; };
 		38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
-		38219AC12C6258AF001A7C4F /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38219AC02C6258AF001A7C4F /* Messages.framework */; };
-		38219ACD2C6258B1001A7C4F /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38219ABF2C6258AF001A7C4F /* Messages Extension.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		38219AD32C625C5C001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
-		38219AD52C626176001A7C4F /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F8C2C425693000C0DDF /* AsyncButton.swift */; };
-		38219AD72C626EE1001A7C4F /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AD62C626EE1001A7C4F /* LetterPicker.swift */; };
-		38219AD92C626F4D001A7C4F /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
-		38219ADB2C626F99001A7C4F /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219ADA2C626F99001A7C4F /* SingleLetterPicker.swift */; };
-		38219ADC2C626F99001A7C4F /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219ADA2C626F99001A7C4F /* SingleLetterPicker.swift */; };
-		38219ADD2C636CBF001A7C4F /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */; };
-		38219ADE2C636D10001A7C4F /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
-		38219ADF2C636D21001A7C4F /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
-		38219AE02C636DBC001A7C4F /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
 		384497FF2C5E8D1400DE24CF /* scream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 384497FE2C5E8D1400DE24CF /* scream.mp3 */; };
@@ -60,6 +48,18 @@
 		38B1BADD2C3ECCC100E3E377 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BADC2C3ECCC100E3E377 /* User.swift */; };
 		38B4B1572C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
 		38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B4B1562C52498400F17CEA /* Localizable.xcstrings */; };
+		38B790F02C6495A400AC9BE2 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38B790EF2C6495A400AC9BE2 /* Messages.framework */; };
+		38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B790F22C6495A400AC9BE2 /* MessagesViewController.swift */; };
+		38B790F82C6495A600AC9BE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B790F72C6495A600AC9BE2 /* Assets.xcassets */; };
+		38B790FE2C6496E200AC9BE2 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE8342C34648600E6CB04 /* Appearance.swift */; };
+		38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
+		38B791002C6496F900AC9BE2 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D75F8C2C425693000C0DDF /* AsyncButton.swift */; };
+		38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */; };
+		38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */; };
+		38B791042C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */; };
+		38B791052C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */; };
+		38B791062C64981500AC9BE2 /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
+		38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
 		38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C32F382C53AB47009D4E57 /* NotUpdating.swift */; };
 		38D75F702C418577000C0DDF /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38D75F6F2C418577000C0DDF /* revenuecatkey.txt */; };
 		38D75F742C418629000C0DDF /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F732C418629000C0DDF /* RevenueCat */; };
@@ -78,13 +78,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		38219ACB2C6258B1001A7C4F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 38219ABE2C6258AF001A7C4F;
-			remoteInfo = "Messages Extension";
-		};
 		38AF91A92C46D685003D100B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 38AE74FC2C1E094500DFB6A7 /* Project object */;
@@ -112,7 +105,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */,
-				38219ACD2C6258B1001A7C4F /* Messages Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,10 +118,6 @@
 		38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlaceHolderView.swift; sourceTree = "<group>"; };
 		38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButtonBorderStyle.swift; sourceTree = "<group>"; };
 		38219AB92C60C9B3001A7C4F /* onChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = onChange.swift; sourceTree = "<group>"; };
-		38219ABF2C6258AF001A7C4F /* Messages Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Messages Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		38219AC02C6258AF001A7C4F /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
-		38219AD62C626EE1001A7C4F /* LetterPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterPicker.swift; sourceTree = "<group>"; };
-		38219ADA2C626F99001A7C4F /* SingleLetterPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLetterPicker.swift; sourceTree = "<group>"; };
 		383C66812C2DE99D003A62B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		384497F92C5E88CE00DE24CF /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
@@ -166,6 +154,13 @@
 		38B1BAD92C3ECC5B00E3E377 /* GameStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStat.swift; sourceTree = "<group>"; };
 		38B1BADC2C3ECCC100E3E377 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		38B4B1562C52498400F17CEA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Messages Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		38B790EF2C6495A400AC9BE2 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
+		38B790F22C6495A400AC9BE2 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		38B790F72C6495A600AC9BE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		38B790F92C6495A600AC9BE2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		38B790FD2C64960400AC9BE2 /* Messages Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Messages Extension.entitlements"; sourceTree = "<group>"; };
+		38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SingleLetterPicker.swift; path = ../../xcode16/superghost/superghost/SingleLetterPicker.swift; sourceTree = "<group>"; };
 		38C32F382C53AB47009D4E57 /* NotUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotUpdating.swift; sourceTree = "<group>"; };
 		38D75F6F2C418577000C0DDF /* revenuecatkey.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = revenuecatkey.txt; sourceTree = "<group>"; };
 		38D75F7C2C418643000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS1.2.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -182,29 +177,7 @@
 		38D75F9B2C42DC16000C0DDF /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		38219ACE2C6258B1001A7C4F /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 38219ABE2C6258AF001A7C4F /* Messages Extension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		38219AC22C6258AF001A7C4F /* Messages Extension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (38219ACE2C6258B1001A7C4F /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Messages Extension"; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		38219ABC2C6258AF001A7C4F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				38219AC12C6258AF001A7C4F /* Messages.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		38AE75012C1E094500DFB6A7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -224,6 +197,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		38B790EB2C6495A400AC9BE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38B790F02C6495A400AC9BE2 /* Messages.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -233,7 +214,7 @@
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
 				38AE75062C1E094500DFB6A7 /* superghost */,
 				38AF919E2C46D683003D100B /* gamestatsWidget */,
-				38219AC22C6258AF001A7C4F /* Messages Extension */,
+				38B790F12C6495A400AC9BE2 /* Messages Extension */,
 				38AE75052C1E094500DFB6A7 /* Products */,
 				38D75F772C418634000C0DDF /* Frameworks */,
 			);
@@ -244,7 +225,7 @@
 			children = (
 				38AE75042C1E094500DFB6A7 /* superghost.app */,
 				38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */,
-				38219ABF2C6258AF001A7C4F /* Messages Extension.appex */,
+				38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -278,6 +259,7 @@
 				38219AB32C601E34001A7C4F /* Messages.swift */,
 				38D75F982C42B876000C0DDF /* PreviewModifier.swift */,
 				38D75F862C425609000C0DDF /* SettingsButton.swift */,
+				38B791032C64977800AC9BE2 /* SingleLetterPicker.swift */,
 				38D75F832C418B21000C0DDF /* PaywallView.swift */,
 				38219AB92C60C9B3001A7C4F /* onChange.swift */,
 				38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */,
@@ -289,8 +271,6 @@
 				388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */,
 				38AE753E2C1E0B2400DFB6A7 /* Alerts.swift */,
 				38AE75382C1E0A4E00DFB6A7 /* GameView.swift */,
-				38219AD62C626EE1001A7C4F /* LetterPicker.swift */,
-				38219ADA2C626F99001A7C4F /* SingleLetterPicker.swift */,
 				38AE753A2C1E0A6D00DFB6A7 /* LoadingView.swift */,
 				38AE753C2C1E0A9D00DFB6A7 /* ApiLayer.swift */,
 				38D75F6F2C418577000C0DDF /* revenuecatkey.txt */,
@@ -322,6 +302,17 @@
 			path = gamestatsWidget;
 			sourceTree = "<group>";
 		};
+		38B790F12C6495A400AC9BE2 /* Messages Extension */ = {
+			isa = PBXGroup;
+			children = (
+				38B790FD2C64960400AC9BE2 /* Messages Extension.entitlements */,
+				38B790F22C6495A400AC9BE2 /* MessagesViewController.swift */,
+				38B790F72C6495A600AC9BE2 /* Assets.xcassets */,
+				38B790F92C6495A600AC9BE2 /* Info.plist */,
+			);
+			path = "Messages Extension";
+			sourceTree = "<group>";
+		};
 		38D75F772C418634000C0DDF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,7 +320,7 @@
 				38D75F7C2C418643000C0DDF /* StoreKit.framework */,
 				38A46C212C46C50F004950E3 /* WidgetKit.framework */,
 				38A46C232C46C50F004950E3 /* SwiftUI.framework */,
-				38219AC02C6258AF001A7C4F /* Messages.framework */,
+				38B790EF2C6495A400AC9BE2 /* Messages.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -337,28 +328,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		38219ABE2C6258AF001A7C4F /* Messages Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 38219ACF2C6258B1001A7C4F /* Build configuration list for PBXNativeTarget "Messages Extension" */;
-			buildPhases = (
-				38219ABB2C6258AF001A7C4F /* Sources */,
-				38219ABC2C6258AF001A7C4F /* Frameworks */,
-				38219ABD2C6258AF001A7C4F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				38219AC22C6258AF001A7C4F /* Messages Extension */,
-			);
-			name = "Messages Extension";
-			packageProductDependencies = (
-			);
-			productName = "Messages Extension";
-			productReference = 38219ABF2C6258AF001A7C4F /* Messages Extension.appex */;
-			productType = "com.apple.product-type.app-extension.messages";
-		};
 		38AE75032C1E094500DFB6A7 /* superghost */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38AE75282C1E094700DFB6A7 /* Build configuration list for PBXNativeTarget "superghost" */;
@@ -374,7 +343,6 @@
 			);
 			dependencies = (
 				38AF91AA2C46D685003D100B /* PBXTargetDependency */,
-				38219ACC2C6258B1001A7C4F /* PBXTargetDependency */,
 			);
 			name = superghost;
 			packageProductDependencies = (
@@ -402,6 +370,23 @@
 			productReference = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		38B790ED2C6495A400AC9BE2 /* Messages Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38B790FC2C6495A600AC9BE2 /* Build configuration list for PBXNativeTarget "Messages Extension" */;
+			buildPhases = (
+				38B790EA2C6495A400AC9BE2 /* Sources */,
+				38B790EB2C6495A400AC9BE2 /* Frameworks */,
+				38B790EC2C6495A400AC9BE2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Messages Extension";
+			productName = "Messages Extension";
+			productReference = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */;
+			productType = "com.apple.product-type.app-extension.messages";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -409,22 +394,22 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					38219ABE2C6258AF001A7C4F = {
-						CreatedOnToolsVersion = 16.0;
-					};
 					38AE75032C1E094500DFB6A7 = {
 						CreatedOnToolsVersion = 15.4;
 					};
 					38AF919A2C46D683003D100B = {
 						CreatedOnToolsVersion = 15.4;
 					};
+					38B790ED2C6495A400AC9BE2 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
 				};
 			};
 			buildConfigurationList = 38AE74FF2C1E094500DFB6A7 /* Build configuration list for PBXProject "superghost" */;
-			compatibilityVersion = "Xcode 15.0";
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -442,19 +427,12 @@
 			targets = (
 				38AE75032C1E094500DFB6A7 /* superghost */,
 				38AF919A2C46D683003D100B /* gamestatsWidgetExtension */,
-				38219ABE2C6258AF001A7C4F /* Messages Extension */,
+				38B790ED2C6495A400AC9BE2 /* Messages Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		38219ABD2C6258AF001A7C4F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		38AE75022C1E094500DFB6A7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -479,6 +457,14 @@
 			files = (
 				38B4B15A2C52498400F17CEA /* Localizable.xcstrings in Resources */,
 				38AF91A62C46D685003D100B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38B790EC2C6495A400AC9BE2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38B790F82C6495A600AC9BE2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,21 +495,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		38219ABB2C6258AF001A7C4F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				38219ADF2C636D21001A7C4F /* ContentPlaceHolderView.swift in Sources */,
-				38219ADC2C626F99001A7C4F /* SingleLetterPicker.swift in Sources */,
-				38219AD92C626F4D001A7C4F /* Appearance.swift in Sources */,
-				38219AE02C636DBC001A7C4F /* AsyncFuncs.swift in Sources */,
-				38219ADE2C636D10001A7C4F /* GameStat.swift in Sources */,
-				38219AD32C625C5C001A7C4F /* onChange.swift in Sources */,
-				38219ADD2C636CBF001A7C4F /* Alerts.swift in Sources */,
-				38219AD52C626176001A7C4F /* AsyncButton.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		38AE75002C1E094500DFB6A7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -531,9 +502,9 @@
 				384EA7002C522E190000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38D75F932C42B450000C0DDF /* WaitingGhost.swift in Sources */,
 				38D75F9C2C42DC16000C0DDF /* InstructionsView.swift in Sources */,
+				38B791042C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */,
 				38AE75372C1E0A2F00DFB6A7 /* GameViewModel.swift in Sources */,
 				38A7259E2C4D24EF0031E9A5 /* TrialEndsInView.swift in Sources */,
-				38219ADB2C626F99001A7C4F /* SingleLetterPicker.swift in Sources */,
 				38D75F842C418B21000C0DDF /* PaywallView.swift in Sources */,
 				38B1BAD72C3ECBC100E3E377 /* Game.swift in Sources */,
 				38AE750A2C1E094500DFB6A7 /* ContentView.swift in Sources */,
@@ -556,7 +527,6 @@
 				38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */,
 				388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */,
 				38C32F392C53AB47009D4E57 /* NotUpdating.swift in Sources */,
-				38219AD72C626EE1001A7C4F /* LetterPicker.swift in Sources */,
 				38D75F902C42B422000C0DDF /* HomeView.swift in Sources */,
 				38D75F8A2C425653000C0DDF /* StatsView.swift in Sources */,
 				38B1BADD2C3ECCC100E3E377 /* User.swift in Sources */,
@@ -577,18 +547,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		38B790EA2C6495A400AC9BE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */,
+				38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */,
+				38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */,
+				38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */,
+				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,
+				38B791062C64981500AC9BE2 /* onChange.swift in Sources */,
+				38B791002C6496F900AC9BE2 /* AsyncButton.swift in Sources */,
+				38B790FE2C6496E200AC9BE2 /* Appearance.swift in Sources */,
+				38B791052C64977800AC9BE2 /* SingleLetterPicker.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		38219ACC2C6258B1001A7C4F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilters = (
-				ios,
-				xros,
-			);
-			target = 38219ABE2C6258AF001A7C4F /* Messages Extension */;
-			targetProxy = 38219ACB2C6258B1001A7C4F /* PBXContainerItemProxy */;
-		};
 		38AF91AA2C46D685003D100B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilters = (
@@ -601,62 +578,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		38219AD02C6258B1001A7C4F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
-				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X5933694SW;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Messages Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nagel.superghost.Messages-Extension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		38219AD12C6258B1001A7C4F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
-				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X5933694SW;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Messages Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nagel.superghost.Messages-Extension";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		38AE75262C1E094700DFB6A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -936,18 +857,65 @@
 			};
 			name = Release;
 		};
+		38B790FA2C6495A600AC9BE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Messages Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nagel.superghost.Messages-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		38B790FB2C6495A600AC9BE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_ENTITLEMENTS = "Messages Extension/Messages Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Messages Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Superghost;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nagel.superghost.Messages-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		38219ACF2C6258B1001A7C4F /* Build configuration list for PBXNativeTarget "Messages Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				38219AD02C6258B1001A7C4F /* Debug */,
-				38219AD12C6258B1001A7C4F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		38AE74FF2C1E094500DFB6A7 /* Build configuration list for PBXProject "superghost" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -971,6 +939,15 @@
 			buildConfigurations = (
 				38AF91AD2C46D685003D100B /* Debug */,
 				38AF91AE2C46D685003D100B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38B790FC2C6495A600AC9BE2 /* Build configuration list for PBXNativeTarget "Messages Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38B790FA2C6495A600AC9BE2 /* Debug */,
+				38B790FB2C6495A600AC9BE2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
