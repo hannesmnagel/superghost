@@ -117,6 +117,21 @@ final class AppState: ObservableObject {
                let winnerIsPlayer1 = move.winnerIsPlayer1 {
                 let isPlayer1 = move.player1Id == conversation.localParticipantIdentifier.uuidString
                 alertItem = winnerIsPlayer1 ? isPlayer1 ? .won : .lost : isPlayer1 ? .lost : .won
+                if let session{
+                    if NSUbiquitousKeyValueStore.default.double(forKey: "\(conversation.storeKey).\(session).lastMoveCount") > 0 {
+                        do{
+                            try GameStat(
+                                player2: isPlayer1 ? move.player2Id : move.player1Id,
+                                withInvitation: true,
+                                won: winnerIsPlayer1 ? isPlayer1 : !isPlayer1,
+                                word: move.word,
+                                id: UUID().uuidString
+                            )
+                            .save()
+                            NSUbiquitousKeyValueStore.default.set(-1.0, forKey: "\(conversation.storeKey).\(session).lastMoveCount")
+                        } catch {}
+                    }
+                }
             }
         }
     }
@@ -196,6 +211,7 @@ struct GameView: View {
 
     var body: some View {
         VStack{
+            Text("hdt")
             if let conversation = appState.conversation{
                 if let lastMove = appState.lastMove {
                     if !lastMove.player1Id.isEmpty && !lastMove.player2Id.isEmpty {
@@ -283,6 +299,7 @@ struct GameView: View {
                                     )
                                 )
                             }
+                            Link("Learn how to play", destination: URL(string: "https://hannesnagel.com")!)
                         }
                     }
                 } else {
@@ -297,6 +314,7 @@ struct GameView: View {
                             )
                         )
                     }
+                    Link("Learn how to play", destination: URL(string: "https://hannesnagel.com")!)
                 }
             }
         }

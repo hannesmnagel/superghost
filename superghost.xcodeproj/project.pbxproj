@@ -14,7 +14,6 @@
 		38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
 		383C30002C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
 		383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
-		383C30032C649CDD005A1DB9 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C30022C649CDD005A1DB9 /* LetterPicker.swift */; };
 		383C30042C649CDD005A1DB9 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C30022C649CDD005A1DB9 /* LetterPicker.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		384497FB2C5E88CE00DE24CF /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384497F92C5E88CE00DE24CF /* SoundManager.swift */; };
@@ -559,7 +558,6 @@
 				38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */,
 				38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */,
 				38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */,
-				383C30032C649CDD005A1DB9 /* LetterPicker.swift in Sources */,
 				38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */,
 				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,
 				383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */,
