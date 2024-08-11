@@ -19,7 +19,33 @@ private let os = OS.visionOS
 #endif
 
 class AppearanceManager {
-    private init(){}
+    @Published var appIcon: AppIcon = .standard {
+        didSet {
+            UserDefaults.standard.set(appIcon.rawValue, forKey: "appIcon")
+        }
+    }
+
+    static let shared = AppearanceManager()
+
+    enum AppIcon: String, CaseIterable{
+        case standard = "AppIcon.standard",
+             blue = "AppIcon.blue",
+             blueSuper = "AppIcon.blue.super.blue",
+             gray = "AppIcon.gray",
+             graySuper = "AppIcon.gray.super.gray",
+             yellow = "AppIcon.yellow",
+             yellowSuper = "AppIcon.yellow.super.yellow",
+             yellowSuperPuple = "AppIcon.yellow.super.purple",
+             purple = "AppIcon.purple",
+             purpleSuperPurple = "AppIcon.purple.super.purple",
+             red = "AppIcon.red",
+             redSuper = "AppIcon.red.super.red",
+             redSuperGreen = "AppIcon.red.super.green"
+    }
+
+    private init(){
+        appIcon = .init(rawValue: UserDefaults.standard.string(forKey: "appIcon") ?? AppIcon.standard.rawValue) ?? .standard
+    }
 
     static let hostGame: Font = .largeTitle
     static let startGame: Font = .largeTitle

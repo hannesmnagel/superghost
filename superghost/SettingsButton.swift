@@ -148,34 +148,37 @@ struct SettingsView: View {
 #if os(iOS)
 struct AppIconPickerView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var viewModel: GameViewModel
+
     let isSuperghost: Bool
-    let icons = [
-        "AppIcon.standard",
-        "AppIcon.blue",
-        "AppIcon.blue.super.blue",
-        "AppIcon.gray",
-        "AppIcon.gray.super.gray",
-        "AppIcon.yellow",
-        "AppIcon.yellow.super.yellow",
-        "AppIcon.yellow.super.purple",
-        "AppIcon.purple",
-        "AppIcon.purple.super.purple",
-        "AppIcon.red",
-        "AppIcon.red.super.red",
-        "AppIcon.red.super.green"
-    ]
+    let icons = AppearanceManager.AppIcon.allCases
     var body: some View {
         ScrollView{
             LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 400))]) {
                 ForEach(icons, id: \.self) { icon in
                     Button{
-                        UIApplication.shared.setAlternateIconName(icon)
-                        dismiss()
+                        if isSuperghost || icon == .standard {
+                            UIApplication.shared.setAlternateIconName(icon.rawValue)
+                            dismiss()
+                        } else {
+                            viewModel.showPaywall = true
+                        }
                     } label: {
-                        Image(icon.appending(".image"))
+                        Image(icon.rawValue.appending(".image"))
                             .resizable()
                             .scaledToFit()
                             .clipShape(.rect(cornerRadius: 10))
+                    }
+                    .overlay{
+                        if AppearanceManager.shared.appIcon == icon {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.accentColor, lineWidth: 3)
+                        }
+                    }
+                    .overlay(alignment: .topTrailing) {
+                        if !isSuperghost && !(icon == .standard){
+                            Image(systemName: "lock.fill")
+                        }
                     }
                 }
             }

@@ -85,12 +85,18 @@ struct ContentView: View {
         let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
         print(daysSinceTrialEnd)
-        isSuperghost = subscriptions.contains("monthly.superghost") || timeSinceTrialEnd < 0
+        isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
+
+#if os(iOS)
+        if !isSuperghost && AppearanceManager.shared.appIcon != .standard{
+            try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
+        }
+#endif
 
         let showedPaywallToday = Calendar.current.isDateInToday(lastPaywallView)
 
         //is in trial:
-        if !subscriptions.contains("monthly.superghost") && timeSinceTrialEnd < 0 {
+        if !(info.entitlements["superghost"]?.isActive ?? false) && timeSinceTrialEnd < 0 {
             showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
         } else {
             showTrialEndsIn = nil
