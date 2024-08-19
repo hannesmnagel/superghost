@@ -36,20 +36,24 @@ struct LeaderboardView: View {
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)
                 }
             }
-            inlineLeaderboard
-            if image != nil {
-                Button{
-                    GKAccessPoint.shared.trigger(state: .leaderboards) {}
-                } label: {
-                    HStack{
-                        Text("More")
-                        Image(systemName: "ellipsis")
+            if score < 1200{
+                ContentPlaceHolderView("Earn a score of 1,200 to see the leaderboard", systemImage: "chart.bar.fill")
+            } else {
+                inlineLeaderboard
+                if image != nil {
+                    Button{
+                        GKAccessPoint.shared.trigger(state: .leaderboards) {}
+                    } label: {
+                        HStack{
+                            Text("More")
+                            Image(systemName: "ellipsis")
+                        }
+                        .contentShape(.rect)
                     }
-                    .contentShape(.rect)
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.bcCapsule)
+                    .padding()
                 }
-                .buttonStyle(.bordered)
-                .buttonBorderShape(.bcCapsule)
-                .padding()
             }
         }
         .task(id: viewModel.games){
