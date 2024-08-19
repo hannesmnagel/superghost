@@ -108,7 +108,11 @@ struct ContentView: View {
                 showMessage("Add some friends and challenge them!")
                 lastPaywallView = Date()
                 try? await Task.sleep(for: .seconds(2))
-                try GKLocalPlayer.local.presentFriendRequestCreator(from: topViewController())
+#if os(macOS)
+                try GKLocalPlayer.local.presentFriendRequestCreator(from: NSApplication.shared.keyWindow ?? .init())
+                #else
+                try GKLocalPlayer.local.presentFriendRequestCreator(from: UIApplication.shared.topViewController() ?? UIViewController())
+                #endif
             }
         }
     }

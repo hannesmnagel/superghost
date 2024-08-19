@@ -64,6 +64,8 @@ struct SettingsView: View {
                     NavigationLink("Learn How To Play"){
                         InstructionsView{}
                     }
+                }
+                Section{
                     if !isSuperghost{
                         Button("Subscribe to Superghost"){
                             dismiss()
@@ -76,9 +78,19 @@ struct SettingsView: View {
                             viewModel.showPaywall = true
                         }
 #endif
+                        if let managementURL{Link("Manage subscription", destination: managementURL)}
                     }
-                    if let managementURL{Link("Manage subscription", destination: managementURL)}
-
+                }
+                Section("Volume:"){
+                    Slider(value: $volume, in: 0...2)
+                        .onChange(of: volume) {newVal in
+                            SoundManager.shared.setVolume(newVal)
+                        }
+#if os(macOS)
+                        .frame(maxWidth: 200)
+#endif
+                }
+                Section{
                     Toggle("Notifications", isOn: $notificationsAllowed)
                         .onChange(of: notificationsAllowed) {newValue in
                             Task{
@@ -105,12 +117,6 @@ struct SettingsView: View {
                                     }
                                 }
                             }
-                        }
-                }
-                Section("Volume"){
-                    Slider(value: $volume, in: 0...2)
-                        .onChange(of: volume) {newVal in
-                            SoundManager.shared.setVolume(newVal)
                         }
                 }
 #if os(iOS)
@@ -140,7 +146,7 @@ struct SettingsView: View {
 #endif
         }
 #if os(macOS)
-        .frame(minWidth: 300, minHeight: 300)
+        .padding(40)
 #endif
     }
 }

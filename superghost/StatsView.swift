@@ -71,7 +71,7 @@ struct StatsView: View {
                 Text("Word Today")
                     .font(AppearanceManager.statsLabel)
             }
-            .frame(width: 200)
+            .frame(width: 100)
             Divider()
 #endif
             VStack{
@@ -80,6 +80,9 @@ struct StatsView: View {
                 Text("Win Streak")
                     .font(AppearanceManager.statsLabel)
             }
+#if os(macOS)
+            .frame(width: 100)
+#endif
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
@@ -88,6 +91,9 @@ struct StatsView: View {
                 Text("Win Rate")
                     .font(AppearanceManager.statsLabel)
             }
+#if os(macOS)
+            .frame(width: 100)
+#endif
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
@@ -96,6 +102,9 @@ struct StatsView: View {
                 Text("Wins Today")
                     .font(AppearanceManager.statsLabel)
             }
+#if os(macOS)
+            .frame(width: 100)
+#endif
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
@@ -104,6 +113,9 @@ struct StatsView: View {
                 Text("Score")
                     .font(AppearanceManager.statsLabel)
             }
+#if os(macOS)
+            .frame(width: 100)
+#endif
             .frame(maxWidth: .infinity)
             Divider()
             VStack{
@@ -117,6 +129,9 @@ struct StatsView: View {
                 Text("Rank")
                     .font(AppearanceManager.statsLabel)
             }
+#if os(macOS)
+            .frame(width: 100)
+#endif
             .frame(maxWidth: .infinity)
         }
         .onChange(of: winningStreak) { newValue, oldValue in

@@ -38,6 +38,7 @@ struct LeaderboardView: View {
             }
             if score < 1200{
                 ContentPlaceHolderView("Earn a score of 1,200 to see the leaderboard", systemImage: "chart.bar.fill")
+                    .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 inlineLeaderboard
                 if image != nil {
