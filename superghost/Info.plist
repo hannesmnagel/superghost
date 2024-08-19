@@ -23,5 +23,7 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSGKFriendListUsageDescription</key>
+	<string>Compare your scores with Friends and battle with them</string>
 </dict>
 </plist>

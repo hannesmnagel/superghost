@@ -29,6 +29,7 @@
 		388D2A962C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */; };
 		388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */; };
 		388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */; };
+		3893E7A52C73A92A0040CA78 /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893E7A42C73A92A0040CA78 /* TopViewController.swift */; };
 		38A7259E2C4D24EF0031E9A5 /* TrialEndsInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */; };
 		38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75072C1E094500DFB6A7 /* superghostApp.swift */; };
 		38AE750A2C1E094500DFB6A7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75092C1E094500DFB6A7 /* ContentView.swift */; };
@@ -142,6 +143,7 @@
 		388D2A932C5F4F9D00F1F0DE /* AsyncFuncs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFuncs.swift; sourceTree = "<group>"; };
 		388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterView.swift; sourceTree = "<group>"; };
+		3893E7A42C73A92A0040CA78 /* TopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialEndsInView.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */,
+				3893E7A42C73A92A0040CA78 /* TopViewController.swift */,
 				384497FC2C5E8D1400DE24CF /* ambient.mp3 */,
 				388D2A902C5ECC6600F1F0DE /* ambient2.mp3 */,
 				384497FD2C5E8D1400DE24CF /* laughingGhost.mp3 */,
@@ -524,6 +527,7 @@
 				38AE75392C1E0A4F00DFB6A7 /* GameView.swift in Sources */,
 				38D75F872C42560A000C0DDF /* SettingsButton.swift in Sources */,
 				38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */,
+				3893E7A52C73A92A0040CA78 /* TopViewController.swift in Sources */,
 				383C30042C649CDD005A1DB9 /* LetterPicker.swift in Sources */,
 				381DE8352C34648600E6CB04 /* Appearance.swift in Sources */,
 				38AE753B2C1E0A6D00DFB6A7 /* LoadingView.swift in Sources */,

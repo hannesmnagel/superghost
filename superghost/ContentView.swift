@@ -81,10 +81,8 @@ struct ContentView: View {
 
     func fetchSubscription() async throws {
         let info = try await Purchases.shared.restorePurchases()
-        let subscriptions = info.activeSubscriptions
         let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-        print(daysSinceTrialEnd)
         isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
 
 #if os(iOS)
@@ -106,8 +104,12 @@ struct ContentView: View {
             viewModel.showPaywall = true
             lastPaywallView = Date()
         } else if !showedPaywallToday && Int.random(in: 0...3) == 0{
-            showMessage("Add some friends and challenge them!")
-            lastPaywallView = Date()
+            if (try? await GKLocalPlayer.local.loadFriends().isEmpty) ?? false {
+                showMessage("Add some friends and challenge them!")
+                lastPaywallView = Date()
+                try? await Task.sleep(for: .seconds(2))
+                try GKLocalPlayer.local.presentFriendRequestCreator(from: topViewController())
+            }
         }
     }
 

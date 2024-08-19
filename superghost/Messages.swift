@@ -34,7 +34,7 @@ struct Messagable: ViewModifier {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)).combined(with: .opacity))
                         .task(id: message){
-                                try? await Task.sleep(for: .seconds(1))
+                            try? await Task.sleep(for: .seconds(message.count/10))
                                 model.message = Array(model.message.dropFirst())
                             }
                     }
