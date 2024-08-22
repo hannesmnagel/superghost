@@ -12,6 +12,7 @@
 		38219AB62C60C546001A7C4F /* ContentPlaceHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB52C60C546001A7C4F /* ContentPlaceHolderView.swift */; };
 		38219AB82C60C604001A7C4F /* CircleButtonBorderStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB72C60C604001A7C4F /* CircleButtonBorderStyle.swift */; };
 		38219ABA2C60C9B3001A7C4F /* onChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB92C60C9B3001A7C4F /* onChange.swift */; };
+		3835DD782C77470200D00EE5 /* CloudStoragePropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EA6FF2C522E190000FE39 /* CloudStoragePropertyWrapper.swift */; };
 		383C30002C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
 		383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C2FFF2C649C75005A1DB9 /* SingleLetterPicker.swift */; };
 		383C30042C649CDD005A1DB9 /* LetterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383C30022C649CDD005A1DB9 /* LetterPicker.swift */; };
@@ -30,6 +31,8 @@
 		388D2A992C5F725F00F1F0DE /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A982C5F725F00F1F0DE /* LeaderboardView.swift */; };
 		388D2A9D2C5F7C6D00F1F0DE /* GameCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D2A9B2C5F7C6D00F1F0DE /* GameCenterView.swift */; };
 		3893E7A52C73A92A0040CA78 /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893E7A42C73A92A0040CA78 /* TopViewController.swift */; };
+		3893E7A62C73D8CA0040CA78 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB32C601E34001A7C4F /* Messages.swift */; };
+		3893E7A72C73D8CA0040CA78 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38219AB32C601E34001A7C4F /* Messages.swift */; };
 		38A7259E2C4D24EF0031E9A5 /* TrialEndsInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A7259D2C4D24EF0031E9A5 /* TrialEndsInView.swift */; };
 		38AE75082C1E094500DFB6A7 /* superghostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75072C1E094500DFB6A7 /* superghostApp.swift */; };
 		38AE750A2C1E094500DFB6A7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE75092C1E094500DFB6A7 /* ContentView.swift */; };
@@ -558,6 +561,7 @@
 				388D2A962C5F500D00F1F0DE /* AsyncFuncs.swift in Sources */,
 				38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */,
 				38AF91A22C46D683003D100B /* gamestatsWidget.swift in Sources */,
+				3893E7A62C73D8CA0040CA78 /* Messages.swift in Sources */,
 				38AF91A42C46D683003D100B /* AppIntent.swift in Sources */,
 				384EA7032C5234BF0000FE39 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38AF91B02C46D718003D100B /* GameStat.swift in Sources */,
@@ -568,6 +572,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3835DD782C77470200D00EE5 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */,
 				38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */,
 				38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */,
@@ -575,6 +580,7 @@
 				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,
 				383C30012C649C75005A1DB9 /* SingleLetterPicker.swift in Sources */,
 				38B791062C64981500AC9BE2 /* onChange.swift in Sources */,
+				3893E7A72C73D8CA0040CA78 /* Messages.swift in Sources */,
 				38B791002C6496F900AC9BE2 /* AsyncButton.swift in Sources */,
 				38B790FE2C6496E200AC9BE2 /* Appearance.swift in Sources */,
 			);
@@ -736,6 +742,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = superghost/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
+				INFOPLIST_KEY_NSGKFriendListUsageDescription = "Compare your scores with Friends and battle with them";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -778,6 +785,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = superghost/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.word-games";
+				INFOPLIST_KEY_NSGKFriendListUsageDescription = "Compare your scores with Friends and battle with them";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -46,14 +46,10 @@ struct GameStat: Codable, Hashable, Identifiable {
         for leaderboard in leaderboards{
             try await leaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local)
         }
-        let low = GKAchievement(identifier: "score.low")    //2000
-        low.percentComplete = Double(score)/2000.0 * 100
-        let mid = GKAchievement(identifier: "score.mid")    //2500
-        mid.percentComplete = Double(score)/2500.0 * 100
-        let high = GKAchievement(identifier: "score.high")  //3000
-        high.percentComplete = Double(score)/3000.0 * 100
-
-        try await GKAchievement.report([low, mid, high])
+        try await reportAchievement(.lowScore, percent: Double(score)/2000.0 * 100)
+        try await reportAchievement(.midScore, percent: Double(score)/2500.0 * 100)
+        try await reportAchievement(.highScore, percent: Double(score)/3000.0 * 100)
+        try await reportAchievement(.leaderboardUnlock, percent: Double(score)/1200.0 * 100)
     }
 }
 
@@ -68,4 +64,29 @@ extension Array where Element == GameStat {
     var recent: Self {filter{Calendar.current.isDate($0.createdAt, equalTo: Date(), toGranularity: .month)}}
     var withInvitation: Self {filter{$0.withInvitation}}
 
+}
+
+enum Achievement: String, CaseIterable {
+    case lowScore = "score.low", midScore = "score.mid", highScore = "score.high", longWord = "word.long", friendAdd = "friend.add", leaderboardUnlock = "leaderboard.unlock", widgetAdd = "widget.add"
+}
+
+func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
+    let achievements = try await GKAchievement.loadAchievements()
+    guard !achievements.contains(where: {$0.isCompleted && $0.identifier == achievement.rawValue}) else {return}
+
+    let achievement = GKAchievement(identifier: achievement.rawValue)
+    achievement.showsCompletionBanner = true
+    achievement.percentComplete = percent
+    try await GKAchievement.report([achievement])
+
+    guard percent >= 100 else {return}
+    showMessage("You earned an Achievement!")
+    Task{
+        try? await Task.sleep(for: .seconds(2))
+        //    if #available(iOS 18.0, *) {
+        //        GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
+        //    } else {
+        GKAccessPoint.shared.trigger(state: .achievements){}
+        //    }
+    }
 }

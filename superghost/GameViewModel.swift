@@ -18,6 +18,7 @@ private enum GameStatus {
 
 @MainActor
 final class GameViewModel: ObservableObject {
+    @CloudStorage("score") private var score = 1000
     @Published var games = [GameStat]()
 
     @Published var showPaywall = false
@@ -39,6 +40,7 @@ final class GameViewModel: ObservableObject {
                                 id: newValue.id
                             )
                             try? stat.save()
+                            changeScore(by: 50)
                             games.insert(stat, at: 0)
                             try? SoundManager.shared.play(.laughingGhost, loop: false)
                         } else {
@@ -52,14 +54,14 @@ final class GameViewModel: ObservableObject {
                                 id: newValue.id
                             )
                             try? stat.save()
+                            changeScore(by: -50)
                             games.insert(stat, at: 0)
                             try? SoundManager.shared.play(.scream, loop: false)
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
-                            let achievement = GKAchievement(identifier: "word.long")
-                            achievement.percentComplete += 100
-                            GKAchievement.report([achievement])
-                            showMessage("You earned an Achievement!\nLook at it in the Game Center Dashboard")
+                            Task{
+                                try? await reportAchievement(.longWord, percent: 100)
+                            }
                         }
                     }
                 } else {

@@ -9,6 +9,8 @@ import SwiftUI
 import RevenueCat
 import BackgroundTasks
 import UserNotifications
+import WidgetKit
+import GameKit
 
 @main
 struct superghostApp: App {
@@ -24,7 +26,8 @@ struct superghostApp: App {
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
     @CloudStorage("notificationsAllowed") var notificationsAllowed = false
-    
+    @CloudStorage("rank") private var rank = -1
+
     @StateObject var viewModel = GameViewModel()
     @Environment(\.scenePhase) var scenePhase
 
@@ -34,33 +37,34 @@ struct superghostApp: App {
                 .modifier(Messagable())
                 .onAppear{
                     try? SoundManager.shared.setActive()
+
+                    scheduleAppRefresh()
                 }
                 .environmentObject(viewModel)
 #if os(macOS)
                 .frame(minHeight: 500)
 #endif
         }
-        .onChange(of: scenePhase){newValue in
-            if scenePhase == .background{
-                Task{
-                    do{
-                        if notificationsAllowed{
-                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(1 * 24 * 60 * 60), repeats: false)
-                            let content = UNMutableNotificationContent()
+        .backgroundTask(.appRefresh("com.nagel.superghost.lbnotifications")) {
+            do{
+                await scheduleAppRefresh()
+                let rank = await rank
 
-                            content.title = "Keep Your Streak Going!"
-                            content.body = "Play some Ghost"
-                            content.sound = .default
-                            try await UNUserNotificationCenter.current().add(
-                                UNNotificationRequest(
-                                    identifier: Calendar.current.startOfDay(for: Date().addingTimeInterval(1 * 24 * 60 * 60)).ISO8601Format(),
-                                    content: content,
-                                    trigger: trigger)
-                            )
-                        }
-                    } catch{}
+                if await notificationsAllowed,
+                   GKLocalPlayer.local.isAuthenticated,
+
+                    let entries = try await GKLeaderboard
+                        .loadLeaderboards(IDs: ["global.score"])
+                        .first?
+                        .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
+                   let myCurrent = entries.0?.rank,
+                   rank > 0,
+                   myCurrent > rank {
+
+                    let otherPlayer = entries.1.first{$0.rank == rank}?.player.alias ?? "Someone"
+                    await sendPushNotification(with: "\(otherPlayer) passed you on the leaderboard!", description: "Claim your rank now!")
                 }
-            }
+            } catch {}
         }
 
 #if os(macOS)
@@ -74,5 +78,32 @@ struct superghostApp: App {
 
         }
 #endif
+    }
+    func scheduleAppRefresh() {
+        //start the backgroundtask with: e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.nagel.superghost.lbnotifications"]
+
+        let request = BGAppRefreshTaskRequest(identifier: "com.nagel.superghost.lbnotifications")
+        // Fetch no earlier than 30 minutes from now.
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 30 * 60)
+
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Could not schedule app refresh: \(error)")
+        }
+    }
+    func sendPushNotification(with title: String, description: String, id: String = UUID().uuidString) {
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(0.1), repeats: false)
+        let content = UNMutableNotificationContent()
+
+        content.title = title
+        content.body = description
+        content.sound = .default
+        UNUserNotificationCenter.current().add(
+            UNNotificationRequest(
+                identifier: id,
+                content: content,
+                trigger: trigger)
+        )
     }
 }

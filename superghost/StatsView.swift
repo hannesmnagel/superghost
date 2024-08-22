@@ -14,7 +14,7 @@ struct StatsView: View {
     @CloudStorage("winStreak") private var winningStreak = 0
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
-    @CloudStorage("score") private var score = 0
+    @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
 

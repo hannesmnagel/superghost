@@ -369,9 +369,8 @@ struct SayTheWordButton: View {
                     setMove(
                         Move(
                             word: word,
-                            blockMoveForPlayer1: true,
-                            //TODO
-                            challengerIsPlayer1: false,
+                            blockMoveForPlayer1: isPlayer1,
+                            challengerIsPlayer1: !isPlayer1,
                             winnerIsPlayer1: isPlayer1,
                             player1Id: lastMove.player1Id,
                             player2Id: lastMove.player2Id,

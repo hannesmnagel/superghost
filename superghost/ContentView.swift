@@ -37,7 +37,7 @@ struct ContentView: View {
     @CloudStorage("winStreak") private var winningStreak = 0
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
-    @CloudStorage("score") private var score = 0
+    @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
     @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
@@ -104,20 +104,29 @@ struct ContentView: View {
             viewModel.showPaywall = true
             lastPaywallView = Date()
         } else if !showedPaywallToday && Int.random(in: 0...3) == 0{
-            if (try? await GKLocalPlayer.local.loadFriends().isEmpty) ?? false {
-                showMessage("Add some friends and challenge them!")
-                lastPaywallView = Date()
-                try? await Task.sleep(for: .seconds(2))
+            if let friends = try? await GKLocalPlayer.local.loadFriends() {
+                if friends.isEmpty {
+                    showMessage("Add some friends and challenge them!")
+                    lastPaywallView = Date()
+                    try? await Task.sleep(for: .seconds(2))
 #if os(macOS)
-                try GKLocalPlayer.local.presentFriendRequestCreator(from: NSApplication.shared.keyWindow ?? .init())
-                #else
-                try GKLocalPlayer.local.presentFriendRequestCreator(from: UIApplication.shared.topViewController() ?? UIViewController())
-                #endif
+                    try GKLocalPlayer.local.presentFriendRequestCreator(from: NSApplication.shared.keyWindow ?? .init())
+#else
+                    try GKLocalPlayer.local.presentFriendRequestCreator(from: UIApplication.shared.topViewController() ?? UIViewController())
+#endif
+                } else {
+                    let achievement = GKAchievement(identifier: "friend.add")
+                    achievement.percentComplete = Double(100 * friends.count)
+                }
             }
         }
     }
 
     nonisolated func refreshScore() async {
+        if await viewModel.games.isEmpty{
+            try? await Task.sleep(for: .seconds(2))
+        }
+
         await MainActor.run{
             winningRate = viewModel.games.winningRate
             winningStreak = viewModel.games.winningStreak
@@ -136,27 +145,6 @@ struct ContentView: View {
             wordToday = lettersOfWord.appending(actualPlaceHolders)
         }
 
-        let recentGames = await viewModel.games.recent
-        let recentWinningRate = recentGames.winningRate
-        let recentWins = recentGames.won.count
-        let recentLosses = recentGames.won.count
-        let totalWins = await viewModel.games.won.count
-
-        let baseScore = 1000
-        let totalWinRateFactor = await Int(100 * winningRate)
-        let recentWinRateFactor = Int(200 * recentWinningRate)
-        let recentWinCountFactor = 40 * recentWins
-        let totalWinCountFactor = 10 * totalWins
-        let recentLostCountFactor = 10 * recentLosses
-
-        let newScore = baseScore + totalWinRateFactor + recentWinRateFactor + recentWinCountFactor + totalWinCountFactor - recentLostCountFactor
-
-        Task{
-            try? await GameStat.submitScore(newScore)
-            await MainActor.run{
-                score = newScore
-            }
-        }
 #if canImport(WidgetKit)
         WidgetCenter.shared.reloadAllTimelines()
 #endif

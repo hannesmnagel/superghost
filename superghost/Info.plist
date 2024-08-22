@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.nagel.superghost.lbnotifications</string>
+		<string>com.nagel.superghost.eventnotifications</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -22,8 +27,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>fetch</string>
 	</array>
-	<key>NSGKFriendListUsageDescription</key>
-	<string>Compare your scores with Friends and battle with them</string>
 </dict>
 </plist>

@@ -24,7 +24,7 @@ struct LeaderboardView: View {
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
     @EnvironmentObject var viewModel: GameViewModel
-    @CloudStorage("score") private var score = 0
+    @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
 
     var body: some View {
@@ -115,6 +115,13 @@ struct LeaderboardView: View {
                         .buttonBorderShape(.bcCapsule)
                     } else {
                         Text("Rank: \(entry.rank)")
+                    }
+                    if entry.player.isInvitable {
+                        Button("Challenge"){
+                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.score) on the leaderboard!", players: [entry.player])
+                            UIApplication.shared.topViewController()?.present(vc, animated: true)
+
+                        }
                     }
                 } loading: {
                     ProgressView()

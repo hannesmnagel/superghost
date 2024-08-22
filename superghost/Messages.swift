@@ -25,7 +25,7 @@ struct Messagable: ViewModifier {
                                 .background(Color.gray.opacity(0.3))
                                 .clipShape(.capsule)
 
-                            Image(.ghostHeadingLeft)
+                            Image("ghostHeadingLeft")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: 300)
@@ -38,6 +38,7 @@ struct Messagable: ViewModifier {
                                 model.message = Array(model.message.dropFirst())
                             }
                     }
+                    
                 }
                 .animation(.smooth, value: model.message)
             }
@@ -47,10 +48,17 @@ struct Messagable: ViewModifier {
 final class MessageModel: ObservableObject {
     private init(){}
     static let shared = MessageModel()
-
+    @Published var showingScoreChangeBy = Int?.none
     @Published var message = [String]()
 }
 
 func showMessage(_ message: String) {
     MessageModel.shared.message.append(message)
+}
+
+
+func changeScore(by score: Int) {
+    let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == (Calendar.current.firstWeekday + 6)
+    let score = score * (isEndOfWeek ? 2 : 1)
+    MessageModel.shared.showingScoreChangeBy = score
 }

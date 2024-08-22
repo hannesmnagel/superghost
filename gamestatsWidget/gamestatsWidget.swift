@@ -9,56 +9,89 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: AppIntentTimelineProvider {
-    @CloudStorage("isSuperghost") private var isSuperghost = false
-    @CloudStorage("winRate") private var winningRate = 0.0
-    @CloudStorage("winStreak") private var winningStreak = 0
-    @CloudStorage("wordToday") private var wordToday = "-----"
-    @CloudStorage("winsToday") private var winsToday = 0
-
-
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(text: "Placeholder", configuration: ConfigurationAppIntent())
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        let config = configuration.configuration
         let string = {
-            switch config {
+            switch configuration.configuration {
             case .rate:
-                winningRate.formatted(.percent.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winRate"),
+                   let newValue = try? JSONDecoder().decode(Double.self, from: data){
+                    return newValue.formatted(.percent.precision(.fractionLength(0)))
+                }
+                else {
+                    return "Ups, sth went wrong."
+                }
             case .streak:
-                winningStreak.formatted(.number.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winStreak"),
+                   let streak = try? JSONDecoder().decode(Int.self, from: data){
+                    return streak.formatted(.number.precision(.fractionLength(0)))
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .word:
-                wordToday
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "wordToday"),
+                   let wordToday = try? JSONDecoder().decode(String.self, from: data){
+                    return wordToday
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .winsToday:
-                winsToday.formatted(.number.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winsToday"),
+                   let winsToday = try? JSONDecoder().decode(Int.self, from: data){
+                    return winsToday.formatted(.number.precision(.fractionLength(0)))
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .icon:
-                "Icon"
+                return "Icon"
             }
         }()
         return SimpleEntry(text: string, configuration: configuration)
 
     }
-    
-    @MainActor
+
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
         let string = {
             switch configuration.configuration {
             case .rate:
-                winningRate.formatted(.percent.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winRate"),
+                   let newValue = try? JSONDecoder().decode(Double.self, from: data){
+                    return newValue.formatted(.percent.precision(.fractionLength(0)))
+                }
+                else {
+                    return "Ups, sth went wrong."
+                }
             case .streak:
-                winningStreak.formatted(.number.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winStreak"),
+                   let streak = try? JSONDecoder().decode(Int.self, from: data){
+                    return streak.formatted(.number.precision(.fractionLength(0)))
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .word:
-                wordToday
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "wordToday"),
+                   let wordToday = try? JSONDecoder().decode(String.self, from: data){
+                    return wordToday
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .winsToday:
-                winsToday.formatted(.number.precision(.fractionLength(0)))
+                if let data = NSUbiquitousKeyValueStore.default.data(forKey: "winsToday"),
+                   let winsToday = try? JSONDecoder().decode(Int.self, from: data){
+                    return winsToday.formatted(.number.precision(.fractionLength(0)))
+                } else {
+                    return "Ups, sth went wrong."
+                }
             case .icon:
-                "Icon"
+                return "Icon"
             }
         }()
         let entry = SimpleEntry(text: string, configuration: configuration)
 
-        return Timeline(entries: [entry], policy: .after(.now + 100))
+        return Timeline(entries: [entry], policy: .after(.now.addingTimeInterval(60)))
     }
 }
 
@@ -68,8 +101,8 @@ struct SimpleEntry: TimelineEntry {
     let configuration: ConfigurationAppIntent
 }
 
-@MainActor
-struct gamestatsWidgetEntryView : View {
+
+struct GamestatsWidgetEntryView : View {
     var entry: Provider.Entry
 
 
@@ -105,7 +138,7 @@ struct gamestatsWidget: Widget {
 
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            gamestatsWidgetEntryView(entry: entry)
+            GamestatsWidgetEntryView(entry: entry)
                 .containerBackground(.black, for: .widget)
         }
     }

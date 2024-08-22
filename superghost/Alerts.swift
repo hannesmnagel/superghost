@@ -14,6 +14,7 @@ enum AlertItem: String, Equatable, Identifiable {
 
 struct AlertView: View {
     @State var alertItem: AlertItem
+
     let dismissParent: (() -> Void)?
     let isSuperghost: Bool
     let quitGame: (() async throws -> Void)?
@@ -38,6 +39,7 @@ struct AlertView: View {
             Text(alertItem == .won ? "Can you win another one?" : alertItem == .playerLeft ? "Play a new game" : "Get revenge!")
                 .font(AppearanceManager.youWonOrLostSubtitle)
                 .padding(.bottom)
+            ScoreChangeView()
             if alertItem == .playerLeft {
                 if let quitGame{
                     Spacer()
@@ -65,7 +67,7 @@ struct AlertView: View {
                         .buttonStyle(AppearanceManager.QuitRematch(isPrimary: player2Id == "botPlayer"))
                         .keyboardShortcut(.cancelAction)
                     }
-                    if let rematch {
+                    if let rematch, player2Id != "botPlayer" {
                         Spacer()
                         AsyncButton{
                             try await rematch()
@@ -86,8 +88,67 @@ struct AlertView: View {
         .interactiveDismissDisabled()
     }
 }
+import CoreHaptics
 
+struct ScoreChangeView: View {
+    @CloudStorage("score") private var score = 1000
+    @ObservedObject var messageModel = MessageModel.shared
+    @State private var engine: CHHapticEngine? = {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return nil }
+        let engine = try? CHHapticEngine()
+        try? engine?.start()
+        return engine
+    }()
 
+    var body: some View {
+        let transition : ContentTransition =
+        if #available(iOS 17.0, *){
+            .numericText(value: Double(score))
+        } else {
+            .numericText()
+        }
+        Text(score, format: .number)
+            .font(.system(size: 70))
+            .contentTransition(transition)
+            .task(id: messageModel.showingScoreChangeBy) {
+                if let newValue = messageModel.showingScoreChangeBy {
+                    try? playValueHaptic(increase: newValue > score)
+                    Task{
+                        try? await Task.sleep(for: .seconds(2))
+                        withAnimation(.smooth(duration: 2, extraBounce: 1)) {
+                            score += newValue
+                        }
+                        messageModel.showingScoreChangeBy = nil
+                    }
+
+                }
+            }
+    }
+    func playValueHaptic(increase: Bool) throws {
+        // Ensure the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
+            return
+        }
+        var events = [CHHapticEvent]()
+        for i in stride(from: 0, to: 1, by: 0.01) {
+            let i = increase ? i : 1-i
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(i))
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(0))
+            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i*4)
+            events.append(event)
+        }
+        let pattern = try CHHapticPattern(events: events, parameters: [])
+        let player = try engine?.makePlayer(with: pattern)
+        try player?.start(atTime: 0)
+    }
+}
+#Preview{
+    ScoreChangeView()
+        .task{
+            try? await Task.sleep(for: .seconds(1))
+            MessageModel.shared.showingScoreChangeBy = 1
+        }
+}
 struct WordDefinitionView: View {
     let word: String
     @State var game: GameStat? = nil
