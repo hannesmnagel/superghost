@@ -9,7 +9,6 @@ import SwiftUI
 import RevenueCat
 import BackgroundTasks
 import UserNotifications
-import WidgetKit
 import GameKit
 
 @main
