@@ -48,7 +48,6 @@ import GameKit
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: GameViewModel
-    @CloudStorage("notificationsAllowed") var notificationsAllowed = true
     @State private var managementURL: URL?
     @AppStorage("volume") var volume = 1.0
 
@@ -90,40 +89,14 @@ struct SettingsView: View {
                         .frame(maxWidth: 200)
 #endif
                 }
-                Section{
-                    Toggle("Notifications", isOn: $notificationsAllowed)
-                        .onChange(of: notificationsAllowed) {newValue in
-                            Task{
-                                if newValue{
-                                    do{
-                                        if try await !UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]){
-#if !os(macOS)
-                                            if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
-                                                await UIApplication.shared.open(settingsURL)
-                                            }
-#endif
-                                            notificationsAllowed = false
-                                        }
-                                    } catch {
-#if !os(macOS)
-                                        if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString){
-                                            await UIApplication.shared.open(settingsURL)
-                                        } else {
-                                            notificationsAllowed = true
-                                        }
-#else
-                                        notificationsAllowed = false
-#endif
-                                    }
-                                }
-                            }
-                        }
-                }
 #if os(iOS)
                 Section("Icon"){
                     NavigationLink("Select AppIcon", destination: AppIconPickerView(isSuperghost: isSuperghost))
                 }
 #endif
+                Section{
+                    ShareLink("Share Testflight Invite", item: URL(string: "https://testflight.apple.com/join/OzTDTCgF")!)
+                }
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

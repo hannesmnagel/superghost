@@ -72,10 +72,10 @@ private final class UbiquitousStorageObserver<Value: Codable>: ObservableObject 
 
 @propertyWrapper
 struct CloudStorage<Value: Codable>: DynamicProperty {
-    @StateObject private var observer: UbiquitousStorageObserver<Value>
+    @ObservedObject private var observer: UbiquitousStorageObserver<Value>
 
     init(wrappedValue defaultValue: Value, _ key: String) {
-        _observer = StateObject(wrappedValue: UbiquitousStorageObserver(initialValue: defaultValue, key: key))
+        _observer = .init(wrappedValue: UbiquitousStorageObserver(initialValue: defaultValue, key: key))
     }
 
     var wrappedValue: Value {

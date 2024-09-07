@@ -23,6 +23,7 @@ struct LeaderboardView: View {
     @State private var myScore : GKLeaderboard.Entry?
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
+    @State private var hasUnlockedLeaderboard = false
     @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
@@ -36,14 +37,17 @@ struct LeaderboardView: View {
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)
                 }
             }
-            if score < 1200{
-                ContentPlaceHolderView("Earn a score of 1,200 to see the leaderboard", systemImage: "chart.bar.fill")
+            if !GKLocalPlayer.local.isAuthenticated{
+                ContentPlaceHolderView("Sign In to Game Center to see the leaderboard", systemImage: "person.3")
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else if !hasUnlockedLeaderboard {
+                ContentPlaceHolderView("Earn a score of 1,050 to see the leaderboard", systemImage: "chart.bar.fill")
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 inlineLeaderboard
                 if image != nil {
                     Button{
-                        GKAccessPoint.shared.trigger(state: .leaderboards) {}
+                        GKAccessPoint.shared.trigger(leaderboardID: "global.score", playerScope: .global, timeScope: .allTime)
                     } label: {
                         HStack{
                             Text("More")
@@ -58,9 +62,10 @@ struct LeaderboardView: View {
             }
         }
         .task(id: viewModel.games){
-            if !GKLocalPlayer.local.isAuthenticated{
+            while !GKLocalPlayer.local.isAuthenticated{
                 try? await Task.sleep(for: .seconds(2))
             }
+            hasUnlockedLeaderboard = (try? await GKAchievement.loadAchievements().first(where: { $0.identifier == Achievement.leaderboardUnlock.rawValue })?.percentComplete) == 100
             try? await loadData()
         }
         .task(id: score){
@@ -90,17 +95,17 @@ struct LeaderboardView: View {
                     let friends = try? await GKLocalPlayer.local.loadFriends()
                     if friends?.contains(entry.player) ?? false {
                         Text("A friend of yours ranked at \(entry.rank)")
-//                        if #available(iOS 18.0, macOS 15.0, *){
-//                            Button("View your profile"){
-//                                selectedScore = nil
-//
-//                                DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
-//                                    GKAccessPoint.shared.trigger(player: entry.player)
-//                                }
-//                            }
-//                            .buttonStyle(.bordered)
-//                            .buttonBorderShape(.capsule)
-//                        }
+                        if #available(iOS 18.0, macOS 15.0, *){
+                            Button("View their profile"){
+                                selectedScore = nil
+
+                                DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
+                                    GKAccessPoint.shared.trigger(player: entry.player)
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.capsule)
+                        }
 
                     } else if entry.player == GKLocalPlayer.local {
                         Text("You are rank \(entry.rank)")
@@ -119,7 +124,14 @@ struct LeaderboardView: View {
                     if entry.player.isInvitable {
                         Button("Challenge"){
                             let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.score) on the leaderboard!", players: [entry.player])
+
+#if os(macOS)
+
+                            let window = NSWindow(contentViewController: vc)
+                            NSWindowController(window: window).showWindow(nil)
+                            #else
                             UIApplication.shared.topViewController()?.present(vc, animated: true)
+#endif
 
                         }
                     }
@@ -140,7 +152,7 @@ struct LeaderboardView: View {
             }
 //        }
     }
-    func loadData() async throws {
+    nonisolated func loadData() async throws {
         guard let leaderboard = try? await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first
         else {
             return
@@ -169,11 +181,11 @@ struct LeaderboardView: View {
     var inlineLeaderboard: some View {
         ForEach(entries, id: \.rank) { entry in
             Button{
-                //                if #available(iOS 18.0, macOS 15.0, *) {
-                //                    GKAccessPoint.shared.trigger(player: entry.player)
-                //                } else {
-                selectedScore = entry
-                //                }
+                if #available(iOS 18.0, macOS 15.0, *) {
+                    GKAccessPoint.shared.trigger(player: entry.player)
+                } else {
+                    selectedScore = entry
+                }
             } label: {
                 HStack{
                     Text("\(entry.rank).")
@@ -193,44 +205,28 @@ extension GKPlayer {
     @MainActor
     func asyncImage(_ size: PhotoSize) -> some View {
         AsyncView {
-            try? await withCheckedThrowingContinuation{con in
-
-                self.loadPhoto(for: size) { image, error in
-                    if let image {
-                        con.resume(returning: Image(uiImage: image))
-                    } else {
-                        con.resume(throwing: error!)
-                    }
+            await Task<Image?, Never>{
+                while !GKLocalPlayer.local.isAuthenticated{
+                    try? await Task.sleep(for: .seconds(1))
                 }
+                return try? await withCheckedThrowingContinuation{con in
+                    self.loadPhoto(for: size) { image, error in
+                        if let image {
+                            con.resume(returning: Image(uiImage: image))
+                        } else {
+                            con.resume(throwing: error!)
+                        }
+                    }
 
-            }
+                }
+            }.value?
             .resizable().scaledToFit().clipShape(.circle)
         } loading: {
             ProgressView()
         }
     }
 }
-private struct AsyncView<Content: View, Loading: View>: View {
-    @State var content: Content?
-    @ViewBuilder let loading: Loading
-    let contentClosure: () async -> Content
-    init(@ViewBuilder content: @escaping () async -> Content, loading: () -> Loading) {
-        self.content = nil
-        self.loading = loading()
-        contentClosure = content
-    }
 
-    var body: some View {
-        if let content{
-            content
-        } else {
-            loading
-                .task {
-                    content = await contentClosure()
-                }
-        }
-    }
-}
 
 #Preview {
     LeaderboardView(isSuperghost: true)

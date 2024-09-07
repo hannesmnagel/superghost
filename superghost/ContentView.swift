@@ -39,7 +39,6 @@ struct ContentView: View {
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
-    @CloudStorage("notificationsAllowed") var notificationsAllowed = false
 
     var body: some View {
         Group{
@@ -57,12 +56,18 @@ struct ContentView: View {
         .preferredColorScheme(.dark)
         .task(id: superghostTrialEnd) {
             do{
+                if NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) == 100.0{
+                    Task.detached{
+                        try await reportAchievement(.widgetAdd, percent: 100)
+                    }
+                }
                 try await fetchSubscription()
             } catch {
                 print(error)
             }
         }
         .sheet(isPresented: $viewModel.showPaywall) {
+            Logger.userInteraction.info("Dismissed Paywall")
             Task{try? await fetchSubscription()}
         } content: {
             PaywallView()
@@ -75,50 +80,73 @@ struct ContentView: View {
 
         .task(id: viewModel.games.debugDescription.appending(isSuperghost.description)) {
             await refreshScore()
-            await requestNotification()
+            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
+                if (try? await UNUserNotificationCenter.current().requestAuthorization()) == true{
+                    requestAction(.enableNotifications)
+                }
+            }
         }
     }
 
-    func fetchSubscription() async throws {
+    nonisolated func fetchSubscription() async throws {
         let info = try await Purchases.shared.restorePurchases()
-        let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
+        let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-        isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
+        await MainActor.run{
+            isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
+        }
 
 #if os(iOS)
-        if !isSuperghost && AppearanceManager.shared.appIcon != .standard{
+        if await !isSuperghost && AppearanceManager.shared.appIcon != .standard{
             try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
         }
 #endif
 
-        let showedPaywallToday = Calendar.current.isDateInToday(lastPaywallView)
+        let showedPaywallToday = await Calendar.current.isDateInToday(lastPaywallView)
 
         //is in trial:
         if !(info.entitlements["superghost"]?.isActive ?? false) && timeSinceTrialEnd < 0 {
-            showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
+            await MainActor.run{
+                showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
+            }
         } else {
-            showTrialEndsIn = nil
+            await MainActor.run{
+                showTrialEndsIn = nil
+            }
         }
         //is not superghost, every 4 days:
-        if !showedPaywallToday && !isSuperghost && (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3) {
-            viewModel.showPaywall = true
-            lastPaywallView = Date()
-        } else if !showedPaywallToday && Int.random(in: 0...3) == 0{
-            if let friends = try? await GKLocalPlayer.local.loadFriends() {
-                if friends.isEmpty {
-                    showMessage("Add some friends and challenge them!")
-                    lastPaywallView = Date()
-                    try? await Task.sleep(for: .seconds(2))
-#if os(macOS)
-                    try GKLocalPlayer.local.presentFriendRequestCreator(from: NSApplication.shared.keyWindow ?? .init())
-#else
-                    try GKLocalPlayer.local.presentFriendRequestCreator(from: UIApplication.shared.topViewController() ?? UIViewController())
-#endif
-                } else {
-                    let achievement = GKAchievement(identifier: "friend.add")
-                    achievement.percentComplete = Double(100 * friends.count)
-                }
+        if !showedPaywallToday,
+           await !isSuperghost,
+           (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3)
+        {
+            await MainActor.run{
+                viewModel.showPaywall = true
+                lastPaywallView = Date()
             }
+            Logger.userInteraction.info("presenting paywall")
+        } else if Int.random(in: 0...2) == 0,
+                  await UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized{
+            requestAction(.enableNotifications)
+        }
+        else if Int.random(in: 0...3) == 0,
+            let friends = try? await GKLocalPlayer.local.loadFriends() {
+                if friends.isEmpty {
+                    requestAction(.addFriends)
+                    await MainActor.run{
+                        lastPaywallView = Date()
+                    }
+
+                } else {
+                    Task.detached{
+                        try? await reportAchievement(.friendAdd, percent: 100)
+                    }
+                }
+        } else if Int.random(in: 0...3) == 0 && NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) != 100 {
+            requestAction(.addWidget)
+        } else if !showedPaywallToday && Int.random(in: 0...3) == 0 {
+            Logger.userInteraction.info("Play in Messages feature tip")
+            showMessage("Did you know, you can play against friends in Messages?")
+            showMessage("Just tap the plus Button in Messages and then choose Superghost")
         }
     }
 
@@ -148,25 +176,6 @@ struct ContentView: View {
 #if canImport(WidgetKit)
         WidgetCenter.shared.reloadAllTimelines()
 #endif
-    }
-
-    nonisolated func requestNotification() async {
-        if await !viewModel.games.isEmpty {
-            do{
-                if await notificationsAllowed {
-                    guard try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) else {
-                        await MainActor.run{
-                            notificationsAllowed = false
-                        }
-                        return
-                    }
-                }
-            } catch {
-                await MainActor.run{
-                    notificationsAllowed = false
-                }
-            }
-        }
     }
 }
 

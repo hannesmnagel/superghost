@@ -18,6 +18,7 @@ class MessagesViewController: MSMessagesAppViewController {
         let hostingController = UIHostingController(
             rootView: ContentView()
                 .environmentObject(appState)
+                .environment(\.topViewController, {self})
         )
         addChild(hostingController)
         view.addSubview(hostingController.view)

@@ -59,7 +59,7 @@ final class GameViewModel: ObservableObject {
                             try? SoundManager.shared.play(.scream, loop: false)
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
-                            Task{
+                            Task.detached{
                                 try? await reportAchievement(.longWord, percent: 100)
                             }
                         }
@@ -112,6 +112,8 @@ final class GameViewModel: ObservableObject {
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
+
+        Logger.userInteraction.info("Joined Game with ID: \(gameId)")
     }
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(with: currentUser.id, isSuperghost: true)
@@ -120,6 +122,7 @@ final class GameViewModel: ObservableObject {
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
+        Logger.userInteraction.info("Hosted Game")
     }
 
     func processPlayerMove(for letter: String, isSuperghost: Bool) async throws {
@@ -138,6 +141,7 @@ final class GameViewModel: ObservableObject {
 
     func quitGame(isSuperghost: Bool) async throws {
         try await ApiLayer.shared.quitGame(isPrivate: withInvitation, isSuperghost: isSuperghost)
+        Logger.userInteraction.info("Quit Game")
     }
 
 

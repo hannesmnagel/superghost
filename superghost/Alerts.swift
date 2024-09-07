@@ -91,6 +91,7 @@ struct AlertView: View {
 import CoreHaptics
 
 struct ScoreChangeView: View {
+    @Environment(\.topViewController) var topViewController
     @CloudStorage("score") private var score = 1000
     @ObservedObject var messageModel = MessageModel.shared
     @State private var engine: CHHapticEngine? = {
@@ -102,7 +103,7 @@ struct ScoreChangeView: View {
 
     var body: some View {
         let transition : ContentTransition =
-        if #available(iOS 17.0, *){
+        if #available(iOS 17.0, macOS 14.0, *){
             .numericText(value: Double(score))
         } else {
             .numericText()
@@ -112,13 +113,18 @@ struct ScoreChangeView: View {
             .contentTransition(transition)
             .task(id: messageModel.showingScoreChangeBy) {
                 if let newValue = messageModel.showingScoreChangeBy {
-                    try? playValueHaptic(increase: newValue > score)
+                    try? playValueHaptic(increase: newValue > 0)
                     Task{
                         try? await Task.sleep(for: .seconds(2))
+
+                        if let vc = topViewController(){
+                            showConfetti(on: vc)
+                        }
                         withAnimation(.smooth(duration: 2, extraBounce: 1)) {
                             score += newValue
                         }
                         messageModel.showingScoreChangeBy = nil
+                        Logger.score.info("score changed by \(newValue)")
                     }
 
                 }
@@ -188,6 +194,7 @@ struct WordDefinitionView: View {
                 ContentPlaceHolderView("Couldn't get definitions!", systemImage: "network.slash")
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
+                    .frame(maxWidth: .infinity, alignment: .center)
             case .loading:
                 ProgressView()
                     .listRowBackground(Color.clear)
@@ -197,6 +204,7 @@ struct WordDefinitionView: View {
                     ContentPlaceHolderView("This is not a word", systemImage: "character.book.closed")
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     ForEach(definitions, id: \.self) { entry in
                         viewFor(entry: entry)

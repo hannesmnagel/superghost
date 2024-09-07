@@ -34,7 +34,6 @@ class SoundManager{
     }
 
     func play(_ sound: Sound, loop: Bool) throws {
-        guard volume > 0 else {return}
         guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3"),
               let url = URL(string: string)
         else {
@@ -44,7 +43,7 @@ class SoundManager{
         let player = try AVAudioPlayer(contentsOf: url)
         players[sound] = player
         player.prepareToPlay()
-        player.setVolume(Float(volume), fadeDuration: 1)
+        player.volume = Float(volume)
         player.play()
         player.numberOfLoops = loop ? -1 : 0
     }

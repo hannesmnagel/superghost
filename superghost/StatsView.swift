@@ -31,10 +31,12 @@ struct StatsView: View {
             .toolbar {
                 summary
             }
+        let listClosed = 20
 #else
         summary
+        let listClosed = 5
 #endif
-        ForEach(viewModel.games.prefix(expandingList ? .max : 5)){game in
+        ForEach(viewModel.games.prefix(expandingList ? .max : listClosed)){game in
             Button{selection = game} label: {
                 HStack{
                     Text(game.word)
@@ -46,7 +48,7 @@ struct StatsView: View {
             .buttonStyle(.plain)
             .listRowBackground(game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
         }
-        if viewModel.games.count > 5 {
+        if viewModel.games.count > listClosed {
             Button{
                 withAnimation(.smooth){expandingList.toggle()}
             } label: {

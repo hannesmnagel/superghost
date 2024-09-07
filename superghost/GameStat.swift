@@ -41,15 +41,18 @@ struct GameStat: Codable, Hashable, Identifiable {
     }
 
     static func submitScore(_ score: Int) async throws {
-        try? await Task.sleep(for: .seconds(0.5))
+        while !GKLocalPlayer.local.isAuthenticated{ try? await Task.sleep(for: .seconds(1))}
+
         let leaderboards = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"])
         for leaderboard in leaderboards{
             try await leaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local)
         }
-        try await reportAchievement(.lowScore, percent: Double(score)/2000.0 * 100)
-        try await reportAchievement(.midScore, percent: Double(score)/2500.0 * 100)
-        try await reportAchievement(.highScore, percent: Double(score)/3000.0 * 100)
-        try await reportAchievement(.leaderboardUnlock, percent: Double(score)/1200.0 * 100)
+        Task.detached{
+            try await reportAchievement(.lowScore, percent: Double(score)/2000.0 * 100)
+            try await reportAchievement(.midScore, percent: Double(score)/2500.0 * 100)
+            try await reportAchievement(.highScore, percent: Double(score)/3000.0 * 100)
+            try await reportAchievement(.leaderboardUnlock, percent: Double(score)/1050.0 * 100)
+        }
     }
 }
 
@@ -71,22 +74,35 @@ enum Achievement: String, CaseIterable {
 }
 
 func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
-    let achievements = try await GKAchievement.loadAchievements()
-    guard !achievements.contains(where: {$0.isCompleted && $0.identifier == achievement.rawValue}) else {return}
+    do{
+        guard Bundle.main.bundleIdentifier == "com.nagel.superghost" else {
+            NSUbiquitousKeyValueStore.default.set(percent, forKey: achievement.rawValue)
+            Logger.achievements.warning("Player not authenticated. Achievement stored for later reporting.")
+            return
+        }
+        while !GKLocalPlayer.local.isAuthenticated{ try? await Task.sleep(for: .seconds(1))}
+        let achievements = try await GKAchievement.loadAchievements()
+        guard !achievements.contains(where: {$0.isCompleted && $0.identifier == achievement.rawValue}) else {return}
 
-    let achievement = GKAchievement(identifier: achievement.rawValue)
-    achievement.showsCompletionBanner = true
-    achievement.percentComplete = percent
-    try await GKAchievement.report([achievement])
+        let achievement = GKAchievement(identifier: achievement.rawValue)
+        achievement.showsCompletionBanner = true
+        achievement.percentComplete = percent
+        NSUbiquitousKeyValueStore.default.set(percent, forKey: achievement.identifier)
+        try await GKAchievement.report([achievement])
 
-    guard percent >= 100 else {return}
-    showMessage("You earned an Achievement!")
-    Task{
-        try? await Task.sleep(for: .seconds(2))
-        //    if #available(iOS 18.0, *) {
-        //        GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
-        //    } else {
-        GKAccessPoint.shared.trigger(state: .achievements){}
-        //    }
+        guard percent >= 100 else {return}
+        showMessage("You earned an Achievement!")
+        Task{
+            try? await Task.sleep(for: .seconds(2))
+            if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {
+                await MainActor.run{
+                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
+                }
+            }
+        }
+        Logger.achievements.info("Logged achievement \(achievement.identifier, privacy: .public)")
+    } catch {
+        Logger.achievements.error("Failed to log achievement \(achievement.rawValue, privacy: .public) with error: \(error, privacy: .public)")
+        throw error
     }
 }

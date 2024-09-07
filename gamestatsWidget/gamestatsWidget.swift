@@ -7,6 +7,9 @@
 
 import WidgetKit
 import SwiftUI
+import GameKit
+
+import os
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -49,6 +52,11 @@ struct Provider: AppIntentTimelineProvider {
                 return "Icon"
             }
         }()
+        if !context.isPreview {
+            Task.detached{
+                try? await reportAchievement(.widgetAdd, percent: 100)
+            }
+        }
         return SimpleEntry(text: string, configuration: configuration)
 
     }
@@ -90,7 +98,12 @@ struct Provider: AppIntentTimelineProvider {
             }
         }()
         let entry = SimpleEntry(text: string, configuration: configuration)
-
+        if !context.isPreview {
+            Task.detached{
+                try? await reportAchievement(.widgetAdd, percent: 100)
+            }
+        }
+        
         return Timeline(entries: [entry], policy: .after(.now.addingTimeInterval(60)))
     }
 }
@@ -104,11 +117,12 @@ struct SimpleEntry: TimelineEntry {
 
 struct GamestatsWidgetEntryView : View {
     var entry: Provider.Entry
+    @Environment(\.widgetFamily) var widgetFamily
 
 
     var body: some View {
         ZStack {
-            Image(.ghost)
+            Image(widgetFamily == .systemSmall ? .ghost512 : .ghost1024)
                 .resizable()
                 .scaledToFit()
                 .scaleEffect(1.4)

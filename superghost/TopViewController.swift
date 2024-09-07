@@ -5,8 +5,9 @@
 //  Created by Hannes Nagel on 8/19/24.
 //
 
+import SwiftUI
+
 #if canImport(UIKit)
-import UIKit
 
 extension UIApplication {
     func topViewController(base: UIViewController? = UIApplication.shared.connectedScenes

@@ -19,6 +19,24 @@
     "A friend of yours ranked at %lld" : {
 
     },
+    "Achievements" : {
+
+    },
+    "Add a Friend now to earn 50XP" : {
+
+    },
+    "Add a widget now to earn 50XP" : {
+
+    },
+    "Add Friends" : {
+
+    },
+    "Allow notifications" : {
+
+    },
+    "Allow notifications now to earn 50XP" : {
+
+    },
     "An error occured" : {
 
     },
@@ -64,7 +82,7 @@
     "Display Your Wins today" : {
 
     },
-    "Done" : {
+    "Enable Notifications" : {
 
     },
     "For only %@ per Month. " : {
@@ -103,6 +121,9 @@
     "Manage subscription" : {
 
     },
+    "Maybe later" : {
+
+    },
     "More" : {
 
     },
@@ -112,7 +133,7 @@
     "No products found" : {
 
     },
-    "Notifications" : {
+    "Okay, I added one!" : {
 
     },
     "Play a new game" : {
@@ -128,6 +149,9 @@
 
     },
     "Rank: %lld" : {
+
+    },
+    "Recent Games" : {
 
     },
     "Rematch" : {
@@ -146,6 +170,9 @@
 
     },
     "Settings" : {
+
+    },
+    "Share Testflight Invite" : {
 
     },
     "Show Paywall" : {
@@ -209,6 +236,9 @@
     "This is not a word" : {
 
     },
+    "View their profile" : {
+
+    },
     "View your profile" : {
 
     },
@@ -222,6 +252,12 @@
 
     },
     "What word did you think of?" : {
+
+    },
+    "Why don't you add a Widget?" : {
+
+    },
+    "Why don't you add some Friends?" : {
 
     },
     "Win Rate" : {

@@ -16,6 +16,15 @@ struct HomeView: View {
     @CloudStorage("wordToday") private var wordToday = "-----"
 
     var body: some View {
+        HStack {
+#if os(macOS)
+            List{
+                Text("Recent Games")
+                    .font(.title.bold())
+                StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
+            }
+            .frame(maxWidth: 300)
+#endif
             VStack {
                 List{
                     Section{
@@ -41,8 +50,13 @@ struct HomeView: View {
                         LeaderboardView(isSuperghost: isSuperghost)
                     }
                     Section{
+                        AchievementsView()
+                    }
+                    #if !os(macOS)
+                    Section{
                         StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
                     }
+                    #endif
                     Section{
                         SettingsButton(isSuperghost: isSuperghost)
                             .listRowBackground(Color.clear)
@@ -50,38 +64,55 @@ struct HomeView: View {
                     }
                 }
                 .scrollContentBackground(.hidden)
+#if os(macOS)
+                .overlay{
+                    if let gameStat = gameStatSelection{
+                            WordDefinitionView(word: gameStat.word, game: gameStat)
+                                .padding(.top)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())
+                                .overlay(alignment: .topTrailing){
+                                    Button{gameStatSelection = nil} label: {
+                                        Image(systemName: "xmark")
+                                    }
+                                    .keyboardShortcut(.cancelAction)
+                                    .buttonBorderShape(.bcCapsule)
+                                    .padding(.top)
+                                    .padding(.trailing)
+                                }
+                            .id(gameStat)
+                    }
+                }
+#endif
             }
             .onOpenURL { url in
                 Task{
                     let gameId = url.lastPathComponent
 
+                    Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
+                    
                     try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
                     gameStatSelection = nil
                     isGameViewPresented = true
                 }
             }
+        }
+#if !os(macOS)
             .sheet(item: $gameStatSelection) { gameStat in
                 NavigationStack{
                     WordDefinitionView(word: gameStat.word, game: gameStat)
                         .padding(.top)
                         .toolbar{
                             ToolbarItem(placement: .cancellationAction){
-#if os(iOS) || os(visionOS)
                                 Button{gameStatSelection = nil} label: {
                                     Image(systemName: "xmark")
                                 }
-#elseif os(macOS)
-                                Button("Done"){gameStatSelection = nil}
-
-#endif
                             }
                         }
                         .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())
-#if os(macOS)
-                        .frame(minWidth: 500, minHeight: 500)
-#endif
                 }
             }
+#endif
     }
     @MainActor @ViewBuilder
     var header: some View {

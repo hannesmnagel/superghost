@@ -39,7 +39,10 @@ struct GameView: View {
                 .buttonStyle(.plain)
             }
             if viewModel.gameStatusText == .waitingForPlayer{
-                Text(appearingDate, style: .timer) + Text(" elapsed - ETA:") + Text(appearingDate.addingTimeInterval(.random(in: 13...17)), style: .relative)
+                Text(appearingDate, style: .timer)
+                    .monospacedDigit()
+                + Text(" elapsed - ETA:") + Text(appearingDate.addingTimeInterval(.random(in: 3...6)), style: .relative)
+                    .monospacedDigit()
             }
             Spacer()
 
@@ -56,6 +59,13 @@ struct GameView: View {
             } else if let game = viewModel.game{
                 VStack {
                     if game.challengingUserId.isEmpty {
+                        if game.blockMoveForPlayerId != viewModel.currentUser.id {
+                            ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
+                                .transition(.scale(scale: 0.1, anchor: .bottom))
+                        } else {
+                            ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
+                                .transition(.scale(scale: 0.1, anchor: .bottom))
+                        }
                         LetterPicker(isSuperghost: isSuperghost)
                         if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
                             AsyncButton{
@@ -68,6 +78,7 @@ struct GameView: View {
                         }
                         //MARK: When you are challenged
                     } else if game.challengingUserId != viewModel.currentUser.id{
+                        ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
                         Text(game.moves.last?.word ?? "")
                             .font(AppearanceManager.wordInGame)
                         SayTheWordButton(isSuperghost: isSuperghost)
@@ -85,6 +96,7 @@ struct GameView: View {
                 }
                 .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                 .padding()
+                .animation(.bouncy, value: game)
                 Spacer()
             }
         }
