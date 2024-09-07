@@ -96,7 +96,7 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
             try? await Task.sleep(for: .seconds(2))
             if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {
                 await MainActor.run{
-                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
+                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier){}
                 }
             }
         }
