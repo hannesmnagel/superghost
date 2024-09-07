@@ -8,6 +8,7 @@
 import SwiftUI
 import RevenueCat
 import UserNotifications
+import OSLog
 
 struct SettingsButton: View {
     let isSuperghost: Bool
@@ -56,6 +57,19 @@ struct SettingsView: View {
     enum Destination: String {case learn, none}
     let dismiss: ()->Void
 
+#if DEBUG
+    @State private var entries = {
+        let store = try? OSLogStore(scope: .currentProcessIdentifier)
+        let position = store?.position(timeIntervalSinceLatestBoot: 1)
+        let entries = try? store?
+            .getEntries(at: position)
+            .compactMap { $0 as? OSLogEntryLog }
+            .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
+            .map { "[\($0.date.formatted())] [\($0.category)] \($0.composedMessage)" }
+        return entries ?? []
+    }()
+#endif
+
     var body: some View {
         NavigationStack{
             Form{
@@ -97,6 +111,16 @@ struct SettingsView: View {
                 Section{
                     ShareLink("Share Testflight Invite", item: URL(string: "https://testflight.apple.com/join/OzTDTCgF")!)
                 }
+#if DEBUG
+                DisclosureGroup("Logs") {
+                    ForEach(entries, id: \.self) { entry in
+                        Text(entry)
+                            .onTapGesture {
+                                UIPasteboard.general.string = entries.joined(separator: "\n")
+                            }
+                    }
+                }
+#endif
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

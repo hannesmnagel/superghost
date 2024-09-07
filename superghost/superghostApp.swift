@@ -39,7 +39,6 @@ struct superghostApp: App {
                     Logger.userInteraction.info("App launched")
 #if !os(macOS)
                     scheduleLBNotifications()
-                    scheduleEventNotifications()
 #endif
                 }
                 .environmentObject(viewModel)
@@ -53,14 +52,19 @@ struct superghostApp: App {
         .backgroundTask(.appRefresh("com.nagel.superghost.lbnotifications")) {
             do{
                 scheduleLBNotifications()
+
+                if await UNUserNotificationCenter.current().pendingNotificationRequests().filter({$0.identifier == "end-of-week-start-of-day"}).isEmpty{
+                    scheduleEventNotifcation()
+                }
+
                 let rank = await rank
 
                 if GKLocalPlayer.local.isAuthenticated,
 
                     let entries = try await GKLeaderboard
-                        .loadLeaderboards(IDs: ["global.score"])
-                        .first?
-                        .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
+                    .loadLeaderboards(IDs: ["global.score"])
+                    .first?
+                    .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
                    let myCurrent = entries.0?.rank,
                    rank > 0,
                    myCurrent > rank {
@@ -90,45 +94,6 @@ struct superghostApp: App {
                 Logger.appRefresh.error("\(error, privacy: .public)")
             }
         }
-        .backgroundTask(.appRefresh("com.nagel.superghost.eventnotifications")) {
-            scheduleEventNotifications()
-
-            let greetings = [
-                ("Double Trouble!", "It’s the last weekday, and today your match counts double! Time to rack up those XP points and make your competition sweat!"),
-                ("XP-ocalypse Now!", "Attention, brave XP warriors! On this fine last weekday, every match counts as two! So go out there and double your trouble!"),
-                ("Twice the Fun!", "Why settle for one when you can have two? Today is the day when each match doubles your XP! Get in there and show them who’s boss!"),
-                ("Weekend Prep: Double XP Edition!", "Before you kick back and relax, let’s double up those XP points! Today’s matches are worth two—like a two-for-one deal but without the calories!"),
-                ("XP Extravaganza!", "Happy last weekday! It’s time to feast on double XP! Don’t worry, your matches won’t bite (but they will count twice)!"),
-                ("Dueling XP Points!", "It’s a duel! Each match today counts double, so put on your best game face and go for the win! The XP gods demand it!"),
-                ("Double or Nothing!", "It’s your lucky day! Every match today counts double towards XP—so put on your favorite socks and let’s get this double XP party started!"),
-                ("XP: The Sequel!", "Guess what? Every match today is a sequel worth twice the XP! Time to make your gaming history a blockbuster hit!"),
-                ("Double Your Pleasure, Double Your XP!", "It’s the last weekday! Matches today count double, so don’t just play—play like you mean it! Your XP is waiting for a lift!"),
-                ("Last Weekday Shenanigans!", "Happy last weekday! Today, your matches come with a bonus—double XP! Get ready to level up faster than you can say ‘XP-tastic!’")
-            ]
-            let greeting = greetings.randomElement()!
-
-            let eveningReminders = [
-                ("Last Call for Double XP!", "This is it! Today is your final chance to rack up double XP before the week wraps up! Don’t miss out!"),
-                ("Final Countdown: Double XP Edition!", "Tick tock! The clock is ticking down on your double XP opportunity! Get in those matches while you can!"),
-                ("Last Chance to Level Up!", "It's your last chance! Double XP is about to vanish, so make those matches count before it's too late!"),
-                ("The XP Train is Leaving!", "All aboard the XP train! This is your last chance to hop on for double points before it departs!"),
-                ("Don’t Let Double XP Slip Away!", "The sun is setting, and so is your chance for double XP! Make your final matches count!"),
-                ("End of Day XP Push!", "Time’s almost up! This is your last chance for double XP today! Show them what you’ve got!"),
-                ("Final Opportunity for Double XP!", "This is your last chance to snag those double XP points! Go out with a bang!"),
-                ("Last Match Madness!", "It’s the final hours for double XP! Don’t miss out on making your last matches epic!"),
-                ("Double XP: The Finale!", "This is it! The final chance to earn double XP before the weekend! Make it count!"),
-                ("Get in the Game Before It’s Gone!", "This is your last call for double XP! Don’t let it slip away without a fight!")
-            ]
-            let eveningGreeting = eveningReminders.randomElement()!
-
-            let weekday = Calendar.current.firstWeekday + 6
-
-            sendPushNotification(with: greeting.0, description: greeting.1, id: "end-of-week-start-of-day", using: UNCalendarNotificationTrigger(dateMatching: .init(hour: 9, weekday: weekday), repeats: false))
-
-            sendPushNotification(with: eveningGreeting.0, description: eveningGreeting.1, id: "end-of-week-end-of-day", using: UNCalendarNotificationTrigger(dateMatching: .init(hour: 21, weekday: weekday), repeats: false))
-
-            Logger.appRefresh.info("scheduled push notifications for end of week events")
-        }
 #endif
 #if os(macOS)
         Settings {
@@ -152,22 +117,47 @@ struct superghostApp: App {
 
         do {
             try BGTaskScheduler.shared.submit(lbnotificationRequest)
+            Logger.appRefresh.info("Scheduled new lbnotifications task.")
         } catch {
             Logger.appRefresh.error("Error scheduling lbnotifications: \(error, privacy: .public)")
         }
     }
-    nonisolated func scheduleEventNotifications() {
-        //start the backgroundtask with: e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.nagel.superghost.eventnotifications"]
+    nonisolated func scheduleEventNotifcation() {
+        let greetings = [
+            ("Double Trouble!", "It’s the last weekday, and today your match counts double! Time to rack up those XP points and make your competition sweat!"),
+            ("XP-ocalypse Now!", "Attention, brave XP warriors! On this fine last weekday, every match counts as two! So go out there and double your trouble!"),
+            ("Twice the Fun!", "Why settle for one when you can have two? Today is the day when each match doubles your XP! Get in there and show them who’s boss!"),
+            ("Weekend Prep: Double XP Edition!", "Before you kick back and relax, let’s double up those XP points! Today’s matches are worth two—like a two-for-one deal but without the calories!"),
+            ("XP Extravaganza!", "Happy last weekday! It’s time to feast on double XP! Don’t worry, your matches won’t bite (but they will count twice)!"),
+            ("Dueling XP Points!", "It’s a duel! Each match today counts double, so put on your best game face and go for the win! The XP gods demand it!"),
+            ("Double or Nothing!", "It’s your lucky day! Every match today counts double towards XP—so put on your favorite socks and let’s get this double XP party started!"),
+            ("XP: The Sequel!", "Guess what? Every match today is a sequel worth twice the XP! Time to make your gaming history a blockbuster hit!"),
+            ("Double Your Pleasure, Double Your XP!", "It’s the last weekday! Matches today count double, so don’t just play—play like you mean it! Your XP is waiting for a lift!"),
+            ("Last Weekday Shenanigans!", "Happy last weekday! Today, your matches come with a bonus—double XP! Get ready to level up faster than you can say ‘XP-tastic!’")
+        ]
+        let greeting = greetings.randomElement()!
 
-        let eventnotificationRequest = BGAppRefreshTaskRequest(identifier: "com.nagel.superghost.eventnotifications")
-        // Fetch no earlier than 10 hours from now.
-        eventnotificationRequest.earliestBeginDate = Date(timeIntervalSinceNow: 10 * 60 * 60)
+        let eveningReminders = [
+            ("Last Call for Double XP!", "This is it! Today is your final chance to rack up double XP before the week wraps up! Don’t miss out!"),
+            ("Final Countdown: Double XP Edition!", "Tick tock! The clock is ticking down on your double XP opportunity! Get in those matches while you can!"),
+            ("Last Chance to Level Up!", "It's your last chance! Double XP is about to vanish, so make those matches count before it's too late!"),
+            ("The XP Train is Leaving!", "All aboard the XP train! This is your last chance to hop on for double points before it departs!"),
+            ("Don’t Let Double XP Slip Away!", "The sun is setting, and so is your chance for double XP! Make your final matches count!"),
+            ("End of Day XP Push!", "Time’s almost up! This is your last chance for double XP today! Show them what you’ve got!"),
+            ("Final Opportunity for Double XP!", "This is your last chance to snag those double XP points! Go out with a bang!"),
+            ("Last Match Madness!", "It’s the final hours for double XP! Don’t miss out on making your last matches epic!"),
+            ("Double XP: The Finale!", "This is it! The final chance to earn double XP before the weekend! Make it count!"),
+            ("Get in the Game Before It’s Gone!", "This is your last call for double XP! Don’t let it slip away without a fight!")
+        ]
+        let eveningGreeting = eveningReminders.randomElement()!
 
-        do {
-            try BGTaskScheduler.shared.submit(eventnotificationRequest)
-        } catch {
-            Logger.appRefresh.error("Error scheduling eventnotifications: \(error, privacy: .public)")
-        }
+        let weekday = Calendar.current.firstWeekday + 6
+
+        sendPushNotification(with: greeting.0, description: greeting.1, id: "end-of-week-start-of-day", using: UNCalendarNotificationTrigger(dateMatching: .init(hour: 9, weekday: weekday), repeats: false))
+
+        sendPushNotification(with: eveningGreeting.0, description: eveningGreeting.1, id: "end-of-week-end-of-day", using: UNCalendarNotificationTrigger(dateMatching: .init(hour: 21, weekday: weekday), repeats: false))
+
+        Logger.appRefresh.info("scheduled push notifications for end of week events")
     }
 #endif
     nonisolated func sendPushNotification(with title: String, description: String, id: String = UUID().uuidString, at date: Date = .now) {

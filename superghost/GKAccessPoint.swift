@@ -7,7 +7,6 @@
 
 import GameKit
 import SwiftUI
-import WidgetKit
 
 extension GKAccessPoint{
     @MainActor

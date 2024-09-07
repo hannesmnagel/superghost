@@ -5,7 +5,6 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.nagel.superghost.lbnotifications</string>
-		<string>com.nagel.superghost.eventnotifications</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
