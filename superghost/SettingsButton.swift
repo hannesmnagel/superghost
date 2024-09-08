@@ -16,7 +16,7 @@ struct SettingsButton: View {
 
 
     var body: some View {
-        #if os(macOS)
+#if os(macOS)
         if #available(macOS 14.0, *){
             SettingsLink{
                 Label("Settings", systemImage: "gearshape")
@@ -28,7 +28,7 @@ struct SettingsButton: View {
                 Label("Settings", systemImage: "gearshape")
             }
         }
-        #else
+#else
         Button{
             showingSettings = true
         } label: {
@@ -41,7 +41,7 @@ struct SettingsButton: View {
         .sheet(isPresented: $showingSettings){
             SettingsView(isSuperghost: isSuperghost){showingSettings = false}
         }
-        #endif
+#endif
     }
 }
 
@@ -116,7 +116,11 @@ struct SettingsView: View {
                     ForEach(entries, id: \.self) { entry in
                         Text(entry)
                             .onTapGesture {
+#if os(macOS)
+                                NSPasteboard.general.setString(entries.joined(separator: "\n"), forType: .string)
+#else
                                 UIPasteboard.general.string = entries.joined(separator: "\n")
+#endif
                             }
                     }
                 }
@@ -125,7 +129,7 @@ struct SettingsView: View {
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .task{
-                managementURL = try? await Purchases.shared.restorePurchases().managementURL
+                managementURL = try? await Purchases.shared.customerInfo().managementURL
             }
             .navigationTitle("Settings")
 #if !os(macOS)

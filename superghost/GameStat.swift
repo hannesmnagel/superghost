@@ -41,7 +41,10 @@ struct GameStat: Codable, Hashable, Identifiable {
     }
 
     static func submitScore(_ score: Int) async throws {
-        while !GKLocalPlayer.local.isAuthenticated{ try? await Task.sleep(for: .seconds(1))}
+        let start = Date()
+        while !GKLocalPlayer.local.isAuthenticated,
+        !(Date().timeIntervalSince(start) > 10)
+        { try? await Task.sleep(for: .seconds(1))}
 
         let leaderboards = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"])
         for leaderboard in leaderboards{
@@ -91,7 +94,7 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
         try await GKAchievement.report([achievement])
 
         guard percent >= 100 else {return}
-        showMessage("You earned an Achievement!")
+        await showMessage("You earned an Achievement!")
         Task{
             try? await Task.sleep(for: .seconds(2))
             if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {

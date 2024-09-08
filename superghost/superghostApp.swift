@@ -51,7 +51,7 @@ struct superghostApp: App {
         .backgroundTask(.appRefresh("com.nagel.superghost.lbnotifications")) {
             do{
                 scheduleLBNotifications()
-
+                
                 if await UNUserNotificationCenter.current().pendingNotificationRequests().filter({$0.identifier == "end-of-week-start-of-day"}).isEmpty{
                     scheduleEventNotifcation()
                 }

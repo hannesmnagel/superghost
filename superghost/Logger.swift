@@ -11,10 +11,11 @@ import os
 final class Logger {
     private static let subsystem = "com.nagel.superghost"
     enum Category: String {
-        case achievements, score, appRefresh, userInteraction
+        case achievements, score, appRefresh, userInteraction, subscription
     }
     static let achievements = os.Logger(subsystem: subsystem, category: Category.achievements.rawValue)
     static let score = os.Logger(subsystem: subsystem, category: Category.score.rawValue)
     static let appRefresh = os.Logger(subsystem: subsystem, category: Category.appRefresh.rawValue)
     static let userInteraction = os.Logger(subsystem: subsystem, category: Category.userInteraction.rawValue)
+    static let subscription = os.Logger(subsystem: subsystem, category: Category.subscription.rawValue)
 }

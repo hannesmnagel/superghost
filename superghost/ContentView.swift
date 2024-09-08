@@ -54,21 +54,15 @@ struct ContentView: View {
         .animation(.smooth, value: isFirstUse)
         .animation(.smooth, value: isGameViewPresented)
         .preferredColorScheme(.dark)
-        .task(id: superghostTrialEnd) {
-            do{
-                if NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) == 100.0{
-                    Task.detached{
-                        try await reportAchievement(.widgetAdd, percent: 100)
-                    }
-                }
-                try await fetchSubscription()
-            } catch {
-                print(error)
-            }
-        }
         .sheet(isPresented: $viewModel.showPaywall) {
             Logger.userInteraction.info("Dismissed Paywall")
-            Task{try? await fetchSubscription()}
+            Task{
+                do{
+                    try await fetchSubscription()
+                } catch {
+                    Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
+                }
+            }
         } content: {
             PaywallView()
 #if os(macOS)
@@ -78,18 +72,32 @@ struct ContentView: View {
         .fontDesign(.rounded)
         .background(Color.black, ignoresSafeAreaEdges: .all)
 
-        .task(id: viewModel.games.debugDescription.appending(isSuperghost.description)) {
+        .task(id: viewModel.games) {
             await refreshScore()
-            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
-                if (try? await UNUserNotificationCenter.current().requestAuthorization()) == true{
-                    requestAction(.enableNotifications)
+        }
+        .task(id: isSuperghost) {
+            do{
+                try await fetchSubscription()
+            } catch {
+                Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
+            }
+        }
+        .task{
+            if NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) == 100.0{
+                Task.detached{
+                    try await reportAchievement(.widgetAdd, percent: 100)
                 }
             }
+            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
+                _ = try? await UNUserNotificationCenter.current().requestAuthorization()
+            }
+
+            await promptUserForAction()
         }
     }
 
     nonisolated func fetchSubscription() async throws {
-        let info = try await Purchases.shared.restorePurchases()
+        let info = try await Purchases.shared.customerInfo()
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
         await MainActor.run{
@@ -102,7 +110,6 @@ struct ContentView: View {
         }
 #endif
 
-        let showedPaywallToday = await Calendar.current.isDateInToday(lastPaywallView)
 
         //is in trial:
         if !(info.entitlements["superghost"]?.isActive ?? false) && timeSinceTrialEnd < 0 {
@@ -114,6 +121,12 @@ struct ContentView: View {
                 showTrialEndsIn = nil
             }
         }
+    }
+    nonisolated func promptUserForAction() async {
+        let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
+        let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
+
+        let showedPaywallToday = await Calendar.current.isDateInToday(lastPaywallView)
         //is not superghost, every 4 days:
         if !showedPaywallToday,
            await !isSuperghost,
@@ -126,27 +139,27 @@ struct ContentView: View {
             Logger.userInteraction.info("presenting paywall")
         } else if Int.random(in: 0...2) == 0,
                   await UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized{
-            requestAction(.enableNotifications)
+            await requestAction(.enableNotifications)
         }
         else if Int.random(in: 0...3) == 0,
-            let friends = try? await GKLocalPlayer.local.loadFriends() {
-                if friends.isEmpty {
-                    requestAction(.addFriends)
-                    await MainActor.run{
-                        lastPaywallView = Date()
-                    }
-
-                } else {
-                    Task.detached{
-                        try? await reportAchievement(.friendAdd, percent: 100)
-                    }
+                let friends = try? await GKLocalPlayer.local.loadFriends() {
+            if friends.isEmpty {
+                await requestAction(.addFriends)
+                await MainActor.run{
+                    lastPaywallView = Date()
                 }
+
+            } else {
+                Task.detached{
+                    try? await reportAchievement(.friendAdd, percent: 100)
+                }
+            }
         } else if Int.random(in: 0...3) == 0 && NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) != 100 {
-            requestAction(.addWidget)
+            await requestAction(.addWidget)
         } else if !showedPaywallToday && Int.random(in: 0...3) == 0 {
             Logger.userInteraction.info("Play in Messages feature tip")
-            showMessage("Did you know, you can play against friends in Messages?")
-            showMessage("Just tap the plus Button in Messages and then choose Superghost")
+            await showMessage("Did you know, you can play against friends in Messages?")
+            await showMessage("Just tap the plus Button in Messages and then choose Superghost")
         }
     }
 

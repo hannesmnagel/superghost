@@ -60,7 +60,9 @@ struct Messagable: ViewModifier {
                     model.message = Array(model.message.dropFirst())
                 }
             }
-            .sheet(item: $model.showingAction) { action in
+            .sheet(item: $model.showingAction) {
+                task?.cancel()
+            } content: { action in
                 VStack{
                     switch action {
                     case .addFriends:
@@ -70,9 +72,6 @@ struct Messagable: ViewModifier {
                     case .enableNotifications:
                         enableNotifications
                     }
-                }
-                .onDisappear{
-                    task?.cancel()
                 }
                 .multilineTextAlignment(.center)
                 .presentationDetents([.fraction(0.7), .large])
@@ -123,10 +122,12 @@ struct Messagable: ViewModifier {
     }
     nonisolated private func dismissWhenNotificationsAllowed() async throws {
         
-        while await !(UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized) {
+        while await (UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized) {
             try? await Task.sleep(for: .seconds(1))
         }
-        try? await GameStat.submitScore(score + 50)
+        Task.detached{
+            try? await GameStat.submitScore(score + 50)
+        }
         await MainActor.run{
             showingScore = true
         }
@@ -252,7 +253,7 @@ struct Messagable: ViewModifier {
                 let settings = await UNUserNotificationCenter.current().notificationSettings()
                 switch settings.authorizationStatus{
                 case .notDetermined:
-                    _ = try? await UNUserNotificationCenter.current().requestAuthorization()
+                    _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 case .denied:
                     #if os(macOS)
                     showMessage("Open settings to allow notifications.")
@@ -285,7 +286,7 @@ struct Messagable: ViewModifier {
         .buttonStyle(.bordered)
     }
 }
-
+@MainActor
 func changeScore(by score: Int) {
     let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == (Calendar.current.firstWeekday + 6)
     let score = score * (isEndOfWeek ? 2 : 1)

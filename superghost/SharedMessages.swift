@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 final class MessageModel: ObservableObject {
     private init(){}
     static let shared = MessageModel()
@@ -15,10 +16,12 @@ final class MessageModel: ObservableObject {
     @Published var showingAction = UserAction?.none
 }
 
+@MainActor
 func showMessage(_ message: String) {
     MessageModel.shared.message.append(message)
 }
 
+@MainActor
 func requestAction(_ action: UserAction){
     Logger.userInteraction.info("Requesting action: \(action.rawValue, privacy: .public)")
     MessageModel.shared.showingAction = action
