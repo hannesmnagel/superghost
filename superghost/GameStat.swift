@@ -28,16 +28,27 @@ struct GameStat: Codable, Hashable, Identifiable {
         GKLocalPlayer.local.saveGameData(data, withName: id.uuidString)
     }
     static func loadAll() async throws -> [GameStat] {
-        let games = try await GKLocalPlayer.local.fetchSavedGames().concurrentMap {
-            do{
-                let data = try await $0.loadData()
-                let decoded = try? JSONDecoder().decode(Self.self, from: data)
-                return decoded
-            } catch {
-                return nil
+        do{
+            while !GKLocalPlayer.local.isAuthenticated {
+                try? await Task.sleep(for: .seconds(1))
             }
+            try? await Task.sleep(for: .seconds(15))
+
+            let fetchedGames = try await GKLocalPlayer.local.fetchSavedGames()
+            let games = await fetchedGames.concurrentMap {
+                do{
+                    let data = try await $0.loadData()
+                    let decoded = try? JSONDecoder().decode(Self.self, from: data)
+                    return decoded
+                } catch {
+                    return nil
+                }
+            }
+            return games.compactMap{$0}
+        } catch {
+            Logger.score.error("Could not load saved games: \(error)")
+            throw error
         }
-        return games.compactMap{$0}
     }
 
     static func submitScore(_ score: Int) async throws {

@@ -37,7 +37,7 @@ final class GameViewModel: ObservableObject {
                                 withInvitation: withInvitation,
                                 won: true,
                                 word: newValue.moves.last?.word.uppercased() ?? "",
-                                id: newValue.id
+                                id: UUID().uuidString
                             )
                             try? stat.save()
                             changeScore(by: 50)
@@ -51,7 +51,7 @@ final class GameViewModel: ObservableObject {
                                 withInvitation: withInvitation,
                                 won: false,
                                 word: newValue.moves.last?.word.uppercased() ?? "",
-                                id: newValue.id
+                                id: UUID().uuidString
                             )
                             try? stat.save()
                             changeScore(by: -50)

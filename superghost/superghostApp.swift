@@ -43,8 +43,6 @@ struct superghostApp: App {
                 .environmentObject(viewModel)
 #if os(macOS)
                 .frame(minHeight: 500)
-#else
-                .environment(\.topViewController, {UIApplication.shared.topViewController()})
 #endif
         }
 #if !os(macOS)

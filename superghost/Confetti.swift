@@ -159,7 +159,7 @@ func showConfetti(on viewController: ViewController) {
     let hostingController = UIHostingController(rootView: ParticleView())
     hostingController.view.backgroundColor = .clear
     hostingController.modalPresentationStyle = .overFullScreen
-    viewController
+    UIApplication.shared.topViewController()?
         .present(hostingController, animated: false)
     Task{
         try? await Task.sleep(for: .seconds(10))

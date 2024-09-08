@@ -34,7 +34,6 @@
 		38716A182C8C84B300087542 /* Confetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38716A172C8C84B300087542 /* Confetti.swift */; };
 		38716A1D2C8C8F6E00087542 /* SharedTopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38716A1C2C8C8F6E00087542 /* SharedTopViewController.swift */; };
 		38716A1E2C8C8F6E00087542 /* SharedTopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38716A1C2C8C8F6E00087542 /* SharedTopViewController.swift */; };
-		38716A1F2C8C956700087542 /* Confetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38716A172C8C84B300087542 /* Confetti.swift */; };
 		387CD6FC2C5DB0D200DF79DD /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 387CD6FB2C5DB0D200DF79DD /* waitingGhost.mov */; };
 		388399D02C8A185C00585D83 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388399CF2C8A185C00585D83 /* AchievementsView.swift */; };
 		388399D32C8A18A800585D83 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388399D22C8A18A800585D83 /* AsyncView.swift */; };
@@ -612,7 +611,6 @@
 				38B790FF2C6496F200AC9BE2 /* AsyncFuncs.swift in Sources */,
 				38B791022C64971E00AC9BE2 /* GameStat.swift in Sources */,
 				38B791012C64970C00AC9BE2 /* Alerts.swift in Sources */,
-				38716A1F2C8C956700087542 /* Confetti.swift in Sources */,
 				38B791072C64982A00AC9BE2 /* ContentPlaceHolderView.swift in Sources */,
 				388399D52C8A18A800585D83 /* AsyncView.swift in Sources */,
 				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,

@@ -288,8 +288,17 @@ struct Messagable: ViewModifier {
 }
 @MainActor
 func changeScore(by score: Int) {
-    let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == (Calendar.current.firstWeekday + 6)
+    let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == ((Calendar.current.firstWeekday + 6) % 7)
+    Logger.score.info("Is end of week: \(isEndOfWeek, format: .answer, privacy: .public)")
     let score = score * (isEndOfWeek ? 2 : 1)
+    if score > 0 {
+#if canImport(UIKit)
+        Task{
+            try? await Task.sleep(for: .seconds(2))
+            showConfetti(on: UIApplication.shared.topViewController() ?? ViewController())
+        }
+#endif
+    }
     MessageModel.shared.showingScoreChangeBy = score
     let data = NSUbiquitousKeyValueStore.default.data(forKey: "score")
     if let oldScore = try? JSONDecoder().decode(Int.self, from: data ?? Data()){

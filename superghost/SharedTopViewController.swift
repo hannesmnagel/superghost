@@ -11,7 +11,3 @@ typealias ViewController = NSViewController
 #else
 typealias ViewController = UIViewController
 #endif
-
-extension EnvironmentValues{
-    @Entry var topViewController : () -> ViewController? = {nil}
-}

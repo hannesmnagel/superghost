@@ -91,7 +91,6 @@ struct AlertView: View {
 import CoreHaptics
 
 struct ScoreChangeView: View {
-    @Environment(\.topViewController) var topViewController
     @CloudStorage("score") private var score = 1000
     @ObservedObject var messageModel = MessageModel.shared
     @State private var engine: CHHapticEngine? = {
@@ -116,10 +115,6 @@ struct ScoreChangeView: View {
                     try? playValueHaptic(increase: newValue > 0)
                     Task{
                         try? await Task.sleep(for: .seconds(2))
-
-                        if let vc = topViewController(){
-                            showConfetti(on: vc)
-                        }
                         withAnimation(.smooth(duration: 2, extraBounce: 1)) {
                             score += newValue
                         }
