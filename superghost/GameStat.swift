@@ -29,11 +29,6 @@ struct GameStat: Codable, Hashable, Identifiable {
     }
     static func loadAll() async throws -> [GameStat] {
         do{
-            while !GKLocalPlayer.local.isAuthenticated {
-                try? await Task.sleep(for: .seconds(1))
-            }
-            try? await Task.sleep(for: .seconds(15))
-
             let fetchedGames = try await GKLocalPlayer.local.fetchSavedGames()
             let games = await fetchedGames.concurrentMap {
                 do{
