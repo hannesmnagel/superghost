@@ -42,7 +42,6 @@ final class GameViewModel: ObservableObject {
                             try? stat.save()
                             changeScore(by: 50)
                             games.insert(stat, at: 0)
-                            try? SoundManager.shared.play(.laughingGhost, loop: false)
                         } else {
                             alertItem = .lost
 
@@ -56,7 +55,6 @@ final class GameViewModel: ObservableObject {
                             try? stat.save()
                             changeScore(by: -50)
                             games.insert(stat, at: 0)
-                            try? SoundManager.shared.play(.scream, loop: false)
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
                             Task.detached{
@@ -91,8 +89,11 @@ final class GameViewModel: ObservableObject {
             }
         }
         currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
-        Task{
-            games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
+        Task.detached{
+            let games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
+            await MainActor.run {
+                self.games = games
+            }
         }
     }
 

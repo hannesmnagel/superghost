@@ -7,9 +7,10 @@
 
 import SwiftUI
 import AVFoundation
+import CoreHaptics
 
 class SoundManager{
-    @AppStorage("volume") private var volume = 1.0
+    let hapticsEngine = try? CHHapticEngine()
 
     private var players = [Sound:AVAudioPlayer]()
 
@@ -33,8 +34,8 @@ class SoundManager{
 #endif
     }
 
-    func play(_ sound: Sound, loop: Bool) throws {
-        guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3"),
+    func play(_ sound: Sound, loop: Bool) async throws {
+        guard let string = Bundle.main.path(forResource: sound.rawValue, ofType: "mp4"),
               let url = URL(string: string)
         else {
             throw SoundManagerError.couldntFindFile
@@ -43,12 +44,23 @@ class SoundManager{
         let player = try AVAudioPlayer(contentsOf: url)
         players[sound] = player
         player.prepareToPlay()
-        player.volume = Float(volume)
+        player.volume = 1
+        if let ahap = sound.ahap{
+            try? await hapticsEngine?.start()
+            let url = URL(fileURLWithPath: Bundle.main.path(forResource: ahap, ofType: nil)!)
+            try? hapticsEngine?.playPattern(from: url)
+        }
         player.play()
         player.numberOfLoops = loop ? -1 : 0
     }
     enum Sound: String {
-        case ambient, ambient2, laughingGhost, scream
+        case won
+        var ahap: String? {
+            switch self {
+            case .won:
+                "won.ahap"
+            }
+        }
     }
 }
 enum SoundManagerError: Error {

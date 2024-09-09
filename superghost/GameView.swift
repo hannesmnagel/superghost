@@ -62,12 +62,21 @@ struct GameView: View {
                         if game.blockMoveForPlayerId != viewModel.currentUser.id {
                             ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
                                 .transition(.scale(scale: 0.1, anchor: .bottom))
+                            if viewModel.games.isEmpty{
+                                if let word = game.moves.last?.word,
+                                   !word.isEmpty {
+                                    Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(word)?")
+                                    Text("Select a letter so that this still is the case or challenge your opponent")
+                                } else {
+                                    Text("Select any Letter you want")
+                                }
+                            }
                         } else {
                             ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
                                 .transition(.scale(scale: 0.1, anchor: .bottom))
                         }
                         LetterPicker(isSuperghost: isSuperghost)
-                        if viewModel.game?.moves.last?.word.count ?? 0 > 2 {
+                        if viewModel.game?.moves.last?.word.count ?? 0 > 1 {
                             AsyncButton{
                                 viewModel.game?.challengingUserId = viewModel.currentUser.id
                                 viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
@@ -75,6 +84,7 @@ struct GameView: View {
                             } label: {
                                 Text("There is no such word")
                             }
+                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
                         }
                         //MARK: When you are challenged
                     } else if game.challengingUserId != viewModel.currentUser.id{
@@ -88,6 +98,7 @@ struct GameView: View {
                         } label: {
                             Text("Yes, I lied")
                         }
+                        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
                         //MARK: When you challenged
                     } else {
                         LoadingView()
@@ -120,7 +131,6 @@ struct GameView: View {
                 .frame(minWidth: 500, minHeight: 500)
 #endif
         }
-        .buttonStyle(.bordered)
         .animation(.snappy, value: viewModel.gameStatusText)
         .animation(.snappy, value: viewModel.alertItem)
         .animation(.snappy, value: viewModel.game)
@@ -193,7 +203,7 @@ struct SayTheWordButton: View {
         AsyncButton {
             if isExpanded {
                 if try await isWord(word) && (
-                    (viewModel.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") : word.hasPrefix(viewModel.game?.moves.last?.word ?? "")
+                    (viewModel.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") : word.uppercased().hasPrefix((viewModel.game?.moves.last?.word ?? "").uppercased())
                 ) {
                     viewModel.game?.moves.append(.init(isPlayer1: viewModel.isPlayerOne(), word: word))
                     viewModel.game!.winningPlayerId = viewModel.currentUser.id
@@ -207,6 +217,7 @@ struct SayTheWordButton: View {
         } label: {
             Text(isExpanded ? "Confirm" : "There is a word")
         }
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
     }
 }
 

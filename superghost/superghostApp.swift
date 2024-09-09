@@ -16,11 +16,6 @@ struct superghostApp: App {
     init(){
         Purchases.logLevel = .error
         try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
-        Task{
-            try? SoundManager.shared.play(.ambient, loop: true)
-            try? await Task.sleep(for: .seconds(2))
-            try? SoundManager.shared.play(.ambient2, loop: true)
-        }
     }
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
@@ -28,6 +23,7 @@ struct superghostApp: App {
 
     @StateObject var viewModel = GameViewModel()
     @Environment(\.scenePhase) var scenePhase
+    @State private var score = 0
 
     var body: some Scene {
         WindowGroup {

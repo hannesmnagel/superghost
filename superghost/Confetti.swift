@@ -12,7 +12,7 @@ import SwiftUI
 private class ParticleScene: SKScene {
 
     // Emission rate per second
-    private let spawnRate = 100.0
+    private let spawnRate = 300.0
     // Maximum angle for particle spread from the vertical axis (270 degrees)
     private let maxSpreadAngle = Double.pi / 4
 
@@ -76,7 +76,7 @@ private class ParticleScene: SKScene {
         #endif
         beginParticles()
         Task {
-            try? await Task.sleep(for: .seconds(3))
+            try? await Task.sleep(for: .seconds(1))
             spawnTimer?.invalidate()
         }
     }
@@ -127,7 +127,7 @@ private class ParticleScene: SKScene {
 
         // Movement action based on direction
         let moveVelocity = pow(size.width, 1.15) * 7
-        let moveAction = SKAction.move(by: CGVector(dx: cos(direction) * moveVelocity, dy: sin(direction) * moveVelocity), duration: 1.0)
+        let moveAction = SKAction.move(by: CGVector(dx: cos(direction) * moveVelocity, dy: sin(direction) * moveVelocity), duration: 0.3)
 
         // Scaling action
         let scaleAction = SKAction.scale(by: scaleSpeed, duration: 1.0)
@@ -154,7 +154,7 @@ private struct ParticleView: View {
     }
 }
 
-func showConfetti(on viewController: ViewController) {
+func showConfetti() {
     #if !os(macOS)
     let hostingController = UIHostingController(rootView: ParticleView())
     hostingController.view.backgroundColor = .clear
@@ -162,8 +162,8 @@ func showConfetti(on viewController: ViewController) {
     UIApplication.shared.topViewController()?
         .present(hostingController, animated: false)
     Task{
-        try? await Task.sleep(for: .seconds(10))
-        _ = await hostingController.dismiss(animated: false)
+        try? await Task.sleep(for: .seconds(3))
+        _ = await hostingController.dismiss(animated: true)
     }
     #endif
 }

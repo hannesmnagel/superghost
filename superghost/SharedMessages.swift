@@ -11,9 +11,25 @@ import Foundation
 final class MessageModel: ObservableObject {
     private init(){}
     static let shared = MessageModel()
-    @Published var showingScoreChangeBy = Int?.none
     @Published var message = [String]()
     @Published var showingAction = UserAction?.none
+    @CloudStorage("score") private var score = 1000
+
+    func changeScore(by translation: Int) async {
+
+        for _ in 1...translation.magnitude {
+            if translation > 0 {
+                score += 1
+            } else {
+                score -= 1
+            }
+            try? await Task.sleep(for: .milliseconds(100/translation.magnitude))
+        }
+        let score = score
+        Task.detached{
+            try? await GameStat.submitScore(score)
+        }
+    }
 }
 
 @MainActor

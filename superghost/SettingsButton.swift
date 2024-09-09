@@ -50,7 +50,6 @@ import GameKit
 struct SettingsView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @State private var managementURL: URL?
-    @AppStorage("volume") var volume = 1.0
 
     let isSuperghost: Bool
 
@@ -58,16 +57,7 @@ struct SettingsView: View {
     let dismiss: ()->Void
 
 #if DEBUG
-    @State private var entries = {
-        let store = try? OSLogStore(scope: .currentProcessIdentifier)
-        let position = store?.position(timeIntervalSinceLatestBoot: 1)
-        let entries = try? store?
-            .getEntries(at: position)
-            .compactMap { $0 as? OSLogEntryLog }
-            .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
-            .map { "[\($0.date.formatted())] [\($0.category)] \($0.composedMessage)" }
-        return entries ?? []
-    }()
+    @State private var entries = [String]()
 #endif
 
     var body: some View {
@@ -94,15 +84,6 @@ struct SettingsView: View {
                         if let managementURL{Link("Manage subscription", destination: managementURL)}
                     }
                 }
-                Section("Volume:"){
-                    Slider(value: $volume, in: 0...2)
-                        .onChange(of: volume) {newVal in
-                            SoundManager.shared.setVolume(newVal)
-                        }
-#if os(macOS)
-                        .frame(maxWidth: 200)
-#endif
-                }
 #if os(iOS)
                 Section("Icon"){
                     NavigationLink("Select AppIcon", destination: AppIconPickerView(isSuperghost: isSuperghost))
@@ -123,6 +104,16 @@ struct SettingsView: View {
 #endif
                             }
                     }
+                }
+                .task{
+                    let store = try? OSLogStore(scope: .currentProcessIdentifier)
+                    let position = store?.position(timeIntervalSinceLatestBoot: 1)
+                    let entries = try? store?
+                        .getEntries(at: position)
+                        .compactMap { $0 as? OSLogEntryLog }
+                        .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
+                        .map { "[\($0.date.formatted())] [\($0.category)] \($0.composedMessage)" }
+                    self.entries = entries ?? []
                 }
 #endif
             }

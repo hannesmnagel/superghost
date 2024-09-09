@@ -109,4 +109,19 @@ class AppearanceManager {
                 .font(AppearanceManager.hostGame)
         }
     }
+    struct FullWidthButtonStyle: ButtonStyle {
+        @Environment(\.isEnabled) var isEnabled
+        let isSecondary: Bool
+
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .foregroundStyle(isEnabled ? .white : .secondary)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(isSecondary ? .clear : (isEnabled ? .accent : .accent.opacity(0.5)))
+                .background(isSecondary ? .thin : Material.thick)
+                .clipShape(.capsule)
+                .scaleEffect(configuration.isPressed ? 0.9 : 1)
+        }
+    }
 }

@@ -46,6 +46,16 @@
     "Become a Superghost" : {
 
     },
+    "Can you think of a word that %@ %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Can you think of a word that %1$@ %2$@?"
+          }
+        }
+      }
+    },
     "Can you win another one?" : {
 
     },
@@ -166,6 +176,12 @@
     "Score" : {
 
     },
+    "Select a letter so that this still is the case or challenge your opponent" : {
+
+    },
+    "Select any Letter you want" : {
+
+    },
     "Select AppIcon" : {
 
     },
@@ -243,9 +259,6 @@
 
     },
     "View your profile" : {
-
-    },
-    "Volume:" : {
 
     },
     "Waiting for Player" : {

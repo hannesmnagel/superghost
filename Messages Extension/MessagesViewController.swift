@@ -263,7 +263,7 @@ struct GameView: View {
                                 .keyboardShortcut(.defaultAction)
                                 .disabled(leadingLetter.isEmpty && trailingLetter.isEmpty)
 
-                                if lastMove.word.count > 2 {
+                                if lastMove.word.count > 1 {
                                     AsyncButton{
                                         appState.move(
                                             Move(

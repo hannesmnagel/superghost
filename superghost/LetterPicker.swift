@@ -40,5 +40,6 @@ struct LetterPicker: View {
         }
         .keyboardShortcut(.defaultAction)
         .disabled(leadingLetter.isEmpty && trailingLetter.isEmpty)
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
     }
 }

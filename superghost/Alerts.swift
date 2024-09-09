@@ -88,17 +88,10 @@ struct AlertView: View {
         .interactiveDismissDisabled()
     }
 }
-import CoreHaptics
+
 
 struct ScoreChangeView: View {
     @CloudStorage("score") private var score = 1000
-    @ObservedObject var messageModel = MessageModel.shared
-    @State private var engine: CHHapticEngine? = {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return nil }
-        let engine = try? CHHapticEngine()
-        try? engine?.start()
-        return engine
-    }()
 
     var body: some View {
         let transition : ContentTransition =
@@ -110,44 +103,13 @@ struct ScoreChangeView: View {
         Text(score, format: .number)
             .font(.system(size: 70))
             .contentTransition(transition)
-            .task(id: messageModel.showingScoreChangeBy) {
-                if let newValue = messageModel.showingScoreChangeBy {
-                    try? playValueHaptic(increase: newValue > 0)
-                    Task{
-                        try? await Task.sleep(for: .seconds(2))
-                        withAnimation(.smooth(duration: 2, extraBounce: 1)) {
-                            score += newValue
-                        }
-                        messageModel.showingScoreChangeBy = nil
-                        Logger.score.info("score changed by \(newValue)")
-                    }
-
-                }
-            }
-    }
-    func playValueHaptic(increase: Bool) throws {
-        // Ensure the device supports haptics
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
-            return
-        }
-        var events = [CHHapticEvent]()
-        for i in stride(from: 0, to: 1, by: 0.01) {
-            let i = increase ? i : 1-i
-            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: Float(i))
-            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: Float(0))
-            let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i*4)
-            events.append(event)
-        }
-        let pattern = try CHHapticPattern(events: events, parameters: [])
-        let player = try engine?.makePlayer(with: pattern)
-        try player?.start(atTime: 0)
     }
 }
 #Preview{
     ScoreChangeView()
         .task{
             try? await Task.sleep(for: .seconds(1))
-            MessageModel.shared.showingScoreChangeBy = 1
+            await MessageModel.shared.changeScore(by: Bool.random() ? 10 : -10)
         }
 }
 struct WordDefinitionView: View {

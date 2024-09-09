@@ -91,7 +91,7 @@ extension GKAchievementDescription {
     func asyncImage(achieved: Bool) -> some View {
         if achieved{
             AsyncView {
-                await Task.detached{
+                await Task.detached(priority: .low){
                     try? await Image(uiImage: self.loadImage())
                         .resizable().scaledToFit().clipShape(.circle)
                 }.value

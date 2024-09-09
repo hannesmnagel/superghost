@@ -23,7 +23,12 @@ struct AsyncView<Content: View, Loading: View>: View {
         } else {
             loading
                 .task {
-                    content = await contentClosure()
+                    Task.detached{
+                        let content = await contentClosure()
+                        await MainActor.run {
+                            self.content = content
+                        }
+                    }
                 }
         }
     }
