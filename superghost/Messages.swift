@@ -16,6 +16,8 @@ struct Messagable: ViewModifier {
     @State private var task : Task<Void, Never>?
     @State private var showingScore = false
     @CloudStorage("score") var score = 1000
+    @State private var widgetExplanationStep = 0
+    @State private var presentationDetent = PresentationDetent.medium
 
     func body(content: Content) -> some View {
         content
@@ -73,8 +75,9 @@ struct Messagable: ViewModifier {
                         enableNotifications
                     }
                 }
+                .padding(.horizontal)
                 .multilineTextAlignment(.center)
-                .presentationDetents([.fraction(0.7), .large])
+                .presentationDetents([.medium, .large], selection: $presentationDetent)
             }
 
     }
@@ -86,14 +89,11 @@ struct Messagable: ViewModifier {
         await MainActor.run{
             showingScore = true
         }
-        try? await Task.sleep(for: .seconds(1))
         await MainActor.run{
-            withAnimation(.smooth(duration: 2, extraBounce: 1)) {
-                score += 50
-            }
+            changeScore(by: 50)
             Logger.score.info("Increased score by 50 because user added a friend.")
         }
-        try? await Task.sleep(for: .seconds(2))
+        try? await Task.sleep(for: .seconds(6))
         await MainActor.run{
             model.showingAction = nil
             showingScore = false
@@ -107,14 +107,11 @@ struct Messagable: ViewModifier {
         await MainActor.run{
             showingScore = true
         }
-        try? await Task.sleep(for: .seconds(1))
         await MainActor.run{
-            withAnimation(.smooth(duration: 2, extraBounce: 1)) {
-                score += 50
-            }
+            changeScore(by: 50)
             Logger.score.info("Increased score by 50 because user added a widget.")
         }
-        try? await Task.sleep(for: .seconds(2))
+        try? await Task.sleep(for: .seconds(6))
         await MainActor.run{
             model.showingAction = nil
             showingScore = false
@@ -131,14 +128,11 @@ struct Messagable: ViewModifier {
         await MainActor.run{
             showingScore = true
         }
-        try? await Task.sleep(for: .seconds(1))
         await MainActor.run{
-            withAnimation(.smooth(duration: 2, extraBounce: 1)) {
-                score += 50
-            }
+            changeScore(by: 50)
             Logger.score.info("Increased score by 50 because user allowed notifications")
         }
-        try? await Task.sleep(for: .seconds(2))
+        try? await Task.sleep(for: .seconds(6))
         await MainActor.run{
             model.showingAction = nil
             showingScore = false
@@ -161,6 +155,12 @@ struct Messagable: ViewModifier {
     }
     @MainActor @ViewBuilder
     var addFriends: some View {
+        Text("Add a Friend")
+            .font(.largeTitle.bold())
+            .padding(.top)
+        Text("And earn 50 XP")
+            .bold()
+        Spacer()
         GKLocalPlayer.local.asyncImage(.normal)
             .padding(.top)
             .padding(.horizontal, 70)
@@ -168,11 +168,6 @@ struct Messagable: ViewModifier {
             .overlay{
                 scoreChangeOverlay
             }
-        Spacer()
-        Text("Why don't you add some Friends?")
-            .font(.largeTitle.bold())
-        Text("Add a Friend now to earn 50XP")
-            .bold()
         Spacer()
         AsyncButton{
             GKAccessPoint.shared.addFriends()
@@ -184,52 +179,145 @@ struct Messagable: ViewModifier {
         } label: {
             Text("Add Friends")
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .font(.title2.bold())
         Button("Maybe later"){
             model.showingAction = nil
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
     }
     @MainActor @ViewBuilder
     var addWidget: some View{
-        Image(systemName: "widget.small.badge.plus")
-            .resizable()
-            .scaledToFit()
-            .imageScale(.large)
-            .padding()
-            .padding(.top)
-            .padding(.horizontal, 70)
-            .opacity(showingScore ? 0.1 : 1)
-            .overlay{
-                scoreChangeOverlay
-            }
+        if widgetExplanationStep == 0 {
+            Text("Add a Widget")
+                .font(.largeTitle.bold())
+                .padding(.top, 30)
+            Text("And earn an extra 50 XP")
+                .bold()
+            Spacer()
 
-        Spacer()
-        Text("Why don't you add a Widget?")
-            .font(.largeTitle.bold())
-        Text("Add a widget now to earn 50XP")
-            .bold()
-        Spacer()
-        AsyncButton{
-            task?.cancel()
-            task = Task{
-                try? await dismissWhenAddedWidget()
+            Image(systemName: "apps.iphone.badge.plus")
+                .resizable()
+                .scaledToFit()
+                .imageScale(.large)
+                .padding()
+                .padding(.top)
+                .padding(.horizontal, 70)
+                .fontWeight(.thin)
+
+            Spacer()
+            Button("Continue"){
+                widgetExplanationStep = 1
+                presentationDetent = .large
             }
-            await task?.value
-        } label: {
-            Text("Okay, I added one!")
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+            .font(.title2.bold())
+            Button("Maybe later"){
+                model.showingAction = nil
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+        } else if widgetExplanationStep == 1 {
+
+            Text("Tap and hold anywhere on your Home Screen")
+                .font(.largeTitle.bold())
+                .padding(.top)
+            if #available(iOS 18.0, *){
+                Text("Then Tap the \"edit\" in the upper left and choose \"Add Widget\"")
+            } else {
+                Text("Then Tap the \"+\" in the upper left")
+            }
+            Spacer()
+            Image(systemName: "apps.iphone")
+                .resizable()
+                .scaledToFit()
+                .imageScale(.large)
+                .padding()
+                .padding(.top)
+                .padding(.horizontal, 70)
+                .fontWeight(.thin)
+
+            Spacer()
+            Button("Continue"){
+                widgetExplanationStep = 2
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+            .font(.title2.bold())
+            Button("Cancel"){
+                model.showingAction = nil
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+        } else if widgetExplanationStep == 2 {
+
+            Text("Search for superghost")
+                .font(.largeTitle.bold())
+                .padding(.top)
+            Text("Then add it to your home screen")
+
+            Spacer()
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .imageScale(.large)
+                .padding()
+                .padding(.top)
+                .padding(.horizontal, 70)
+                .fontWeight(.thin)
+
+            Spacer()
+            Button("Continue"){
+                widgetExplanationStep = 3
+
+                task?.cancel()
+                task = Task{
+                    try? await dismissWhenAddedWidget()
+                }
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+            .font(.title2.bold())
+            Button("Cancel"){
+                model.showingAction = nil
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+        } else {
+
+
+            Text("Just waiting for you...")
+                .font(.largeTitle.bold())
+                .padding(.top)
+                .opacity(showingScore ? 0.1 : 1)
+            Text("Add it to your home screen")
+                .opacity(showingScore ? 0.1 : 1)
+
+            Spacer()
+            Image(systemName: "clock")
+                .resizable()
+                .scaledToFit()
+                .imageScale(.large)
+                .padding()
+                .padding(.top)
+                .padding(.horizontal, 70)
+                .opacity(showingScore ? 0.1 : 1)
+                .overlay{
+                    scoreChangeOverlay
+                }
+                .fontWeight(.thin)
+
+            Spacer()
+            Button("Cancel"){
+                model.showingAction = nil
+            }
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
         }
-        .buttonStyle(.borderedProminent)
-        .font(.title2.bold())
-        Button("Maybe later"){
-            model.showingAction = nil
-        }
-        .buttonStyle(.bordered)
     }
 
     @MainActor @ViewBuilder
     var enableNotifications: some View {
+        Text("Enable Notifications")
+            .font(.largeTitle.bold())
+            .padding(.top)
+        Text("Allow notifications now to earn 50XP")
+            .bold()
+        Spacer()
         Image(systemName: "bell.badge")
             .resizable()
             .scaledToFit()
@@ -242,11 +330,6 @@ struct Messagable: ViewModifier {
                 scoreChangeOverlay
             }
 
-        Spacer()
-        Text("Enable Notifications")
-            .font(.largeTitle.bold())
-        Text("Allow notifications now to earn 50XP")
-            .bold()
         Spacer()
         Button("Allow notifications"){
             Task{
@@ -278,12 +361,12 @@ struct Messagable: ViewModifier {
                 try? await dismissWhenNotificationsAllowed()
             }
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .font(.title2.bold())
         Button("Maybe later"){
             model.showingAction = nil
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
     }
 }
 @MainActor
@@ -307,7 +390,7 @@ func changeScore(by score: Int) {
 #Preview {
     VStack{}.modifier(Messagable())
         .task{
-            requestAction(.enableNotifications)
+            requestAction(.addWidget)
         }
 }
 

@@ -41,7 +41,7 @@ struct LeaderboardView: View {
                 ContentPlaceHolderView("Sign In to Game Center to see the leaderboard", systemImage: "person.3")
                     .frame(maxWidth: .infinity, alignment: .center)
             } else if !hasUnlockedLeaderboard {
-                ContentPlaceHolderView("Earn a score of 1,050 to see the leaderboard", systemImage: "chart.bar.fill")
+                ContentPlaceHolderView("Earn 1,050 XP to see the leaderboard", systemImage: "chart.bar.fill")
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 inlineLeaderboard
@@ -123,7 +123,7 @@ struct LeaderboardView: View {
                     }
                     if entry.player.isInvitable {
                         Button("Challenge"){
-                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.score) on the leaderboard!", players: [entry.player])
+                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player])
 
 #if os(macOS)
 

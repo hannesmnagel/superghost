@@ -22,13 +22,16 @@
     "Achievements" : {
 
     },
-    "Add a Friend now to earn 50XP" : {
+    "Add a Friend" : {
 
     },
-    "Add a widget now to earn 50XP" : {
+    "Add a Widget" : {
 
     },
     "Add Friends" : {
+
+    },
+    "Add it to your home screen" : {
 
     },
     "Allow notifications" : {
@@ -38,6 +41,12 @@
 
     },
     "An error occured" : {
+
+    },
+    "And earn 50 XP" : {
+
+    },
+    "And earn an extra 50 XP" : {
 
     },
     "Auto-Renews. Cancel Anytime." : {
@@ -113,6 +122,9 @@
     "Icon" : {
 
     },
+    "Just waiting for you..." : {
+
+    },
     "Launch Superghost" : {
 
     },
@@ -146,9 +158,6 @@
     "No products found" : {
 
     },
-    "Okay, I added one!" : {
-
-    },
     "Play a new game" : {
 
     },
@@ -173,7 +182,7 @@
     "Restore Purchases" : {
 
     },
-    "Score" : {
+    "Search for superghost" : {
 
     },
     "Select a letter so that this still is the case or challenge your opponent" : {
@@ -237,7 +246,19 @@
     "Synonyms: %@" : {
 
     },
+    "Tap and hold anywhere on your Home Screen" : {
+
+    },
     "Tap to play" : {
+
+    },
+    "Then add it to your home screen" : {
+
+    },
+    "Then Tap the \"+\" in the upper left" : {
+
+    },
+    "Then Tap the \"edit\" in the upper left and choose \"Add Widget\"" : {
 
     },
     "There is a word" : {
@@ -270,12 +291,6 @@
     "What word did you think of?" : {
 
     },
-    "Why don't you add a Widget?" : {
-
-    },
-    "Why don't you add some Friends?" : {
-
-    },
     "Win Rate" : {
 
     },
@@ -286,6 +301,9 @@
 
     },
     "Word Today" : {
+
+    },
+    "XP" : {
 
     },
     "Yes, I lied" : {

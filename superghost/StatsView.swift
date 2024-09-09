@@ -113,7 +113,7 @@ struct StatsView: View {
                 VStack{
                     Text(score, format: .number)
                         .font(AppearanceManager.statsValue)
-                    Text("Score")
+                    Text("XP")
                         .font(AppearanceManager.statsLabel)
                 }
 #if os(macOS)
