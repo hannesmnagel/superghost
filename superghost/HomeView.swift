@@ -128,6 +128,16 @@ struct HomeView: View {
                 Text("Start")
             }
             .disabled(viewModel.games.today.lost.count >= (isSuperghost ? 10 : 5))
+            .popover(isPresented: .constant(viewModel.games.isEmpty)) {
+                if #available(macOS 13.3, iOS 17.3, *) {
+                    VStack{
+                        Text("What are you waiting for?")
+                        Text("Let's go!!!")
+                    }
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
+            }
             .onTapGesture {
                 if !isSuperghost && viewModel.games.today.lost.count >= 5{
                     viewModel.showPaywall = true
