@@ -181,7 +181,7 @@ struct LeaderboardView: View {
     var inlineLeaderboard: some View {
         ForEach(entries, id: \.rank) { entry in
             Button{
-                if #available(iOS 18.0, macOS 15.0, *) {
+                if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *) {
                     GKAccessPoint.shared.trigger(player: entry.player)
                 } else {
                     selectedScore = entry
