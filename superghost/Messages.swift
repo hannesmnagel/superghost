@@ -73,6 +73,8 @@ struct Messagable: ViewModifier {
                         addWidget
                     case .enableNotifications:
                         enableNotifications
+                    case .showDoubleXP:
+                        showDoubleXP
                     }
                 }
                 .padding(.horizontal)
@@ -309,7 +311,32 @@ struct Messagable: ViewModifier {
             .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
         }
     }
-
+    @MainActor @ViewBuilder
+    var showDoubleXP: some View {
+        Text("Special Event!")
+            .font(.largeTitle.bold())
+            .padding(.top)
+        Text("It's the End of the Week")
+            .bold()
+        Spacer()
+        Image(systemName: "star.fill")
+            .resizable()
+            .scaledToFit()
+            .imageScale(.large)
+            .padding()
+            .padding(.top)
+            .padding(.horizontal, 70)
+            .symbolRenderingMode(.multicolor)
+        Spacer()
+        Text("Get Double XP for each Game")
+            .bold()
+        Spacer()
+        Button("Earn Double XP"){
+            model.showingAction = nil
+        }
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+        .font(.title2.bold())
+    }
     @MainActor @ViewBuilder
     var enableNotifications: some View {
         Text("Enable Notifications")
@@ -390,7 +417,7 @@ func changeScore(by score: Int) {
 #Preview {
     VStack{}.modifier(Messagable())
         .task{
-            requestAction(.addWidget)
+            requestAction(.showDoubleXP)
         }
 }
 
