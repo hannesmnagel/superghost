@@ -95,7 +95,7 @@ struct LeaderboardView: View {
                     let friends = try? await GKLocalPlayer.local.loadFriends()
                     if friends?.contains(entry.player) ?? false {
                         Text("A friend of yours ranked at \(entry.rank)")
-                        if #available(iOS 18.0, macOS 15.0, *){
+                        if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *){
                             Button("View their profile"){
                                 selectedScore = nil
 
@@ -123,7 +123,7 @@ struct LeaderboardView: View {
                     }
                     if entry.player.isInvitable {
                         Button("Challenge"){
-                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player])
+                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completionHandler: nil)
 
 #if os(macOS)
 

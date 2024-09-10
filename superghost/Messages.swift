@@ -316,7 +316,7 @@ struct Messagable: ViewModifier {
         Text("Special Event!")
             .font(.largeTitle.bold())
             .padding(.top)
-        Text("It's the End of the Week")
+        Text("It's a very special Sunday!")
             .bold()
         Spacer()
         Image(systemName: "star.fill")
@@ -398,9 +398,8 @@ struct Messagable: ViewModifier {
 }
 @MainActor
 func changeScore(by score: Int) {
-    let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == ((Calendar.current.firstWeekday + 6) % 7)
-    Logger.score.info("Is end of week: \(isEndOfWeek, format: .answer, privacy: .public)")
-    let score = score * (isEndOfWeek ? 2 : 1)
+    let isSunday = Calendar.current.component(.weekday, from: .now) == 1
+    let score = score * (isSunday ? 2 : 1)
 #if canImport(UIKit)
         Task{
             try? await Task.sleep(for: .seconds(2))

@@ -144,7 +144,7 @@ struct superghostApp: App {
         ]
         let eveningGreeting = eveningReminders.randomElement()!
 
-        let weekday = Calendar.current.firstWeekday + 6
+        let weekday = 1
 
         sendPushNotification(with: greeting.0, description: greeting.1, id: "end-of-week-start-of-day", using: UNCalendarNotificationTrigger(dateMatching: .init(hour: 9, weekday: weekday), repeats: false))
 

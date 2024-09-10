@@ -125,12 +125,12 @@ struct ContentView: View {
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
 
-        let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == ((Calendar.current.firstWeekday + 6) % 7)
+        let isSunday = Calendar.current.component(.weekday, from: .now) == 1
 
         while await isFirstUse {
             try? await Task.sleep(for: .seconds(2))
         }
-        if isEndOfWeek {
+        if isSunday {
             await requestAction(.showDoubleXP)
         } else
         //is not superghost, every 4 days:
