@@ -27,7 +27,6 @@ extension Date: Swift.RawRepresentable{
 struct ContentView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("isFirstUse") var isFirstUse = true
-    @CloudStorage("lastViewOfPaywall") var lastPaywallView = Date.distantPast
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @State var isGameViewPresented = false
     @State private var showTrialEndsIn : Int?
@@ -126,15 +125,20 @@ struct ContentView: View {
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
 
-        let showedPaywallToday = await Calendar.current.isDateInToday(lastPaywallView)
+        let isEndOfWeek = Calendar.current.component(.weekday, from: .now) == ((Calendar.current.firstWeekday + 6) % 7)
+
+        while await isFirstUse {
+            try? await Task.sleep(for: .seconds(2))
+        }
+        if isEndOfWeek {
+            await requestAction(.showDoubleXP)
+        } else
         //is not superghost, every 4 days:
-        if !showedPaywallToday,
-           await !isSuperghost,
+        if await !isSuperghost,
            (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3)
         {
             await MainActor.run{
                 viewModel.showPaywall = true
-                lastPaywallView = Date()
             }
             Logger.userInteraction.info("presenting paywall")
         } else if Int.random(in: 0...2) == 0,
@@ -145,10 +149,6 @@ struct ContentView: View {
                 let friends = try? await GKLocalPlayer.local.loadFriends() {
             if friends.isEmpty {
                 await requestAction(.addFriends)
-                await MainActor.run{
-                    lastPaywallView = Date()
-                }
-
             } else {
                 Task.detached{
                     try? await reportAchievement(.friendAdd, percent: 100)
@@ -156,7 +156,7 @@ struct ContentView: View {
             }
         } else if Int.random(in: 0...3) == 0 && NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) != 100 {
             await requestAction(.addWidget)
-        } else if !showedPaywallToday && Int.random(in: 0...3) == 0 {
+        } else if Int.random(in: 0...5) == 0 {
             Logger.userInteraction.info("Play in Messages feature tip")
             await showMessage("Did you know, you can play against friends in Messages?")
             await showMessage("Just tap the plus Button in Messages and then choose Superghost")
