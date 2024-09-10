@@ -55,12 +55,7 @@ Inspired by a game played on the chalk board, superghost is a word game where yo
 #else
             TabView(selection: $selection){
                 ForEach(instructions, id:\.self){instruction in
-                    ViewThatFits{
-                        Text(instruction)
-                        ScrollView{
-                            Text(instruction)
-                        }
-                    }
+                    Text(instruction)
                     .font(AppearanceManager.instructions)
                     .task {
                         do{
