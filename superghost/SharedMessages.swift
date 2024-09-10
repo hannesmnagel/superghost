@@ -44,7 +44,7 @@ func requestAction(_ action: UserAction){
 }
 
 enum UserAction: String, Identifiable{
-    case addFriends, addWidget, enableNotifications
+    case addFriends, addWidget, enableNotifications, showDoubleXP
 
     var id: Self { self }
 }
