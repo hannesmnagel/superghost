@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
-		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38AF919C2C46D683003D100B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38AF919D2C46D683003D100B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF919F2C46D683003D100B /* gamestatsWidgetBundle.swift */; };
@@ -415,10 +415,7 @@
 /* Begin PBXTargetDependency section */
 		38474C7B2C64AC27006FCDB4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilters = (
-				ios,
-				xros,
-			);
+			platformFilter = ios;
 			target = 38B790ED2C6495A400AC9BE2 /* Messages Extension */;
 			targetProxy = 38474C7A2C64AC27006FCDB4 /* PBXContainerItemProxy */;
 		};
