@@ -156,6 +156,7 @@ struct AppIconPickerView: View {
                 ForEach(icons, id: \.self) { icon in
                     Button{
                         if isSuperghost || icon == .standard {
+                            AppearanceManager.shared.appIcon = icon
                             UIApplication.shared.setAlternateIconName(icon.rawValue)
                             dismiss()
                         } else {
