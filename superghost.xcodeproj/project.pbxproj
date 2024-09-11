@@ -15,7 +15,7 @@
 		38AF91A22C46D683003D100B /* gamestatsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF91A12C46D683003D100B /* gamestatsWidget.swift */; };
 		38AF91A42C46D683003D100B /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF91A32C46D683003D100B /* AppIntent.swift */; };
 		38AF91A62C46D685003D100B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38AF91A52C46D685003D100B /* Assets.xcassets */; };
-		38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */; platformFilters = (ios, macos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38B790F02C6495A400AC9BE2 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38B790EF2C6495A400AC9BE2 /* Messages.framework */; };
 		38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B790F22C6495A400AC9BE2 /* MessagesViewController.swift */; };
 		38B790F82C6495A600AC9BE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B790F72C6495A600AC9BE2 /* Assets.xcassets */; };
@@ -421,6 +421,10 @@
 		};
 		38AF91AA2C46D685003D100B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				macos,
+			);
 			target = 38AF919A2C46D683003D100B /* gamestatsWidgetExtension */;
 			targetProxy = 38AF91A92C46D685003D100B /* PBXContainerItemProxy */;
 		};
