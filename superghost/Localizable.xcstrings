@@ -110,6 +110,9 @@
     "For only %@ per Month. " : {
 
     },
+    "Game Center" : {
+
+    },
     "Game started" : {
 
     },
@@ -210,9 +213,6 @@
 
     },
     "Settings" : {
-
-    },
-    "Share Testflight Invite" : {
 
     },
     "Show Paywall" : {

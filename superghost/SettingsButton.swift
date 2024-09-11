@@ -90,7 +90,9 @@ struct SettingsView: View {
                 }
 #endif
                 Section{
-                    ShareLink("Share Testflight Invite", item: URL(string: "https://testflight.apple.com/join/OzTDTCgF")!)
+                    Button("Game Center"){
+                        GKAccessPoint.shared.trigger {}
+                    }
                 }
 #if DEBUG
                 DisclosureGroup("Logs") {
