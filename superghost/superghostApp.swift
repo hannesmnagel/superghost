@@ -52,7 +52,9 @@ struct superghostApp: App {
 
                 let rank = await rank
 
-                while !GKLocalPlayer.local.isAuthenticated {
+                let timeout = Date()
+                while !GKLocalPlayer.local.isAuthenticated,
+                      Date().timeIntervalSince(timeout) < 10 {
                     try? await Task.sleep(for: .seconds(1))
                 }
                 if let entries = try await GKLeaderboard
