@@ -52,9 +52,10 @@ struct superghostApp: App {
 
                 let rank = await rank
 
-                if GKLocalPlayer.local.isAuthenticated,
-
-                    let entries = try await GKLeaderboard
+                while !GKLocalPlayer.local.isAuthenticated {
+                    try? await Task.sleep(for: .seconds(1))
+                }
+                if let entries = try await GKLeaderboard
                     .loadLeaderboards(IDs: ["global.score"])
                     .first?
                     .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
