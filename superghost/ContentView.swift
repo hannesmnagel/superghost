@@ -90,8 +90,11 @@ struct ContentView: View {
             if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
                 _ = try? await UNUserNotificationCenter.current().requestAuthorization()
             }
-
-            await promptUserForAction()
+        }
+        .onAppear{
+            Task{
+                await promptUserForAction()
+            }
         }
     }
 
