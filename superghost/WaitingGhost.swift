@@ -49,6 +49,8 @@ struct Video: View {
 #endif
     }
 
+    @State private var isOnScreen = false
+
     var body: some View {
         AVPlayerControllerRepresented(player: player)
             .aspectRatio(contentMode: .fill)
@@ -59,17 +61,20 @@ struct Video: View {
                     self.player.seek(to: .zero)
                     self.player.play()
                 }
+                isOnScreen = true
                 Task{
-                    await playAfter500ms()
+                    while isOnScreen {
+                        if player.rate == 0{
+                            player.play()
+                        }
+                        try? await Task.sleep(for: .milliseconds(500))
+                    }
                 }
             }
-    }
-    func playAfter500ms() async {
-        try? await Task.sleep(for: .milliseconds(500))
-        player.play()
-        Task{
-            await playAfter500ms()
-        }
+            .onDisappear{
+                isOnScreen = false
+                player.pause()
+            }
     }
 }
 #if os(macOS)
