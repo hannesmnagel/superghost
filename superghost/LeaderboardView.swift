@@ -123,7 +123,12 @@ struct LeaderboardView: View {
                     }
                     if entry.player.isInvitable {
                         Button("Challenge"){
-                            let vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completionHandler: nil)
+                            let vc: ViewController
+                            if #available(iOS 17.0, macOS 14.0, *) {
+                                vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
+                            } else {
+                                vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completionHandler: nil)
+                            }
 
 #if os(macOS)
 
