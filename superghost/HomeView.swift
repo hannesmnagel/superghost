@@ -14,6 +14,7 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
     @CloudStorage("wordToday") private var wordToday = "-----"
+    @AppStorage("startPopoverPresented") var startPopoverPresented = true
 
     var body: some View {
         HStack {
@@ -128,7 +129,7 @@ struct HomeView: View {
                 Text("Start")
             }
             .disabled(viewModel.games.today.lost.count >= (isSuperghost ? 10 : 5))
-            .popover(isPresented: .constant(viewModel.games.isEmpty)) {
+            .popover(isPresented: $startPopoverPresented) {
                 if #available(macOS 13.3, iOS 17.3, *) {
                     VStack{
                         Text("What are you waiting for?")
