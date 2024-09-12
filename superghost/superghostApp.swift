@@ -20,6 +20,7 @@ struct superghostApp: App {
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
     @CloudStorage("rank") private var rank = -1
+    @CloudStorage("doubleXPuntil") private var xpBoostUntil = Date.distantPast
 
     @StateObject var viewModel = GameViewModel()
     @Environment(\.scenePhase) var scenePhase
@@ -84,6 +85,14 @@ struct superghostApp: App {
 
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
+                    if .random() && .random(),
+                    let in15mins = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) {
+                        sendPushNotification(with: "Play NOW!", description: "It's double XP. But just for 15 minutes!")
+                        await MainActor.run{
+                            xpBoostUntil = in15mins
+                        }
+                        Logger.appRefresh.log("Sent push notification, because it's double XP time!")
+                    }
                     Logger.appRefresh.info("Did not sent push notification but checked if someone passed you on the leaderboard.")
                 }
             } catch {

@@ -130,7 +130,19 @@ struct ContentView: View {
         while await isFirstUse {
             try? await Task.sleep(for: .seconds(2))
         }
-        if isSunday {
+        let isDoubleXP : Bool
+        if let data = NSUbiquitousKeyValueStore.default.data(forKey: "doubleXPuntil"),
+           let date = try? JSONDecoder().decode(Date.self, from: data),
+           date > .now{
+            isDoubleXP = true
+        } else {isDoubleXP = false}
+
+
+        if isSunday && isDoubleXP {
+            await requestAction(.show4xXP)
+        } else if isSunday {
+            await requestAction(.showSunday)
+        } else if isDoubleXP {
             await requestAction(.showDoubleXP)
         } else
         //is not superghost, every 4 days:

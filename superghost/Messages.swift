@@ -74,7 +74,11 @@ struct Messagable: ViewModifier {
                     case .enableNotifications:
                         enableNotifications
                     case .showDoubleXP:
-                        showDoubleXP
+                        showDoubleXP(title: "Special Event!", title2: "It's time for Double XP", subtitle: "Claim Double XP for each Game", buttonTitle: "Earn Double XP now!")
+                    case .showSunday:
+                        showDoubleXP(title: "Special Event!", title2: "It's a very special Sunday!", subtitle: "Get Double XP for each Game", buttonTitle: "Earn Double XP")
+                    case .show4xXP:
+                        showDoubleXP(title: "4x the XP", title2: "It's a very special Sunday!", subtitle: "Plus: It's Double XP time", buttonTitle: "Earn 4x XP")
                     }
                 }
                 .padding(.horizontal)
@@ -312,11 +316,11 @@ struct Messagable: ViewModifier {
         }
     }
     @MainActor @ViewBuilder
-    var showDoubleXP: some View {
-        Text("Special Event!")
+    func showDoubleXP(title: String, title2: String, subtitle: String, buttonTitle: String) -> some View {
+        Text(title)
             .font(.largeTitle.bold())
             .padding(.top)
-        Text("It's a very special Sunday!")
+        Text(title2)
             .bold()
         Spacer()
         Image(systemName: "star.fill")
@@ -328,10 +332,10 @@ struct Messagable: ViewModifier {
             .padding(.horizontal, 70)
             .symbolRenderingMode(.multicolor)
         Spacer()
-        Text("Get Double XP for each Game")
+        Text(subtitle)
             .bold()
         Spacer()
-        Button("Earn Double XP"){
+        Button(buttonTitle){
             model.showingAction = nil
         }
         .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
@@ -399,7 +403,14 @@ struct Messagable: ViewModifier {
 @MainActor
 func changeScore(by score: Int) {
     let isSunday = Calendar.current.component(.weekday, from: .now) == 1
-    let score = score * (isSunday ? 2 : 1)
+    let isDoubleXP : Bool
+    if let data = NSUbiquitousKeyValueStore.default.data(forKey: "doubleXPuntil"),
+       let date = try? JSONDecoder().decode(Date.self, from: data),
+       date > .now{
+            isDoubleXP = true
+    } else {isDoubleXP = false}
+
+    let score = score * (isSunday ? 2 : 1) * (isDoubleXP ? 2 : 1)
 #if canImport(UIKit)
         Task{
             try? await Task.sleep(for: .seconds(2))
