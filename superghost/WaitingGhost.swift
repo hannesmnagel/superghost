@@ -11,7 +11,7 @@ struct WaitingGhost: View {
     let date = Date()
     
     var body: some View {
-
+#if !os(macOS)
         if #available(iOS 17.0, macOS 14.0, *) {
             Video("waitingGhost")
                 .notUpdating()
@@ -27,6 +27,9 @@ struct WaitingGhost: View {
                 .notUpdating()
                 .padding()
         }
+#else
+        VStack{}.frame(height: 100)
+#endif
     }
 }
 
@@ -38,72 +41,27 @@ struct WaitingGhost: View {
 import AVKit
 
 struct Video: View {
-    private let player: AVPlayer
+    private var player: AVQueuePlayer
+    private var playerLooper: AVPlayerLooper
 
     init(_ named: String) {
         let url = Bundle.main.resourceURL!.appending(path: "\(named).mov")
-        self.player = AVPlayer(url: url)
-        self.player.isMuted = true
+        let asset = AVAsset(url: url)
+        let item = AVPlayerItem(asset: asset)
+
+        player = AVQueuePlayer(playerItem: item)
+        playerLooper = AVPlayerLooper(player: player, templateItem: item)
 #if !os(macOS)
         try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
 #endif
     }
 
-    @State private var isOnScreen = false
-
     var body: some View {
-        AVPlayerControllerRepresented(player: player)
+        VideoPlayer(player: player)
             .aspectRatio(contentMode: .fill)
             .disabled(true)
-            .onAppear {
-                self.player.play()
-                NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: nil, queue: .main) { _ in
-                    self.player.seek(to: .zero)
-                    self.player.play()
-                }
-                isOnScreen = true
-                Task{
-                    while isOnScreen {
-                        if player.rate == 0{
-                            player.play()
-                        }
-                        try? await Task.sleep(for: .milliseconds(500))
-                    }
-                }
-            }
-            .onDisappear{
-                isOnScreen = false
-                player.pause()
+            .onAppear{
+                player.play()
             }
     }
 }
-#if os(macOS)
-struct AVPlayerControllerRepresented : NSViewRepresentable {
-    var player : AVPlayer
-
-    func makeNSView(context: Context) -> AVPlayerView {
-        let view = AVPlayerView()
-        view.controlsStyle = .none
-        view.player = player
-        return view
-    }
-
-    func updateNSView(_ nsView: AVPlayerView, context: Context) {
-
-    }
-}
-#else
-struct AVPlayerControllerRepresented: UIViewControllerRepresentable {
-    var player: AVPlayer
-
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let playerViewController = AVPlayerViewController()
-        playerViewController.player = player
-        playerViewController.showsPlaybackControls = false // Hide playback controls
-        return playerViewController
-    }
-
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-    }
-}
-#endif
