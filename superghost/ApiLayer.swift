@@ -59,16 +59,26 @@ final class ApiLayer: ObservableObject {
         request.httpBody = try JSONEncoder().encode(json)
 
         let (data, _) = try await URLSession.shared.data(for: request)
-        let game = try JSONDecoder().decode(Game.self, from: data)
-
+        let game: Game
+        do{
+            game = try JSONDecoder().decode(Game.self, from: data)
+        } catch let error as DecodingError {
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            throw error
+        }
         return game
     }
 
     func findEmptyGame(isSuperghost: Bool) async throws -> Game {
         let url = await URL(string: "\(backendURL(.https, isSuperghost: isSuperghost))/game/findEmptyPlayer2Id")!
         let (data, _) = try await URLSession.shared.data(from: url)
-        let game = try JSONDecoder().decode(Game.self, from: data)
-
+        let game: Game
+        do{
+            game = try JSONDecoder().decode(Game.self, from: data)
+        } catch let error as DecodingError {
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            throw error
+        }
         return game
     }
 
@@ -81,7 +91,13 @@ final class ApiLayer: ObservableObject {
         request.httpBody = try JSONEncoder().encode(userId)
 
         let (data, _) = try await URLSession.shared.data(for: request)
-        let game = try JSONDecoder().decode(Game.self, from: data)
+        let game: Game
+        do{
+            game = try JSONDecoder().decode(Game.self, from: data)
+        } catch let error as DecodingError {
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            throw error
+        }
 
         return game
     }
@@ -89,7 +105,13 @@ final class ApiLayer: ObservableObject {
     func getGame(gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
         let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/\(gameId)")!
         let (data, _) = try await URLSession.shared.data(from: url)
-        let game = try JSONDecoder().decode(Game.self, from: data)
+        let game: Game
+        do{
+            game = try JSONDecoder().decode(Game.self, from: data)
+        } catch let error as DecodingError {
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            throw error
+        }
 
         return game
     }
@@ -112,7 +134,13 @@ final class ApiLayer: ObservableObject {
         request.httpBody = jsonData
 
         let (data, _) = try await URLSession.shared.data(for: request)
-        let game = try JSONDecoder().decode(Game.self, from: data)
+        let game: Game
+        do{
+            game = try JSONDecoder().decode(Game.self, from: data)
+        } catch let error as DecodingError {
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            throw error
+        }
 
         return game
     }
