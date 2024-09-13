@@ -27,6 +27,7 @@ struct LeaderboardView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
+    @Namespace var namespace
 
     var body: some View {
         VStack{
@@ -196,6 +197,7 @@ struct LeaderboardView: View {
                     Text("\(entry.rank).")
                     entry.player.asyncImage(.small)
                         .frame(width: 40, height: 40)
+                        .id(entry.player.alias)
                     Text(entry.player.alias)
                     Spacer()
                     Text(entry.formattedScore)
@@ -203,6 +205,7 @@ struct LeaderboardView: View {
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            .matchedGeometryEffect(id: entry.player.gamePlayerID, in: namespace)
         }
     }
 }
