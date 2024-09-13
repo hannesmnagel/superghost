@@ -53,6 +53,7 @@ struct GameView: View {
                     if let url = URL(string: "https://hannesnagel.com/superghost/private/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
                         ShareLink(item: url)
+                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                     }
                 }
                 //MARK: Playing:
