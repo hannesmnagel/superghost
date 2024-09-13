@@ -33,7 +33,13 @@ struct StatsView: View {
             }
         let listClosed = 20
 #else
-        summary
+        ViewThatFits {
+            summary
+            ScrollView(.horizontal){
+                summary
+            }
+            .scrollContentBackground(.hidden)
+        }
         let listClosed = 5
 #endif
         ForEach(viewModel.games.prefix(expandingList ? .max : listClosed)){game in
@@ -65,79 +71,77 @@ struct StatsView: View {
     }
     @ViewBuilder @MainActor
     var summary: some View {
-        ScrollView(.horizontal){
-            HStack(alignment: .top){
+                HStack(alignment: .top){
 #if os(macOS)
-                VStack{
-                    Text(wordToday)
-                        .font(AppearanceManager.statsValue)
-                    Text("Word Today")
-                        .font(AppearanceManager.statsLabel)
-                }
-                .frame(width: 100)
-                Divider()
-#endif
-                VStack{
-                    Text(winningStreak, format: .number)
-                        .font(AppearanceManager.statsValue)
-                    Text("Win Streak")
-                        .font(AppearanceManager.statsLabel)
-                }
-#if os(macOS)
-                .frame(width: 100)
-#endif
-                .frame(maxWidth: .infinity)
-                Divider()
-                VStack{
-                    Text(winningRate, format: .percent.precision(.fractionLength(0)))
-                        .font(AppearanceManager.statsValue)
-                    Text("Win Rate")
-                        .font(AppearanceManager.statsLabel)
-                }
-#if os(macOS)
-                .frame(width: 100)
-#endif
-                .frame(maxWidth: .infinity)
-                Divider()
-                VStack{
-                    Text(winsToday, format: .number)
-                        .font(AppearanceManager.statsValue)
-                    Text("Wins Today")
-                        .font(AppearanceManager.statsLabel)
-                }
-#if os(macOS)
-                .frame(width: 100)
-#endif
-                .frame(maxWidth: .infinity)
-                Divider()
-                VStack{
-                    Text(score, format: .number)
-                        .font(AppearanceManager.statsValue)
-                    Text("XP")
-                        .font(AppearanceManager.statsLabel)
-                }
-#if os(macOS)
-                .frame(width: 100)
-#endif
-                .frame(maxWidth: .infinity)
-                Divider()
-                VStack{
-                    if rank >= 0{
-                        Text(rank, format: .number)
+                    VStack{
+                        Text(wordToday)
                             .font(AppearanceManager.statsValue)
-                    } else {
-                        Text("No")
-                            .font(AppearanceManager.statsValue)
+                        Text("Word Today")
+                            .font(AppearanceManager.statsLabel)
                     }
-                    Text("Rank")
-                        .font(AppearanceManager.statsLabel)
-                }
-#if os(macOS)
-                .frame(width: 100)
+                    .frame(width: 100)
+                    Divider()
 #endif
-                .frame(maxWidth: .infinity)
-            }
-        }
+                    VStack{
+                        Text(winningStreak, format: .number)
+                            .font(AppearanceManager.statsValue)
+                        Text("Win Streak")
+                            .font(AppearanceManager.statsLabel)
+                    }
+#if os(macOS)
+                    .frame(width: 100)
+#endif
+                    .frame(minWidth: 70)
+                    Divider()
+                    VStack{
+                        Text(winningRate, format: .percent.precision(.fractionLength(0)))
+                            .font(AppearanceManager.statsValue)
+                        Text("Win Rate")
+                            .font(AppearanceManager.statsLabel)
+                    }
+#if os(macOS)
+                    .frame(width: 100)
+#endif
+                    .frame(minWidth: 70)
+                    Divider()
+                    VStack{
+                        Text(winsToday, format: .number)
+                            .font(AppearanceManager.statsValue)
+                        Text("Wins Today")
+                            .font(AppearanceManager.statsLabel)
+                    }
+#if os(macOS)
+                    .frame(width: 100)
+#endif
+                    .frame(minWidth: 70)
+                    Divider()
+                    VStack{
+                        Text(score, format: .number)
+                            .font(AppearanceManager.statsValue)
+                        Text("XP")
+                            .font(AppearanceManager.statsLabel)
+                    }
+#if os(macOS)
+                    .frame(width: 100)
+#endif
+                    .frame(minWidth: 70)
+                    Divider()
+                    VStack{
+                        if rank >= 0{
+                            Text(rank, format: .number)
+                                .font(AppearanceManager.statsValue)
+                        } else {
+                            Text("No")
+                                .font(AppearanceManager.statsValue)
+                        }
+                        Text("Rank")
+                            .font(AppearanceManager.statsLabel)
+                    }
+#if os(macOS)
+                    .frame(width: 100)
+#endif
+                    .frame(minWidth: 70)
+                }
         .onChange(of: winningStreak) { newValue, oldValue in
             if Int(oldValue/5) < Int(newValue/5) && (oldValue + 1) == newValue {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
