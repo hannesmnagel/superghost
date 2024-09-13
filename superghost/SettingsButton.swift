@@ -57,7 +57,7 @@ struct SettingsView: View {
     let dismiss: ()->Void
 
 #if DEBUG
-    @State private var entries = [String]()
+    @State private var logs = [String]()
 #endif
 
     var body: some View {
@@ -96,26 +96,30 @@ struct SettingsView: View {
                 }
 #if DEBUG
                 DisclosureGroup("Logs") {
-                    ForEach(entries, id: \.self) { entry in
+                    ForEach(logs, id: \.self) { entry in
                         Text(entry)
                             .onTapGesture {
 #if os(macOS)
-                                NSPasteboard.general.setString(entries.joined(separator: "\n"), forType: .string)
+                                NSPasteboard.general.setString(logs.joined(separator: "\n"), forType: .string)
 #else
-                                UIPasteboard.general.string = entries.joined(separator: "\n")
+                                UIPasteboard.general.string = logs.joined(separator: "\n")
 #endif
                             }
                     }
                 }
                 .task{
-                    let store = try? OSLogStore(scope: .currentProcessIdentifier)
-                    let position = store?.position(timeIntervalSinceLatestBoot: 1)
-                    let entries = try? store?
-                        .getEntries(at: position)
-                        .compactMap { $0 as? OSLogEntryLog }
-                        .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
-                        .map { "[\($0.date.formatted())] [\($0.category)] \($0.composedMessage)" }
-                    self.entries = entries ?? []
+                    Task.detached{
+                        let store = try? OSLogStore(scope: .currentProcessIdentifier)
+                        let position = store?.position(timeIntervalSinceLatestBoot: 1)
+                        let entries = try? store?
+                            .getEntries(at: position)
+                            .compactMap { $0 as? OSLogEntryLog }
+                            .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
+                            .map { "[\($0.date.formatted())] [\($0.category)] \($0.composedMessage)" }
+                        await MainActor.run{
+                            self.logs = entries ?? []
+                        }
+                    }
                 }
 #endif
             }
