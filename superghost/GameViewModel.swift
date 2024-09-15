@@ -50,6 +50,7 @@ final class GameViewModel: ObservableObject {
                             try? stat.save()
                             changeScore(by: 50)
                             games.insert(stat, at: 0)
+                            Logger.remoteLog("finished game and won")
                         } else {
                             alertItem = .lost
 
@@ -63,6 +64,7 @@ final class GameViewModel: ObservableObject {
                             try? stat.save()
                             changeScore(by: -50)
                             games.insert(stat, at: 0)
+                            Logger.remoteLog("finished game and won")
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
                             Task.detached{

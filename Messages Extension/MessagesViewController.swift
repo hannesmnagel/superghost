@@ -165,6 +165,7 @@ final class AppState: ObservableObject {
         conversation.send(message)
         lastMove = move
         NSUbiquitousKeyValueStore.default.set(Double(move.count), forKey: "\(conversation.storeKey).\(session!).lastMoveCount")
+        Logger.remoteLog("messages app \(layout.caption ?? "did something")")
     }
 }
 
