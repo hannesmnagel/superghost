@@ -32,7 +32,7 @@ final class Logger {
             do {
                 let timeout = Date()
                 while !GKLocalPlayer.local.isAuthenticated,
-                      timeout > .now + 10 {
+                      timeout < .now + 10 {
                     try? await Task.sleep(for: .seconds(1))
                 }
                 let event = Event(userId: GKLocalPlayer.local.gamePlayerID, eventName: eventName, timestamp: Date())
