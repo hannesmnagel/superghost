@@ -30,6 +30,18 @@ struct superghostApp: App {
         WindowGroup {
             ContentView()
                 .modifier(Messagable())
+                .onChange(of: scenePhase) {oldValue, newValue in
+                    switch newValue {
+                    case .background:
+                        Logger.appDidDeactivate()
+                    case .inactive:
+                        Logger.appDidActivate()
+                    case .active:
+                        Logger.appDidActivate()
+                    @unknown default:
+                        return
+                    }
+                }
                 .onAppear{
                     try? SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
