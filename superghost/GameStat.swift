@@ -82,6 +82,7 @@ enum Achievement: String, CaseIterable {
     case lowScore = "score.low", midScore = "score.mid", highScore = "score.high", longWord = "word.long", friendAdd = "friend.add", leaderboardUnlock = "leaderboard.unlock", widgetAdd = "widget.add"
 }
 
+@available(iOSApplicationExtension 18.0, *)
 func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
     do{
         guard Bundle.main.bundleIdentifier == "com.nagel.superghost" else {
@@ -104,7 +105,9 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
         Task{
             try? await Task.sleep(for: .seconds(2))
             await MainActor.run{
-                GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
+                if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {
+                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier){}
+                }
             }
         }
         Logger.achievements.info("Logged achievement \(achievement.identifier, privacy: .public)")

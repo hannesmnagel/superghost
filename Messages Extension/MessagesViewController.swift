@@ -458,10 +458,3 @@ func retry<R:Sendable>(count: Int = 3, _ action: () async throws ->R) async reth
 
     }
 }
-import GameKit
-
-extension GKAccessPoint{
-    func trigger(achievementID: String){
-        //do nothing
-    }
-}

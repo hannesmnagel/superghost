@@ -14,11 +14,3 @@ struct gamestatsWidgetBundle: WidgetBundle {
         gamestatsWidget()
     }
 }
-
-import GameKit
-
-extension GKAccessPoint{
-    func trigger(achievementID: String){
-        //Do nothing
-    }
-}
