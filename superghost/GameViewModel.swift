@@ -48,7 +48,7 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            changeScore(by: 50)
+                            changeScore(by: .random(in: 48...52))
                             games.insert(stat, at: 0)
                             Logger.remoteLog("finished game and won")
                         } else {
@@ -62,7 +62,7 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            changeScore(by: -50)
+                            changeScore(by: -.random(in: 48...52))
                             games.insert(stat, at: 0)
                             Logger.remoteLog("finished game and won")
                         }
