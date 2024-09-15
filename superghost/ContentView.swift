@@ -38,6 +38,8 @@ struct ContentView: View {
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
+    
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         Group{
