@@ -145,12 +145,16 @@ final class AppState: ObservableObject {
         if session == nil {
             session = message.session
         }
-        message.shouldExpire = move.winnerIsPlayer1 == nil
+        message.shouldExpire = false
         let layout = MSMessageTemplateLayout()
 
-        layout.image = UIImage(named: "ghostHeadingLeft")
+        layout.image = UIImage(resource: .ghostHeadingLeft)
         if let winnerIsPlayer1 = move.winnerIsPlayer1 {
-            layout.caption = winnerIsPlayer1 ? (move.blockMoveForPlayer1 ? "Won the game" : "Lost the game") : (move.blockMoveForPlayer1 ? "Lost the game" : "Won the game")
+            layout.caption = (move.blockMoveForPlayer1 == winnerIsPlayer1) ? "Won the game" : "Lost the game"
+        } else if move.player2Id.isEmpty{
+            layout.caption = "Invited to a game"
+        } else if move.word.isEmpty {
+            layout.caption = "Joined the game"
         } else {
             layout.caption = "Did a Move"
         }

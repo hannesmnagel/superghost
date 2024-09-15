@@ -11,7 +11,7 @@ import RevenueCat
 
 
 private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> String {
-    "\(option.rawValue)://hannesnagel.com/\(isSuperghost ? "superghost" : "ghost")"
+    "\(option.rawValue)://hannesnagel.com/api/v2/\(isSuperghost ? "superghost" : "ghost")"
 }
 enum RequestType:String{case https, wss}
 final class ApiLayer: ObservableObject {
@@ -156,7 +156,7 @@ final class ApiLayer: ObservableObject {
     private func connectToWebSocket(gameId: String, isPrivate: Bool, isSuperghost: Bool) {
         Task{
             let urlSession = URLSession(configuration: .default)
-            guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost))/subscribe/game/\(gameId)") else { return }
+            guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost))/game/subscribe/\(gameId)") else { return }
 
             webSocketTask = urlSession.webSocketTask(with: url)
             await withCheckedContinuation{con in

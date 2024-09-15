@@ -50,7 +50,7 @@ struct GameView: View {
             if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
                 LoadingView()
                 if viewModel.game?.player2Id == "privateGame"{
-                    if let url = URL(string: "https://hannesnagel.com/superghost/private/\(viewModel.game?.id ?? "")"){
+                    if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
                         Text("Send Invitation Link")
                         ShareLink(item: url)
                             .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
