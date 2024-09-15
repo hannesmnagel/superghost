@@ -38,7 +38,7 @@ struct AchievementsView: View {
                         LazyHGrid(rows: [ GridItem(.fixed(200))]) {
                             ForEach(achieved, id: \.0.identifier) { achievement in
                                 Button{
-                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
+                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier)
                                 } label: {
                                     AchievementView(achievement: achievement)
                                         .frame(width: 200)
@@ -48,7 +48,7 @@ struct AchievementsView: View {
                             }
                             ForEach(unachieved, id: \.0.identifier) { achievement in
                                 Button{
-                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
+                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier)
                                 } label: {
                                     AchievementView(achievement: achievement)
                                         .frame(width: 200)

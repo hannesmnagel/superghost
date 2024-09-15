@@ -103,10 +103,8 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
         await showMessage("You earned an Achievement!")
         Task{
             try? await Task.sleep(for: .seconds(2))
-            if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {
-                await MainActor.run{
-                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier){}
-                }
+            await MainActor.run{
+                GKAccessPoint.shared.trigger(achievementID: achievement.identifier)
             }
         }
         Logger.achievements.info("Logged achievement \(achievement.identifier, privacy: .public)")

@@ -16,7 +16,7 @@ extension GKAccessPoint{
         present(vc)
     }
     @MainActor
-    func trigger(achievementID: String, handler: () -> Void){
+    func trigger(achievementID: String){
         let viewController = GKGameCenterViewController(achievementID: achievementID)
         let vc = GKGameCenterViewControllerDismissable(gameCenterViewController: viewController)
         present(vc)
