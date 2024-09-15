@@ -173,6 +173,7 @@ struct ContentView: View {
             await requestAction(.addWidget)
         } else if Int.random(in: 0...5) == 0 {
             Logger.userInteraction.info("Play in Messages feature tip")
+            Logger.remoteLog("Play in Messages feature tip")
             await showMessage("Did you know, you can play against friends in Messages?")
             await showMessage("Just tap the plus Button in Messages and then choose Superghost")
         }

@@ -33,6 +33,7 @@ struct superghostApp: App {
                 .onAppear{
                     try? SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
+                    Logger.remoteLog("App launched")
 #if !os(macOS)
                     scheduleLBNotifications()
 #endif

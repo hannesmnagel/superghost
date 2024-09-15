@@ -40,6 +40,7 @@ func showMessage(_ message: String) {
 @MainActor
 func requestAction(_ action: UserAction){
     Logger.userInteraction.info("Requesting action: \(action.rawValue, privacy: .public)")
+    Logger.remoteLog("Requesting action: \(action.rawValue)")
     MessageModel.shared.showingAction = action
 }
 

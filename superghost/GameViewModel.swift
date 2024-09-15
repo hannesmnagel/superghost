@@ -21,7 +21,15 @@ final class GameViewModel: ObservableObject {
     @CloudStorage("score") private var score = 1000
     @Published var games = [GameStat]()
 
-    @Published var showPaywall = false
+    @Published var showPaywall = false {
+        didSet {
+            if showPaywall {
+                Logger.remoteLog("show paywall")
+            } else {
+                Logger.remoteLog("dismissed paywall")
+            }
+        }
+    }
 
     @Published var game: Game? {
         willSet {
@@ -101,6 +109,9 @@ final class GameViewModel: ObservableObject {
     func getTheGame(isSuperghost: Bool) async throws {
         try await ApiLayer.shared.startGame(with: currentUser.id, isSuperghost: isSuperghost)
 
+        Logger.userInteraction.info("Started Game")
+        Logger.remoteLog("Started Game")
+        
         withInvitation = false
         ApiLayer.shared.$game
             .assign(to: \.game, on: self)
@@ -115,6 +126,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
 
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
+        Logger.remoteLog("Joined Game with ID: \(gameId)")
     }
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(with: currentUser.id, isSuperghost: true)
@@ -124,6 +136,7 @@ final class GameViewModel: ObservableObject {
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
         Logger.userInteraction.info("Hosted Game")
+        Logger.remoteLog("Hosted Game")
     }
 
     func processPlayerMove(for letter: String, isSuperghost: Bool) async throws {
@@ -143,6 +156,7 @@ final class GameViewModel: ObservableObject {
     func quitGame(isSuperghost: Bool) async throws {
         try await ApiLayer.shared.quitGame(isPrivate: withInvitation, isSuperghost: isSuperghost)
         Logger.userInteraction.info("Quit Game")
+        Logger.remoteLog("Quit Game")
     }
 
 
@@ -169,7 +183,10 @@ final class GameViewModel: ObservableObject {
 
         game!.rematchPlayerId.append(currentUser.id)
         alertItem = nil
-
+        
+        Logger.userInteraction.info("rematching")
+        Logger.remoteLog("rematching")
+        
         try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
     }
 
