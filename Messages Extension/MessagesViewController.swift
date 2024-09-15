@@ -302,7 +302,7 @@ struct GameView: View {
                                     )
                                 )
                             }
-                            Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/superghost/private")!)
+                            Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/open/ghost/instructions")!)
                         }
                     }
                 } else {
@@ -317,7 +317,7 @@ struct GameView: View {
                             )
                         )
                     }
-                    Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/superghost/private")!)
+                    Link("Learn how to play", destination: URL(string: "https://hannesnagel.com/open/ghost/instructions")!)
                 }
             }
         }

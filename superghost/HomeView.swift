@@ -87,14 +87,36 @@ struct HomeView: View {
 #endif
             }
             .onOpenURL { url in
-                Task{
-                    let gameId = url.lastPathComponent
-
-                    Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
-                    
-                    try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
-                    gameStatSelection = nil
-                    isGameViewPresented = true
+                if url.absoluteString.hasPrefix("https://hannesnagel.com/open/ghost/") {
+                    let command = url.absoluteString.replacingOccurrences(of: "https://hannesnagel.com/open/ghost/", with: "")
+                    Logger.userInteraction.info("universal link open command: \(command, privacy: .public)")
+                    Logger.remoteLog("universal link open command: \(command)")
+                    if command == "instructions" {
+                        isFirstUse = true
+                    } else if command == "paywall" {
+                        viewModel.showPaywall = true
+                    } else if command == "start" {
+                        Task{
+                            try await viewModel.getTheGame(isSuperghost: isSuperghost)
+                            isGameViewPresented = true
+                        }
+                    } else if command == "host" {
+                        Task{
+                            try await viewModel.hostGame()
+                            isGameViewPresented = true
+                        }
+                    }
+                }else {
+                    Task{
+                        let gameId = url.lastPathComponent
+                        
+                        Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
+                        Logger.remoteLog("Opened link to gameid: \(gameId)")
+                        
+                        try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
+                        gameStatSelection = nil
+                        isGameViewPresented = true
+                    }
                 }
             }
         }
