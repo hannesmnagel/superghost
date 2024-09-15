@@ -82,7 +82,6 @@ enum Achievement: String, CaseIterable {
     case lowScore = "score.low", midScore = "score.mid", highScore = "score.high", longWord = "word.long", friendAdd = "friend.add", leaderboardUnlock = "leaderboard.unlock", widgetAdd = "widget.add"
 }
 
-@available(iOSApplicationExtension 18.0, *)
 func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
     do{
         guard Bundle.main.bundleIdentifier == "com.nagel.superghost" else {
