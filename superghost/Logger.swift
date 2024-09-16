@@ -78,13 +78,16 @@ final class Logger {
             }
             Task{
                 let nots = await UNUserNotificationCenter.current().notificationSettings()
-                let mappingDict : [UNAuthorizationStatus.RawValue : String] = [
+                var mappingDict : [UNAuthorizationStatus.RawValue : String] = [
                     UNAuthorizationStatus.notDetermined.rawValue : "notDetermined",
                     UNAuthorizationStatus.denied.rawValue : "denied",
                     UNAuthorizationStatus.authorized.rawValue : "authorized",
                     UNAuthorizationStatus.provisional.rawValue : "provisional",
-                    UNAuthorizationStatus.ephemeral.rawValue : "ephemeral"
                 ]
+                
+                #if !os(macOS)
+                mappingDict[ UNAuthorizationStatus.ephemeral.rawValue] = "ephemeral"
+                #endif
                 remoteLog("stats|notifications|\(mappingDict[nots.authorizationStatus.rawValue] ?? "error: unknown status")")
             }
         }
