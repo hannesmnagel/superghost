@@ -75,6 +75,9 @@ struct ContentView: View {
 
         .task(id: viewModel.games) {
             await refreshScore()
+            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
+                _ = try? await UNUserNotificationCenter.current().requestAuthorization()
+            }
         }
         .task(id: isSuperghost) {
             do{
@@ -88,9 +91,6 @@ struct ContentView: View {
                 Task.detached{
                     try await reportAchievement(.widgetAdd, percent: 100)
                 }
-            }
-            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
-                _ = try? await UNUserNotificationCenter.current().requestAuthorization()
             }
         }
         .onAppear{
