@@ -8,6 +8,7 @@
 import Foundation
 import os
 import GameKit
+import UserNotifications
 
 final class Logger {
     private static let subsystem = "com.nagel.superghost"
@@ -37,15 +38,21 @@ final class Logger {
     private final class Analyzer {
         @CloudStorage("timeSpentInGhost") private var timeSpentInGhost = 0.0//in minutes
         private var activated : Date?
+        private var notificationDelegate = NotificationDelegate()
+        
+        init(){
+            UNUserNotificationCenter.current().delegate = self.notificationDelegate
+        }
         
         func appDidActivate() {
             activated = .now
+            uploadStats()
         }
         func appDidDeactivate() {
             if let activated {
                 timeSpentInGhost += (Date.now.timeIntervalSince(activated)/60)
+                self.activated = nil
             }
-            uploadStats()
         }
         
         struct Event: Codable {
@@ -56,9 +63,30 @@ final class Logger {
         
         func uploadStats(){
 #if !os(macOS)
-            remoteLog("stats|timeInGhost|\(Int(timeSpentInGhost))")
+            remoteLog("stats|timeInGhost|\(Int(timeSpentInGhost/10)*10)")
 #endif
             remoteLog("stats|osVersion|\(ProcessInfo.processInfo.operatingSystemVersionString)")
+            if let data = NSUbiquitousKeyValueStore.default.data(forKey: "isSuperghost"),
+               let isSuperghost = try? JSONDecoder().decode(Bool.self, from: data) {
+                remoteLog("stats|isSuperghost|\(isSuperghost)")
+            }
+            if let data = NSUbiquitousKeyValueStore.default.data(forKey: "superghostTrialEnd"),
+               let superghostTrialEnd = try? JSONDecoder().decode(Date.self, from: data) {
+                let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
+                let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
+                remoteLog("stats|superghostTrialEnd|\(Int(-daysSinceTrialEnd))")
+            }
+            Task{
+                let nots = await UNUserNotificationCenter.current().notificationSettings()
+                let mappingDict : [UNAuthorizationStatus.RawValue : String] = [
+                    UNAuthorizationStatus.notDetermined.rawValue : "notDetermined",
+                    UNAuthorizationStatus.denied.rawValue : "denied",
+                    UNAuthorizationStatus.authorized.rawValue : "authorized",
+                    UNAuthorizationStatus.provisional.rawValue : "provisional",
+                    UNAuthorizationStatus.ephemeral.rawValue : "ephemeral"
+                ]
+                remoteLog("stats|notifications|\(mappingDict[nots.authorizationStatus.rawValue] ?? "error: unknown status")")
+            }
         }
         func remoteLog(_ eventName: String){
             Task{
@@ -93,6 +121,16 @@ final class Logger {
                     }
                 } catch {
                     Logger.general.error("Error sending remote log: \(error, privacy: .public)")
+                }
+            }
+        }
+        
+        final private class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+            func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+                if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+                    Logger.remoteLog("Tapped notification")
+                    let content = response.notification.request.content
+                    Logger.userInteraction.info("Tapped notification \(content.title) content: \(content.body)")
                 }
             }
         }

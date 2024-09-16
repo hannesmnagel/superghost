@@ -63,7 +63,7 @@ final class ApiLayer: ObservableObject {
         do{
             game = try JSONDecoder().decode(Game.self, from: data)
         } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
             throw error
         }
         return game
@@ -76,7 +76,7 @@ final class ApiLayer: ObservableObject {
         do{
             game = try JSONDecoder().decode(Game.self, from: data)
         } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
             throw error
         }
         return game
@@ -95,7 +95,7 @@ final class ApiLayer: ObservableObject {
         do{
             game = try JSONDecoder().decode(Game.self, from: data)
         } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
             throw error
         }
 
@@ -109,7 +109,7 @@ final class ApiLayer: ObservableObject {
         do{
             game = try JSONDecoder().decode(Game.self, from: data)
         } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
             throw error
         }
 
@@ -138,7 +138,7 @@ final class ApiLayer: ObservableObject {
         do{
             game = try JSONDecoder().decode(Game.self, from: data)
         } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public)")
+            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
             throw error
         }
 

@@ -16,6 +16,9 @@
     "%lld." : {
 
     },
+    "15 minute Double XP" : {
+
+    },
     "A friend of yours ranked at %lld" : {
 
     },
@@ -125,6 +128,9 @@
     "Got it" : {
 
     },
+    "Grant Permission" : {
+
+    },
     "Host a Game" : {
 
     },
@@ -138,6 +144,9 @@
 
     },
     "Launch Superghost" : {
+
+    },
+    "Leaderboard Notifications" : {
 
     },
     "Learn How To Play" : {
@@ -171,6 +180,9 @@
 
     },
     "No products found" : {
+
+    },
+    "Notifications" : {
 
     },
     "Play a new game" : {
@@ -216,6 +228,9 @@
 
     },
     "Show Paywall" : {
+
+    },
+    "Special Event Notifications" : {
 
     },
     "Special Event!" : {

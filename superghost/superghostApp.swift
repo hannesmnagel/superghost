@@ -25,6 +25,12 @@ struct superghostApp: App {
     @StateObject var viewModel = GameViewModel()
     @Environment(\.scenePhase) var scenePhase
     @State private var score = 0
+    
+    
+    @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
+    @CloudStorage("specialEventNotifications") var specialEventNotifications = true
+    @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
+    
 
     var body: some Scene {
         WindowGroup {
@@ -60,7 +66,8 @@ struct superghostApp: App {
             do{
                 scheduleLBNotifications()
                 
-                if await UNUserNotificationCenter.current().pendingNotificationRequests().filter({$0.identifier == "end-of-week-start-of-day"}).isEmpty{
+                if await specialEventNotifications,
+                   await UNUserNotificationCenter.current().pendingNotificationRequests().filter({$0.identifier == "end-of-week-start-of-day"}).isEmpty{
                     scheduleEventNotifcation()
                 }
 
@@ -71,7 +78,8 @@ struct superghostApp: App {
                       Date().timeIntervalSince(timeout) < 10 {
                     try? await Task.sleep(for: .seconds(1))
                 }
-                if let entries = try await GKLeaderboard
+                if await leaderboardNotifications,
+                   let entries = try await GKLeaderboard
                     .loadLeaderboards(IDs: ["global.score"])
                     .first?
                     .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
@@ -98,7 +106,7 @@ struct superghostApp: App {
 
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
-                    if .random() && .random(),
+                    if await doubleXP15minNotifications && .random() && .random() && .random(),
                     let in15mins = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) {
                         sendPushNotification(with: "Play NOW!", description: "It's double XP. But just for 15 minutes!")
                         await MainActor.run{

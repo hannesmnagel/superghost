@@ -50,6 +50,10 @@ import GameKit
 struct SettingsView: View {
     @EnvironmentObject var viewModel: GameViewModel
     @State private var managementURL: URL?
+    @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
+    @CloudStorage("specialEventNotifications") var specialEventNotifications = true
+    @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
+    @State private var notificationRefresh = false
 
     let isSuperghost: Bool
 
@@ -122,6 +126,51 @@ struct SettingsView: View {
                     }
                 }
 #endif
+                
+                Section("Notifications"){
+                    AsyncView {
+                        let authorization = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+                        if authorization == .authorized {
+                            Toggle("15 minute Double XP", isOn: $doubleXP15minNotifications)
+                            Toggle("Special Event Notifications", isOn: $specialEventNotifications)
+                            Toggle("Leaderboard Notifications", isOn: $leaderboardNotifications)
+                        } else {
+                            ContentPlaceHolderView("Notifications not allowed", systemImage: "bell.badge.slash")
+                            Button("Grant Permission"){
+                                Task{
+                                    switch authorization {
+                                    case .notDetermined:
+                                        _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                                    case .denied:
+                                        #if os(macOS)
+                                        showMessage("Open settings to allow notifications.")
+                                        #else
+                                        if let appSettingsURL = URL(string: UIApplication.openSettingsURLString),
+                                           UIApplication.shared.canOpenURL(appSettingsURL) {
+                                            await UIApplication.shared.open(appSettingsURL)
+                                        }
+                                        #endif
+                                    case .authorized:
+                                        return
+                                    case .provisional:
+                                        return
+                                    case .ephemeral:
+                                        return
+                                    @unknown default:
+                                        return
+                                    }
+                                }
+                            }
+                            .task{
+                                try? await Task.sleep(for: .seconds(1))
+                                notificationRefresh.toggle()
+                            }
+                        }
+                    } loading: {
+                        ContentPlaceHolderView("Loading authorization", systemImage: "bell.badge")
+                    }
+                    .id(notificationRefresh)
+                }
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
