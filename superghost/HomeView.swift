@@ -48,6 +48,7 @@ struct HomeView: View {
                             .textCase(.uppercase)
                             .frame(maxWidth: .infinity)
                     }
+                    EventView()
                     Section{
                         LeaderboardView(isSuperghost: isSuperghost)
                     }

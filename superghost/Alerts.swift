@@ -40,6 +40,17 @@ struct AlertView: View {
                 .font(AppearanceManager.youWonOrLostSubtitle)
                 .padding(.bottom)
             ScoreChangeView()
+            if alertItem == .lost{
+                Image(.ghostExplodingHead)
+                    .resizable()
+                    .scaledToFit()
+                    .padding()
+            } else if alertItem == .won {
+                Image(.ghostHeartEyes)
+                    .resizable()
+                    .scaledToFit()
+                    .padding()
+            }
             if alertItem == .playerLeft {
                 if let quitGame{
                     Spacer()

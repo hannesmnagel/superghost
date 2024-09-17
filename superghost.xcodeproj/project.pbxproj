@@ -91,6 +91,7 @@
 		38D75F742C418629000C0DDF /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F732C418629000C0DDF /* RevenueCat */; };
 		38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F752C418629000C0DDF /* RevenueCatUI */; };
 		38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7C2C418643000C0DDF /* StoreKit.framework */; };
+		5C54C14A2C98C285004942FD /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C54C1492C98C285004942FD /* EventView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -206,6 +207,7 @@
 		38B9A8B12C916F8100D7D3F6 /* won.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = won.mp4; sourceTree = "<group>"; };
 		38D75F7C2C418643000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS1.2.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		38D75F7E2C418647000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
+		5C54C1492C98C285004942FD /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +320,7 @@
 				38B9A8922C916F8100D7D3F6 /* GameViewModel.swift */,
 				38B9A8932C916F8100D7D3F6 /* GKAccessPoint.swift */,
 				38B9A8942C916F8100D7D3F6 /* HomeView.swift */,
+				5C54C1492C98C285004942FD /* EventView.swift */,
 				38B9A8952C916F8100D7D3F6 /* Info.plist */,
 				38B9A8962C916F8100D7D3F6 /* InstructionsView.swift */,
 				38B9A8972C916F8100D7D3F6 /* LeaderboardView.swift */,
@@ -550,6 +553,7 @@
 				38B9A8C82C916F8100D7D3F6 /* FirstUseView.swift in Sources */,
 				38B9A8C92C916F8100D7D3F6 /* Game.swift in Sources */,
 				38B9A8CA2C916F8100D7D3F6 /* GameCenterView.swift in Sources */,
+				5C54C14A2C98C285004942FD /* EventView.swift in Sources */,
 				38B9A8CB2C916F8100D7D3F6 /* GameStat.swift in Sources */,
 				38B9A8CC2C916F8100D7D3F6 /* GameView.swift in Sources */,
 				38B9A8CD2C916F8100D7D3F6 /* GameViewModel.swift in Sources */,
