@@ -111,6 +111,7 @@ struct ContentView: View {
 #if os(iOS)
         if await !isSuperghost && AppearanceManager.shared.appIcon != .standard{
             try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
+            AppearanceManager.shared.appIcon = .standard
         }
 #endif
 
@@ -152,7 +153,7 @@ struct ContentView: View {
         } else
         //is not superghost, every 4 days:
         if await !isSuperghost,
-           (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3)
+           (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3), .random()
         {
             await MainActor.run{
                 viewModel.showPaywall = true

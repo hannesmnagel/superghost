@@ -44,11 +44,13 @@ struct AlertView: View {
                 Image(.ghostExplodingHead)
                     .resizable()
                     .scaledToFit()
+                    .frame(maxHeight: 100)
                     .padding()
             } else if alertItem == .won {
                 Image(.ghostHeartEyes)
                     .resizable()
                     .scaledToFit()
+                    .frame(maxHeight: 100)
                     .padding()
             }
             if alertItem == .playerLeft {
