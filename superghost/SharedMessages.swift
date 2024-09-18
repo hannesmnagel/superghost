@@ -29,6 +29,7 @@ final class MessageModel: ObservableObject {
         Task.detached{
             try? await GameStat.submitScore(score)
         }
+        Logger.score.info("changed score by \(translation) to \(score)")
     }
 }
 

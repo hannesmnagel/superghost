@@ -187,7 +187,7 @@ struct superghostApp: App {
     }
 #endif
     nonisolated func sendPushNotification(with title: String, description: String, id: String = UUID().uuidString, at date: Date = .now) {
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: date.timeIntervalSinceNow.magnitude+0.1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: date.timeIntervalSinceNow.magnitude+1, repeats: false)
         sendPushNotification(with: title, description: description, using: trigger)
     }
     nonisolated func sendPushNotification(with title: String, description: String, id: String = UUID().uuidString, using trigger: UNNotificationTrigger) {

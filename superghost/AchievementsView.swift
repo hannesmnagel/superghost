@@ -11,74 +11,56 @@ import GameKit
 
 struct AchievementsView: View {
     @State private var isExpanded = false
+    @ObservedObject var gkStore = GKStore.shared
 
     var body: some View {
-        AsyncView {
-            if let achievements = try? await GKAchievement.loadAchievements(),
-               let achievementDescriptions = try? await GKAchievementDescription.loadAchievementDescriptions(){
-                let achieved = achievementDescriptions.compactMap{achievementDescription in
-                    if let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier}),
-                    achievement.isCompleted{
-                        (achievementDescription, achievement)
-                    } else { nil }
-                }
-                let unachieved = achievementDescriptions.compactMap{achievementDescription in
-                    let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier})
-                    if achievement?.isCompleted == true {
-                        return nil as (GKAchievementDescription, GKAchievement?)?
-                    } else {
-                        return (achievementDescription, achievement)
+        VStack{
+            Text("Achievements")
+                .font(AppearanceManager.leaderboardTitle)
+            ScrollView(.horizontal){
+                LazyHGrid(rows: [ GridItem(.fixed(200))]) {
+                    if let achievedAchievements = gkStore.achievedAchievements {
+                        ForEach(achievedAchievements, id: \.0.identifier) { achievement in
+                            Button{
+                                GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
+                            } label: {
+                                AchievementView(achievement: achievement)
+                                    .frame(width: 200)
+                                    .contentShape(.rect)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    if let unachievedAchievements = gkStore.unachievedAchievements {
+                        ForEach(unachievedAchievements, id: \.0.identifier) { achievement in
+                            Button{
+                                GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
+                            } label: {
+                                AchievementView(achievement: achievement)
+                                    .frame(width: 200)
+                                    .contentShape(.rect)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
 
-                VStack{
-                    Text("Achievements")
-                        .font(AppearanceManager.leaderboardTitle)
-                    ScrollView(.horizontal){
-                        LazyHGrid(rows: [ GridItem(.fixed(200))]) {
-                            ForEach(achieved, id: \.0.identifier) { achievement in
-                                Button{
-                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
-                                } label: {
-                                    AchievementView(achievement: achievement)
-                                        .frame(width: 200)
-                                        .contentShape(.rect)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            ForEach(unachieved, id: \.0.identifier) { achievement in
-                                Button{
-                                    GKAccessPoint.shared.trigger(achievementID: achievement.0.identifier){}
-                                } label: {
-                                    AchievementView(achievement: achievement)
-                                        .frame(width: 200)
-                                        .contentShape(.rect)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-
-                    }
-                    Button{
-                        GKAccessPoint.shared.trigger(state: .achievements){}
-                    } label: {
-                        HStack{
-                            Text("More")
-                            Image(systemName: "ellipsis")
-                        }
-                        .contentShape(.rect)
-                    }
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.bcCapsule)
-                    .padding()
-                }
-                .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
-                .onDisappear{isExpanded = false}
             }
-        } loading: {
-            ContentPlaceHolderView("Loading Achievements...", systemImage: "crown")
-                .frame(maxWidth: .infinity, alignment: .center)
+            Button{
+                GKAccessPoint.shared.trigger(state: .achievements){}
+            } label: {
+                HStack{
+                    Text("More")
+                    Image(systemName: "ellipsis")
+                }
+                .contentShape(.rect)
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.bcCapsule)
+            .padding()
         }
+        .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
+        .onDisappear{isExpanded = false}
     }
 }
 

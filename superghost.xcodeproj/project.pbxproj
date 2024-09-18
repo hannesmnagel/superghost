@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38102BF52C9B115500DABDA8 /* GKStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BF42C9B115500DABDA8 /* GKStore.swift */; };
+		38102BF92C9B5F7100DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */; };
+		38102BFB2C9B5FA300DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38AF919C2C46D683003D100B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
@@ -137,6 +140,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		38102BF42C9B115500DABDA8 /* GKStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKStore.swift; sourceTree = "<group>"; };
+		38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstancePlaceholders.swift; sourceTree = "<group>"; };
+		38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstancePlaceholders.swift; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -269,6 +275,7 @@
 				38AF919F2C46D683003D100B /* gamestatsWidgetBundle.swift */,
 				38AF91A12C46D683003D100B /* gamestatsWidget.swift */,
 				38AF91A32C46D683003D100B /* AppIntent.swift */,
+				38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */,
 				38AF91A52C46D685003D100B /* Assets.xcassets */,
 				38AF91A72C46D685003D100B /* Info.plist */,
 				38AF91A82C46D685003D100B /* gamestatsWidget.entitlements */,
@@ -281,6 +288,7 @@
 			children = (
 				38B790FD2C64960400AC9BE2 /* Messages Extension.entitlements */,
 				38B790F22C6495A400AC9BE2 /* MessagesViewController.swift */,
+				38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */,
 				38B790F72C6495A600AC9BE2 /* Assets.xcassets */,
 				38B790F92C6495A600AC9BE2 /* Info.plist */,
 			);
@@ -348,6 +356,7 @@
 				38B9A8AD2C916F8100D7D3F6 /* User.swift */,
 				38B9A8AE2C916F8100D7D3F6 /* waitingGhost.mov */,
 				38B9A8AF2C916F8100D7D3F6 /* WaitingGhost.swift */,
+				38102BF42C9B115500DABDA8 /* GKStore.swift */,
 				38B9A8B02C916F8100D7D3F6 /* won.ahap */,
 				38B9A8B12C916F8100D7D3F6 /* won.mp4 */,
 			);
@@ -551,6 +560,7 @@
 				38B9A8C62C916F8100D7D3F6 /* ContentPlaceHolderView.swift in Sources */,
 				38B9A8C72C916F8100D7D3F6 /* ContentView.swift in Sources */,
 				38B9A8C82C916F8100D7D3F6 /* FirstUseView.swift in Sources */,
+				38102BF52C9B115500DABDA8 /* GKStore.swift in Sources */,
 				38B9A8C92C916F8100D7D3F6 /* Game.swift in Sources */,
 				38B9A8CA2C916F8100D7D3F6 /* GameCenterView.swift in Sources */,
 				5C54C14A2C98C285004942FD /* EventView.swift in Sources */,
@@ -587,6 +597,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38102BF92C9B5F7100DABDA8 /* InstancePlaceholders.swift in Sources */,
 				38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */,
 				38B9A8E62C916F8100D7D3F6 /* AsyncView.swift in Sources */,
 				38B9A8E72C916F8100D7D3F6 /* AsyncFuncs.swift in Sources */,
@@ -603,6 +614,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38102BFB2C9B5FA300DABDA8 /* InstancePlaceholders.swift in Sources */,
 				38B9A8EC2C916F8100D7D3F6 /* SharedTopViewController.swift in Sources */,
 				38B9A8ED2C916F8100D7D3F6 /* SingleLetterPicker.swift in Sources */,
 				38B9A8EE2C916F8100D7D3F6 /* AsyncView.swift in Sources */,

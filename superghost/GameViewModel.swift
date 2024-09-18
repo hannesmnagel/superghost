@@ -48,8 +48,11 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            changeScore(by: .random(in: 48...52))
                             games.insert(stat, at: 0)
+                            Task{
+                                await changeScore(by: .random(in: 48...52))
+                                try? await GKStore.shared.loadData()
+                            }
                             Logger.remoteLog("finished game and won")
                         } else {
                             alertItem = .lost
@@ -62,8 +65,11 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            changeScore(by: -.random(in: 48...52))
                             games.insert(stat, at: 0)
+                            Task{
+                                await changeScore(by: -.random(in: 48...52))
+                                try await GKStore.shared.loadData()
+                            }
                             Logger.remoteLog("finished game and won")
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {

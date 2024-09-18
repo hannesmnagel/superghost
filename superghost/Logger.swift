@@ -34,16 +34,11 @@ final class Logger {
         analyzer.appDidDeactivate()
     }
     static private let analyzer = Analyzer()
-    
+
     private final class Analyzer {
         @CloudStorage("timeSpentInGhost") private var timeSpentInGhost = 0.0//in minutes
         private var activated : Date?
-        private var notificationDelegate = NotificationDelegate()
-        
-        init(){
-            UNUserNotificationCenter.current().delegate = self.notificationDelegate
-        }
-        
+
         func appDidActivate() {
             activated = .now
             uploadStats()
@@ -124,16 +119,6 @@ final class Logger {
                     }
                 } catch {
                     Logger.general.error("Error sending remote log: \(error, privacy: .public)")
-                }
-            }
-        }
-        
-        final private class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-            func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-                if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
-                    Logger.remoteLog("Tapped notification")
-                    let content = response.notification.request.content
-                    Logger.userInteraction.info("Tapped notification \(content.title) content: \(content.body)")
                 }
             }
         }

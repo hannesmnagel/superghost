@@ -43,6 +43,7 @@ import AVKit
 struct Video: View {
     private var player: AVQueuePlayer
     private var playerLooper: AVPlayerLooper
+    @Environment(\.scenePhase) var scenePhase
 
     init(_ named: String) {
         let url = Bundle.main.resourceURL!.appending(path: "\(named).mov")
@@ -51,6 +52,7 @@ struct Video: View {
 
         player = AVQueuePlayer(playerItem: item)
         playerLooper = AVPlayerLooper(player: player, templateItem: item)
+        player.play()
 #if !os(macOS)
         try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
 #endif
@@ -60,8 +62,10 @@ struct Video: View {
         VideoPlayer(player: player)
             .aspectRatio(contentMode: .fill)
             .disabled(true)
-            .onAppear{
-                player.play()
+            .onChange(of: scenePhase){_, newValue in
+                if newValue == .active{
+                    player.play()
+                }
             }
     }
 }

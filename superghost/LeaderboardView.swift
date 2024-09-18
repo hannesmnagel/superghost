@@ -16,11 +16,7 @@ extension GKLeaderboard.Entry: Swift.Identifiable {
 
 struct LeaderboardView: View {
     let isSuperghost: Bool
-
-    @State private var title = ""
-    @State private var image : Image?
-    @State private var entries = [GKLeaderboard.Entry]()
-    @State private var myScore : GKLeaderboard.Entry?
+    @ObservedObject private var gkStore = GKStore.shared
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
     @State private var hasUnlockedLeaderboard = false
@@ -32,9 +28,11 @@ struct LeaderboardView: View {
     var body: some View {
         VStack{
             HStack{
-                Text(title)
-                    .font(AppearanceManager.leaderboardTitle)
-                if let image{
+                if let leaderboardTitle = gkStore.leaderboardTitle{
+                    Text(leaderboardTitle)
+                        .font(AppearanceManager.leaderboardTitle)
+                }
+                if let image = gkStore.leaderboardImage{
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)
                 }
             }
@@ -45,8 +43,8 @@ struct LeaderboardView: View {
                 ContentPlaceHolderView("Earn 1,050 XP to see the leaderboard", systemImage: "chart.bar.fill")
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
-                inlineLeaderboard
-                if image != nil {
+                if let entries = gkStore.leaderboardData {
+                    inlineLeaderboard(entries: entries)
                     Button{
                         GKAccessPoint.shared.trigger(leaderboardID: "global.score", playerScope: .global, timeScope: .allTime)
                     } label: {
@@ -67,18 +65,7 @@ struct LeaderboardView: View {
                 try? await Task.sleep(for: .seconds(2))
             }
             hasUnlockedLeaderboard = (try? await GKAchievement.loadAchievements().first(where: { $0.identifier == Achievement.leaderboardUnlock.rawValue })?.percentComplete) == 100
-            try? await loadData()
         }
-        .task(id: score){
-            try? await Task.sleep(for: .seconds(5))
-            try? await loadData()
-        }
-        .animation(.bouncy, value: myScore)
-        .animation(.bouncy, value: selectedScore)
-        .animation(.bouncy, value: playerScope)
-        .animation(.bouncy, value: entries)
-        .animation(.bouncy, value: image)
-        .animation(.bouncy, value: title)
         .sheet(item: $selectedScore) { entry in
             scoreDetail(for: entry)
         }
@@ -158,33 +145,8 @@ struct LeaderboardView: View {
             }
 //        }
     }
-    nonisolated func loadData() async throws {
-        guard let leaderboard = try? await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first
-        else {
-            return
-        }
-        let title = leaderboard.title ?? ""
-        let image = try? await withCheckedThrowingContinuation{con in
-            leaderboard.loadImage { image, error in
-                if let image {
-                    con.resume(returning: Image(uiImage: image))
-                } else {
-                    con.resume(throwing: error!)
-                }
-            }
-
-        }
-        let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
-        await MainActor.run{
-            self.myScore = entries.0
-            self.rank = myScore?.rank ?? -1
-            self.entries = entries.1
-            self.title = title
-            self.image = image
-        }
-    }
     @ViewBuilder @MainActor
-    var inlineLeaderboard: some View {
+    func inlineLeaderboard(entries: [GKLeaderboard.Entry]) -> some View {
         ForEach(entries, id: \.rank) { entry in
             Button{
                 if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *) {

@@ -55,6 +55,7 @@ struct ContentView: View {
         .animation(.smooth, value: isFirstUse)
         .animation(.smooth, value: isGameViewPresented)
         .preferredColorScheme(.dark)
+        #if os(macOS)
         .sheet(isPresented: $viewModel.showPaywall) {
             Logger.userInteraction.info("Dismissed Paywall")
             Task{
@@ -66,10 +67,24 @@ struct ContentView: View {
             }
         } content: {
             PaywallView()
-#if os(macOS)
                 .frame(minWidth: 500, minHeight: 500)
-#endif
+                .background(.black)
         }
+#else
+        .fullScreenCover(isPresented: $viewModel.showPaywall) {
+            Logger.userInteraction.info("Dismissed Paywall")
+            Task{
+                do{
+                    try await fetchSubscription()
+                } catch {
+                    Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
+                }
+            }
+        } content: {
+            PaywallView()
+                .background(.black)
+        }
+        #endif
         .fontDesign(.rounded)
         .background(Color.black, ignoresSafeAreaEdges: .all)
 
@@ -104,6 +119,7 @@ struct ContentView: View {
         let info = try await Purchases.shared.customerInfo()
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
+        let wasSuperghost = await isSuperghost
         await MainActor.run{
             isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
         }
@@ -125,6 +141,9 @@ struct ContentView: View {
             await MainActor.run{
                 showTrialEndsIn = nil
             }
+        }
+        if await isSuperghost != wasSuperghost {
+            await refreshScore()
         }
     }
     nonisolated func promptUserForAction() async {

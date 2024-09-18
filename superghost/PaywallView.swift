@@ -24,6 +24,11 @@ struct PaywallView: View {
                             .onRequestedDismissal {
                                 dismiss()
                             }
+                            .onRestoreCompleted { userInfo in
+                                if (userInfo.entitlements["superghost"]?.isActive ?? false) {
+                                    dismiss()
+                                }
+                            }
 #else
                         if let package = offering.availablePackages.first {
                             Spacer()
@@ -63,9 +68,15 @@ struct PaywallView: View {
                         #endif
                     } else {
                         ContentPlaceHolderView("There is nothing available to purchase", systemImage: "questionmark.folder", description: "No products found")
+                            .onAppear{
+                                dismiss()
+                            }
                     }
                 case .failure(_):
                     ContentPlaceHolderView("You can't upgrade right now", systemImage: "network.slash", description: "An error occured")
+                        .onAppear{
+                            dismiss()
+                        }
                 }
             }
         }

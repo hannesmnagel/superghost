@@ -28,45 +28,50 @@ struct HomeView: View {
             .frame(maxWidth: 300)
 #endif
             VStack {
-                List{
-                    Section{
-                        header
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(.none)
-                            .listItemTint(ListItemTint?.none)
-                            .listRowSeparator(.hidden)
-                    }
-                    Section{
-                        {
-                            var resultingText = Text("")
-                            for letter in wordToday {
-                                resultingText = resultingText + ((letter == "-") ? Text(String(letter)).foregroundColor(.secondary) : Text(String(letter)).foregroundColor(.accent))
-                            }
-                            return resultingText
-                        }()
-                            .font(.largeTitle.bold())
-                            .textCase(.uppercase)
-                            .frame(maxWidth: .infinity)
-                    }
-                    EventView()
-                    Section{
-                        LeaderboardView(isSuperghost: isSuperghost)
-                    }
-                    Section{
-                        AchievementsView()
-                    }
-                    #if !os(macOS)
-                    Section{
-                        StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
-                    }
-                    #endif
-                    Section{
-                        SettingsButton(isSuperghost: isSuperghost)
-                            .listRowBackground(Color.clear)
-                            .frame(maxWidth: .infinity)
+                ScrollViewReader{scroll in
+                    List{
+                        Section{
+                            header
+                                .onAppear{
+                                    scroll.scrollTo("wordtoday")
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowInsets(.none)
+                                .listItemTint(ListItemTint?.none)
+                                .listRowSeparator(.hidden)
+                        }
+                        Section{
+                            {
+                                var resultingText = Text("")
+                                for letter in wordToday {
+                                    resultingText = resultingText + ((letter == "-") ? Text(String(letter)).foregroundColor(.secondary) : Text(String(letter)).foregroundColor(.accent))
+                                }
+                                return resultingText
+                            }()
+                                .font(.largeTitle.bold())
+                                .textCase(.uppercase)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .id("wordtoday")
+                        EventView()
+                        Section{
+                            LeaderboardView(isSuperghost: isSuperghost)
+                        }
+                        Section{
+                            AchievementsView()
+                        }
+                        #if !os(macOS)
+                        Section{
+                            StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
+                        }
+                        #endif
+                        Section{
+                            SettingsButton(isSuperghost: isSuperghost)
+                                .listRowBackground(Color.clear)
+                                .frame(maxWidth: .infinity)
+                        }
                     }
                 }
-                .scrollContentBackground(.hidden)
 #if os(macOS)
                 .overlay{
                     if let gameStat = gameStatSelection{

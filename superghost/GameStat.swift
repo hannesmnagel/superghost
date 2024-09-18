@@ -61,6 +61,7 @@ struct GameStat: Codable, Hashable, Identifiable {
             try await reportAchievement(.midScore, percent: Double(score)/2500.0 * 100)
             try await reportAchievement(.highScore, percent: Double(score)/3000.0 * 100)
             try await reportAchievement(.leaderboardUnlock, percent: Double(score)/1050.0 * 100)
+            try await GKStore.shared.loadAchievements()
         }
     }
 }

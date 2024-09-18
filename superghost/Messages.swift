@@ -96,7 +96,7 @@ struct Messagable: ViewModifier {
             showingScore = true
         }
         await MainActor.run{
-            changeScore(by: 50)
+            Task{await changeScore(by: 50)}
             Logger.score.info("Increased score by 50 because user added a friend.")
         }
         try? await Task.sleep(for: .seconds(6))
@@ -114,7 +114,7 @@ struct Messagable: ViewModifier {
             showingScore = true
         }
         await MainActor.run{
-            changeScore(by: 50)
+            Task{await changeScore(by: 50)}
             Logger.score.info("Increased score by 50 because user added a widget.")
         }
         try? await Task.sleep(for: .seconds(6))
@@ -135,7 +135,7 @@ struct Messagable: ViewModifier {
             showingScore = true
         }
         await MainActor.run{
-            changeScore(by: 50)
+            Task{await changeScore(by: 50)}
             Logger.score.info("Increased score by 50 because user allowed notifications")
         }
         try? await Task.sleep(for: .seconds(6))
@@ -401,7 +401,7 @@ struct Messagable: ViewModifier {
     }
 }
 @MainActor
-func changeScore(by score: Int) {
+func changeScore(by score: Int) async {
     let isSunday = Calendar.current.component(.weekday, from: .now) == 1
     let isDoubleXP : Bool
     if let data = NSUbiquitousKeyValueStore.default.data(forKey: "doubleXPuntil"),
@@ -412,15 +412,13 @@ func changeScore(by score: Int) {
 
     let score = score * (isSunday ? 2 : 1) * (isDoubleXP ? 2 : 1)
 #if canImport(UIKit)
-        Task{
-            try? await Task.sleep(for: .seconds(2))
-            if score > 0 {
-                try? await SoundManager.shared.play(.won, loop: false)
-                showConfetti()
-            }
-            try? await Task.sleep(for: .seconds(1.5))
-            await MessageModel.shared.changeScore(by: score)
-        }
+    try? await Task.sleep(for: .seconds(1))
+    if score > 0 {
+        try? await SoundManager.shared.play(.won, loop: false)
+        showConfetti()
+    }
+    try? await Task.sleep(for: .seconds(1.5))
+    await MessageModel.shared.changeScore(by: score)
 #endif
 }
 
