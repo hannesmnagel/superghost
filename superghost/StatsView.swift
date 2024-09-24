@@ -64,6 +64,7 @@ struct StatsView: View {
                 }
                 .contentShape(.rect)
             }
+            .foregroundStyle(.accent)
                 .buttonStyle(.bordered)
                 .buttonBorderShape(.bcCapsule)
                 .frame(maxWidth: .infinity)

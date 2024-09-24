@@ -45,6 +45,7 @@ struct LeaderboardView: View {
             } else {
                 if let entries = gkStore.leaderboardData {
                     inlineLeaderboard(entries: entries)
+                        .id(gkStore.leaderboardData)
                     Button{
                         GKAccessPoint.shared.trigger(leaderboardID: "global.score", playerScope: .global, timeScope: .allTime)
                     } label: {
@@ -54,6 +55,7 @@ struct LeaderboardView: View {
                         }
                         .contentShape(.rect)
                     }
+                    .foregroundStyle(.accent)
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.bcCapsule)
                     .padding()

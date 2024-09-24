@@ -44,6 +44,7 @@ struct AchievementsView: View {
                         }
                     }
                 }
+                .id([gkStore.unachievedAchievements?.debugDescription, gkStore.achievedAchievements?.debugDescription])
 
             }
             Button{

@@ -14,7 +14,7 @@ struct EventView: View {
         
     var body: some View {
         if showEnd {
-            Image(.ghostExplodingHead)
+            Image(.ghostExploding)
                 .resizable()
                 .scaledToFit()
                 .padding()

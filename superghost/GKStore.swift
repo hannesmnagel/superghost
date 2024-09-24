@@ -21,7 +21,6 @@ class GKStore: ObservableObject {
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
     //--------------------------------
-    @Published var achievements: [GKAchievement]?
     @Published var achievedAchievements: [(GKAchievementDescription, GKAchievement)]?
     @Published var unachievedAchievements: [(GKAchievementDescription, GKAchievement?)]?
 

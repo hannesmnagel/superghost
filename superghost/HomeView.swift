@@ -101,7 +101,7 @@ struct HomeView: View {
                     if command == "instructions" {
                         isFirstUse = true
                     } else if command == "paywall" {
-                        viewModel.showPaywall = true
+                        UserDefaults.standard.set(true, forKey: "showingPaywall")
                     } else if command == "start" {
                         Task{
                             try await viewModel.getTheGame(isSuperghost: isSuperghost)
@@ -170,7 +170,7 @@ struct HomeView: View {
             }
             .onTapGesture {
                 if !isSuperghost && viewModel.games.today.lost.count >= 5{
-                    viewModel.showPaywall = true
+                    UserDefaults.standard.set(true, forKey: "showingPaywall")
                 }
             }
             .keyboardShortcut(.defaultAction)

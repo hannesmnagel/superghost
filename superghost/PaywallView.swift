@@ -10,8 +10,8 @@ import RevenueCat
 import RevenueCatUI
 
 struct PaywallView: View {
+    let dismiss: ()->Void
     @State private var products : Result<Offerings,(any Error)>? = nil
-    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         VStack{
@@ -19,16 +19,8 @@ struct PaywallView: View {
                 switch products {
                 case .success(let offering):
                     if let offering = offering.current {
-                        #if !os(macOS)
-                        RevenueCatUI.PaywallView(offering: offering, displayCloseButton: true)
-                            .onRequestedDismissal {
-                                dismiss()
-                            }
-                            .onRestoreCompleted { userInfo in
-                                if (userInfo.entitlements["superghost"]?.isActive ?? false) {
-                                    dismiss()
-                                }
-                            }
+#if !os(macOS)
+                        RevenueCatUI.PaywallView(offering: offering)
 #else
                         if let package = offering.availablePackages.first {
                             Spacer()
@@ -65,32 +57,43 @@ struct PaywallView: View {
                                     }
                                 }
                         }
-                        #endif
+#endif
                     } else {
                         ContentPlaceHolderView("There is nothing available to purchase", systemImage: "questionmark.folder", description: "No products found")
-                            .onAppear{
-                                dismiss()
-                            }
                     }
                 case .failure(_):
                     ContentPlaceHolderView("You can't upgrade right now", systemImage: "network.slash", description: "An error occured")
-                        .onAppear{
-                            dismiss()
-                        }
                 }
             }
         }
-            .task {
-                do{
-                    products = try await .success(Purchases.shared.offerings())
-                } catch{
-                    products = .failure(error)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: dismiss) {
+                    Image(systemName: "xmark")
                 }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.bcCircle)
+                .background(.black)
+                .clipShape(.circle)
             }
+        }
+        .onAppear{
+            Logger.remoteLog("show paywall")
+        }
+        .onDisappear{
+            Logger.remoteLog("dismissed paywall")
+        }
+        .task {
+            do{
+                products = try await .success(Purchases.shared.offerings())
+            } catch{
+                products = .failure(error)
+            }
+        }
     }
 }
 
 #Preview {
-    PaywallView()
+    PaywallView{}
         .modifier(PreviewModifier())
 }

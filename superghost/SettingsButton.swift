@@ -12,7 +12,7 @@ import OSLog
 
 struct SettingsButton: View {
     let isSuperghost: Bool
-    @State private var showingSettings = false
+    @AppStorage("showingSettings") private var showingSettings = false
 
 
     var body: some View {
@@ -38,9 +38,7 @@ struct SettingsButton: View {
         .font(AppearanceManager.settingsButton)
         .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
-        .sheet(isPresented: $showingSettings){
-            SettingsView(isSuperghost: isSuperghost){showingSettings = false}
-        }
+        .foregroundStyle(.accent)
 #endif
     }
 }
@@ -65,7 +63,6 @@ struct SettingsView: View {
 #endif
 
     var body: some View {
-        NavigationStack{
             Form{
                 Section{
                     NavigationLink("Learn How To Play"){
@@ -75,14 +72,12 @@ struct SettingsView: View {
                 Section{
                     if !isSuperghost{
                         Button("Subscribe to Superghost"){
-                            dismiss()
-                            viewModel.showPaywall = true
+                            UserDefaults.standard.set(true, forKey: "showingPaywall")
                         }
                     } else {
 #if DEBUG
                         Button("Show Paywall"){
-                            dismiss()
-                            viewModel.showPaywall = true
+                            UserDefaults.standard.set(true, forKey: "showingPaywall")
                         }
 #endif
                         if let managementURL{Link("Manage subscription", destination: managementURL)}
@@ -169,7 +164,7 @@ struct SettingsView: View {
                     } loading: {
                         ContentPlaceHolderView("Loading authorization", systemImage: "bell.badge")
                     }
-                    .id(notificationRefresh)
+                    .id([notificationRefresh, doubleXP15minNotifications, specialEventNotifications, leaderboardNotifications])
                 }
             }
             .font(AppearanceManager.buttonsInSettings)
@@ -190,9 +185,7 @@ struct SettingsView: View {
                     .buttonBorderShape(.bcCircle)
                 }
             }
-#endif
-        }
-#if os(macOS)
+#else
         .padding(40)
 #endif
     }
@@ -215,7 +208,7 @@ struct AppIconPickerView: View {
                             UIApplication.shared.setAlternateIconName(icon.rawValue)
                             dismiss()
                         } else {
-                            viewModel.showPaywall = true
+                            UserDefaults.standard.set(true, forKey: "showingPaywall")
                         }
                     } label: {
                         Image(icon.rawValue.appending(".image"))
@@ -226,7 +219,7 @@ struct AppIconPickerView: View {
                     .overlay{
                         if AppearanceManager.shared.appIcon == icon {
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.accentColor, lineWidth: 3)
+                                .stroke(Color.accent, lineWidth: 3)
                         }
                     }
                     .overlay(alignment: .topTrailing) {

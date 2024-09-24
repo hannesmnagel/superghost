@@ -35,6 +35,7 @@ struct superghostApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .tint(.accent)
                 .modifier(Messagable())
                 .onChange(of: scenePhase) {oldValue, newValue in
                     switch newValue {
@@ -58,7 +59,7 @@ struct superghostApp: App {
                 }
                 .environmentObject(viewModel)
 #if os(macOS)
-                .frame(minHeight: 500)
+                .frame(minWidth: 1000, minHeight: 500)
 #endif
         }
 #if !os(macOS)

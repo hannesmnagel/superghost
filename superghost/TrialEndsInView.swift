@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TrialEndsInView: View {
     let days: Int
-    @EnvironmentObject var viewModel: GameViewModel
 
     var body: some View {
         Group{
@@ -18,7 +17,7 @@ struct TrialEndsInView: View {
                 .font(AppearanceManager.trialEndsIn)
                 .underline()
         }.onTapGesture {
-            viewModel.showPaywall = true
+            UserDefaults.standard.set(true, forKey: "showingPaywall")
         }
         .multilineTextAlignment(.center)
         .lineLimit(2)

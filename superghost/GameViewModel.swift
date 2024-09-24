@@ -21,16 +21,6 @@ final class GameViewModel: ObservableObject {
     @CloudStorage("score") private var score = 1000
     @Published var games = [GameStat]()
 
-    @Published var showPaywall = false {
-        didSet {
-            if showPaywall {
-                Logger.remoteLog("show paywall")
-            } else {
-                Logger.remoteLog("dismissed paywall")
-            }
-        }
-    }
-
     @Published var game: Game? {
         willSet {
             //check the game status

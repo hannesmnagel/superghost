@@ -409,7 +409,7 @@ struct Move: Codable, Hashable{
     var count: Int
 }
 func isWord(_ word: String) async throws -> Bool {
-    if word.count < 3 {return false}
+    if word.count < 4 {return false}
     let (data, _) = try await retry{try await URLSession.shared.data(from: URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/\(word)")!)}
     if let _ = try? JSONDecoder().decode([WordEntry].self, from: data){
         return true

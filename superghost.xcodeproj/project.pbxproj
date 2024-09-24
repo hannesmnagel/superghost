@@ -95,6 +95,10 @@
 		38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F752C418629000C0DDF /* RevenueCatUI */; };
 		38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7C2C418643000C0DDF /* StoreKit.framework */; };
 		5C54C14A2C98C285004942FD /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C54C1492C98C285004942FD /* EventView.swift */; };
+		5CFB36482CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB36472CA29BCE003CFAC5 /* ScoreChangeView.swift */; };
+		5CFB36492CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB36472CA29BCE003CFAC5 /* ScoreChangeView.swift */; };
+		5CFB364B2CA29BF1003CFAC5 /* WordDefinitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB364A2CA29BF1003CFAC5 /* WordDefinitionView.swift */; };
+		5CFB364C2CA29BF1003CFAC5 /* WordDefinitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB364A2CA29BF1003CFAC5 /* WordDefinitionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +218,8 @@
 		38D75F7C2C418643000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS1.2.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		38D75F7E2C418647000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		5C54C1492C98C285004942FD /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		5CFB36472CA29BCE003CFAC5 /* ScoreChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreChangeView.swift; sourceTree = "<group>"; };
+		5CFB364A2CA29BF1003CFAC5 /* WordDefinitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDefinitionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +315,8 @@
 				38B9A87F2C916F8100D7D3F6 /* Preview Content */,
 				38B9A8802C916F8100D7D3F6 /* AchievementsView.swift */,
 				38B9A8812C916F8100D7D3F6 /* Alerts.swift */,
+				5CFB364A2CA29BF1003CFAC5 /* WordDefinitionView.swift */,
+				5CFB36472CA29BCE003CFAC5 /* ScoreChangeView.swift */,
 				38B9A8822C916F8100D7D3F6 /* ApiLayer.swift */,
 				38B9A8832C916F8100D7D3F6 /* Appearance.swift */,
 				38B9A8842C916F8100D7D3F6 /* Assets.xcassets */,
@@ -572,12 +580,14 @@
 				38B9A8D02C916F8100D7D3F6 /* InstructionsView.swift in Sources */,
 				38B9A8D12C916F8100D7D3F6 /* LeaderboardView.swift in Sources */,
 				38B9A8D22C916F8100D7D3F6 /* LetterPicker.swift in Sources */,
+				5CFB36482CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */,
 				38B9A8D32C916F8100D7D3F6 /* LoadingView.swift in Sources */,
 				38B9A8D42C916F8100D7D3F6 /* Logger.swift in Sources */,
 				38B9A8D52C916F8100D7D3F6 /* Messages.swift in Sources */,
 				38B9A8D62C916F8100D7D3F6 /* NotUpdating.swift in Sources */,
 				38B9A8D72C916F8100D7D3F6 /* onChange.swift in Sources */,
 				38B9A8D82C916F8100D7D3F6 /* PaywallView.swift in Sources */,
+				5CFB364B2CA29BF1003CFAC5 /* WordDefinitionView.swift in Sources */,
 				38B9A8D92C916F8100D7D3F6 /* PreviewModifier.swift in Sources */,
 				38B9A8DA2C916F8100D7D3F6 /* SettingsButton.swift in Sources */,
 				38B9A8DB2C916F8100D7D3F6 /* SharedMessages.swift in Sources */,
@@ -622,11 +632,13 @@
 				38B9A8F02C916F8100D7D3F6 /* onChange.swift in Sources */,
 				38B9A8F12C916F8100D7D3F6 /* Alerts.swift in Sources */,
 				38B9A8F22C916F8100D7D3F6 /* ContentPlaceHolderView.swift in Sources */,
+				5CFB364C2CA29BF1003CFAC5 /* WordDefinitionView.swift in Sources */,
 				38B9A8F32C916F8100D7D3F6 /* CloudStoragePropertyWrapper.swift in Sources */,
 				38B9A8F42C916F8100D7D3F6 /* Appearance.swift in Sources */,
 				38B9A8F52C916F8100D7D3F6 /* Logger.swift in Sources */,
 				38B9A8F62C916F8100D7D3F6 /* SharedMessages.swift in Sources */,
 				38B9A8F72C916F8100D7D3F6 /* AsyncButton.swift in Sources */,
+				5CFB36492CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */,
 				38B9A8F82C916F8100D7D3F6 /* GameStat.swift in Sources */,
 				38B790F32C6495A400AC9BE2 /* MessagesViewController.swift in Sources */,
 			);

@@ -14,105 +14,8 @@ struct GameView: View {
     let appearingDate = Date()
 
     var body: some View {
-
-        VStack {
-            HStack{
-                Image(systemName: "rectangle.portrait.and.arrow.right")
-                    .font(AppearanceManager.quitGame)
-                    .hidden()
-                Spacer()
-                switch viewModel.gameStatusText {
-                case .waitingForPlayer:
-                    Text("Waiting for Player")
-                case .started:
-                    Text("Game started")
-                }
-                Spacer()
-                AsyncButton{
-                    isPresented = false
-                    try await viewModel.quitGame(isSuperghost: isSuperghost)
-                } label: {
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
-                        .font(AppearanceManager.quitGame)
-                }
-                .keyboardShortcut(.cancelAction)
-                .buttonStyle(.plain)
-            }
-            if viewModel.gameStatusText == .waitingForPlayer{
-                Text(appearingDate, style: .timer)
-                    .monospacedDigit()
-                + Text(" elapsed - ETA:") + Text(appearingDate.addingTimeInterval(.random(in: 3...6)), style: .relative)
-                    .monospacedDigit()
-            }
-            Spacer()
-
-            //MARK: Private Game Share Link Screen
-            if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
-                LoadingView()
-                if viewModel.game?.player2Id == "privateGame"{
-                    if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
-                        Text("Send Invitation Link")
-                        ShareLink(item: url)
-                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
-                    }
-                }
-                //MARK: Playing:
-            } else if let game = viewModel.game{
-                VStack {
-                    if game.challengingUserId.isEmpty {
-                        if game.blockMoveForPlayerId != viewModel.currentUser.id {
-                            ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
-                                .transition(.scale(scale: 0.1, anchor: .bottom))
-                            if viewModel.games.isEmpty{
-                                if let word = game.moves.last?.word,
-                                   !word.isEmpty {
-                                    Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(word)?")
-                                    Text("Select a letter so that this still is the case or challenge your opponent")
-                                } else {
-                                    Text("Select any Letter you want")
-                                }
-                            }
-                        } else {
-                            ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
-                                .transition(.scale(scale: 0.1, anchor: .bottom))
-                        }
-                        LetterPicker(isSuperghost: isSuperghost)
-                        if viewModel.game?.moves.last?.word.count ?? 0 > 1 {
-                            AsyncButton{
-                                viewModel.game?.challengingUserId = viewModel.currentUser.id
-                                viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
-                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
-                            } label: {
-                                Text("There is no such word")
-                            }
-                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
-                        }
-                        //MARK: When you are challenged
-                    } else if game.challengingUserId != viewModel.currentUser.id{
-                        ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
-                        Text(game.moves.last?.word ?? "")
-                            .font(AppearanceManager.wordInGame)
-                        SayTheWordButton(isSuperghost: isSuperghost)
-                        AsyncButton{
-                            viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
-                            try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
-                        } label: {
-                            Text("Yes, I lied")
-                        }
-                        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
-                        //MARK: When you challenged
-                    } else {
-                        LoadingView()
-                        Text("Waiting for player response...")
-                    }
-                }
-                .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
-                .padding()
-                .animation(.bouncy, value: game)
-                Spacer()
-            }
-        }
-        .sheet(item: $viewModel.alertItem) { alertItem in
+        if let alertItem = viewModel.alertItem {
+            
             AlertView(
                 alertItem: alertItem,
                 dismissParent: {isPresented = false},
@@ -128,14 +31,97 @@ struct GameView: View {
                 word: viewModel.game?.moves.last?.word ?? "",
                 player2Id: viewModel.game?.player2Id ?? ""
             )
-#if os(macOS) || os(visionOS)
-                .frame(minWidth: 500, minHeight: 500)
-#endif
+        } else {
+            VStack {
+                if viewModel.gameStatusText == .waitingForPlayer{
+                    Text(appearingDate, style: .timer)
+                        .monospacedDigit()
+                    + Text(" elapsed - ETA:") + Text(appearingDate.addingTimeInterval(.random(in: 3...6)), style: .relative)
+                        .monospacedDigit()
+                }
+                Spacer()
+                
+                //MARK: Private Game Share Link Screen
+                if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
+                    LoadingView()
+                    if viewModel.game?.player2Id == "privateGame"{
+                        if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
+                            Text("Send Invitation Link")
+                            ShareLink(item: url)
+                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+                        }
+                    }
+                    //MARK: Playing:
+                } else if let game = viewModel.game{
+                    VStack {
+                        if game.challengingUserId.isEmpty {
+                            if game.blockMoveForPlayerId != viewModel.currentUser.id {
+                                ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
+                                    .transition(.scale(scale: 0.1, anchor: .bottom))
+                                if viewModel.games.isEmpty{
+                                    if let word = game.moves.last?.word,
+                                       !word.isEmpty {
+                                        Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(word)?")
+                                        Text("Select a letter so that this still is the case or challenge your opponent")
+                                    } else {
+                                        Text("Select any Letter you want")
+                                    }
+                                }
+                            } else {
+                                ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
+                                    .transition(.scale(scale: 0.1, anchor: .bottom))
+                            }
+                            LetterPicker(isSuperghost: isSuperghost)
+                            if viewModel.game?.moves.last?.word.count ?? 0 > 1 {
+                                AsyncButton{
+                                    viewModel.game?.challengingUserId = viewModel.currentUser.id
+                                    viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
+                                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
+                                } label: {
+                                    Text("There is no such word")
+                                }
+                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+                            }
+                            //MARK: When you are challenged
+                        } else if game.challengingUserId != viewModel.currentUser.id{
+                            ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
+                            Text(game.moves.last?.word ?? "")
+                                .font(AppearanceManager.wordInGame)
+                            SayTheWordButton(isSuperghost: isSuperghost)
+                            AsyncButton{
+                                viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
+                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
+                            } label: {
+                                Text("Yes, I lied")
+                            }
+                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+                            //MARK: When you challenged
+                        } else {
+                            LoadingView()
+                            Text("Waiting for player response...")
+                        }
+                    }
+                    .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
+                    .padding()
+                    .animation(.bouncy, value: game)
+                    Spacer()
+                }
+            }
+            .navigationTitle(viewModel.gameStatusText == .waitingForPlayer ? "Waiting for Player" : "Game started")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction){
+                    AsyncButton{
+                        isPresented = false
+                        try await viewModel.quitGame(isSuperghost: isSuperghost)
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(AppearanceManager.quitGame)
+                    }
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.bcCircle)
+                }
+            }
         }
-        .animation(.snappy, value: viewModel.gameStatusText)
-        .animation(.snappy, value: viewModel.alertItem)
-        .animation(.snappy, value: viewModel.game)
-        .animation(.snappy, value: viewModel.game?.moves)
     }
 }
 
@@ -155,7 +141,7 @@ struct GameView: View {
 }
 
 func isWord(_ word: String) async throws -> Bool {
-    if word.count < 3 {return false}
+    if word.count < 4 {return false}
     let (data, _) = try await retry{try await URLSession.shared.data(from: URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/\(word)")!)}
     if let _ = try? JSONDecoder().decode([WordEntry].self, from: data){
         return true

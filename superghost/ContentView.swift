@@ -38,53 +38,49 @@ struct ContentView: View {
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
+    @AppStorage("showingSettings") private var settings = false
+    @AppStorage("showingPaywall") private var showingPaywall = false
+    @AppStorage("showingScoreChange") private var showingScoreChange = false
     
     @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
-        Group{
+        NavigationStack{
             if isFirstUse{
                 FirstUseView()
                     .transition(.opacity)
+            } else if showingScoreChange {
+                ScoreChangeView()
+                    .transition(.move(edge: .bottom))
             } else if isGameViewPresented{
                 GameView(isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
+                    .transition(.move(edge: .bottom))
+            } else if showingPaywall {
+                PaywallView{
+                    showingPaywall = false
+                    Logger.userInteraction.info("Dismissed Paywall")
+                    Task{
+                        do{
+                            try await fetchSubscription()
+                        } catch {
+                            Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
+                        }
+                    }
+                }
+                .background(.black)
+                .transition(.move(edge: .bottom))
+                
+            } else if settings {
+                SettingsView(isSuperghost: isSuperghost){settings = false}
+                    .transition(.move(edge: .bottom))
             } else {
                 HomeView(isSuperghost: isSuperghost, showTrialEndsIn: showTrialEndsIn, isGameViewPresented: $isGameViewPresented)
+                    .transition(.move(edge: .top))
             }
         }
         .animation(.smooth, value: isFirstUse)
         .animation(.smooth, value: isGameViewPresented)
         .preferredColorScheme(.dark)
-        #if os(macOS)
-        .sheet(isPresented: $viewModel.showPaywall) {
-            Logger.userInteraction.info("Dismissed Paywall")
-            Task{
-                do{
-                    try await fetchSubscription()
-                } catch {
-                    Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
-                }
-            }
-        } content: {
-            PaywallView()
-                .frame(minWidth: 500, minHeight: 500)
-                .background(.black)
-        }
-#else
-        .fullScreenCover(isPresented: $viewModel.showPaywall) {
-            Logger.userInteraction.info("Dismissed Paywall")
-            Task{
-                do{
-                    try await fetchSubscription()
-                } catch {
-                    Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
-                }
-            }
-        } content: {
-            PaywallView()
-                .background(.black)
-        }
-        #endif
         .fontDesign(.rounded)
         .background(Color.black, ignoresSafeAreaEdges: .all)
 
@@ -175,7 +171,7 @@ struct ContentView: View {
            (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3), .random()
         {
             await MainActor.run{
-                viewModel.showPaywall = true
+                UserDefaults.standard.set(true, forKey: "showingPaywall")
             }
             Logger.userInteraction.info("presenting paywall")
         } else if Int.random(in: 0...2) == 0,
