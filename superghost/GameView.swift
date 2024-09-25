@@ -108,6 +108,9 @@ struct GameView: View {
                 }
             }
             .navigationTitle(viewModel.gameStatusText == .waitingForPlayer ? "Waiting for Player" : "Game started")
+#if !os(macOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction){
                     AsyncButton{
