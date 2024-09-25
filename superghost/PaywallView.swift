@@ -21,6 +21,16 @@ struct PaywallView: View {
                     if let offering = offering.current {
 #if !os(macOS)
                         RevenueCatUI.PaywallView(offering: offering)
+                            .onRestoreCompleted{ info in
+                                if (info.entitlements["superghost"]?.isActive ?? false) {
+                                    dismiss()
+                                }
+                            }
+                            .onPurchaseCompleted{ info in
+                                if (info.entitlements["superghost"]?.isActive ?? false) {
+                                    dismiss()
+                                }
+                            }
 #else
                         if let package = offering.availablePackages.first {
                             Spacer()
@@ -64,16 +74,6 @@ struct PaywallView: View {
                 case .failure(_):
                     ContentPlaceHolderView("You can't upgrade right now", systemImage: "network.slash", description: "An error occured")
                 }
-            }
-        }
-        .onRestoreCompleted{ info in
-            if (info.entitlements["superghost"]?.isActive ?? false) {
-                dismiss()
-            }
-        }
-        .onPurchaseCompleted{ info in
-            if (info.entitlements["superghost"]?.isActive ?? false) {
-                dismiss()
             }
         }
         .toolbar {
