@@ -66,6 +66,16 @@ struct PaywallView: View {
                 }
             }
         }
+        .onRestoreCompleted{ info in
+            if (info.entitlements["superghost"]?.isActive ?? false) {
+                dismiss()
+            }
+        }
+        .onPurchaseCompleted{ info in
+            if (info.entitlements["superghost"]?.isActive ?? false) {
+                dismiss()
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button(action: dismiss) {
