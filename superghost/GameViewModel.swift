@@ -41,7 +41,6 @@ final class GameViewModel: ObservableObject {
                             games.insert(stat, at: 0)
                             Task{
                                 await changeScore(by: .random(in: 48...52))
-                                try? await GKStore.shared.loadData()
                             }
                             Logger.remoteLog("finished game and won")
                         } else {
@@ -58,7 +57,6 @@ final class GameViewModel: ObservableObject {
                             games.insert(stat, at: 0)
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
-                                try await GKStore.shared.loadData()
                             }
                             Logger.remoteLog("finished game and won")
                         }

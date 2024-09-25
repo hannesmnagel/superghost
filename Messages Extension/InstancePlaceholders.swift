@@ -11,4 +11,5 @@ final class GKStore: ObservableObject {
     static let shared = GKStore()
     
     func loadAchievements() async throws {}
+    func loadData() async throws {}
 }

@@ -418,8 +418,8 @@ func changeScore(by score: Int) async {
         showConfetti()
     }
     try? await Task.sleep(for: .seconds(1.5))
-    await MessageModel.shared.changeScore(by: score)
 #endif
+    await MessageModel.shared.changeScore(by: score)
 }
 
 #Preview {
