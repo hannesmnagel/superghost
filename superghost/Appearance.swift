@@ -87,8 +87,7 @@ class AppearanceManager {
 
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .shadow(radius: 2)
-                .foregroundStyle(isEnabled ? .white : .secondary)
+                .foregroundStyle(isEnabled ? .black : .secondary)
                 .padding(.horizontal)
                 .padding()
                 .background(isEnabled ? .accent : .accent.opacity(0.5))
@@ -116,8 +115,7 @@ class AppearanceManager {
 
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .shadow(radius: 2)
-                .foregroundStyle(isEnabled ? .white : .secondary)
+                .foregroundStyle(isEnabled ? (isSecondary ? .white : .black) : .secondary)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(isSecondary ? .clear : (isEnabled ? .accent : .accent.opacity(0.5)))
