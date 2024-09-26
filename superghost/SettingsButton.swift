@@ -183,6 +183,7 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.bcCircle)
+                    .keyboardShortcut(.cancelAction)
                 }
             }
 #else

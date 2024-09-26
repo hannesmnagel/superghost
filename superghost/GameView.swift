@@ -122,6 +122,7 @@ struct GameView: View {
                     }
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.bcCircle)
+                    .keyboardShortcut(.cancelAction)
                 }
             }
         }

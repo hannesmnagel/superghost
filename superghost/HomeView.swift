@@ -137,6 +137,7 @@ struct HomeView: View {
                                 Button{gameStatSelection = nil} label: {
                                     Image(systemName: "xmark")
                                 }
+                                .keyboardShortcut(.cancelAction)
                             }
                         }
                         .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())

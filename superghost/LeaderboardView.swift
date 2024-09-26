@@ -142,6 +142,7 @@ struct LeaderboardView: View {
                         }
                         .buttonStyle(.bordered)
                         .buttonBorderShape(.bcCircle)
+                        .keyboardShortcut(.cancelAction)
                     }
                 }
             }
