@@ -58,7 +58,7 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
-                            Logger.remoteLog("finished game and won")
+                            Logger.remoteLog("finished game and lost")
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
                             Task.detached{
