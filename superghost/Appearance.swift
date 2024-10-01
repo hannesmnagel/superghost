@@ -48,7 +48,6 @@ class AppearanceManager {
     }
 
     static let hostGame: Font = .largeTitle
-    static let startGame: Font = .largeTitle
     static let howToPlayTitle: Font = .largeTitle.bold()
     static let trialEndsIn: Font = .subheadline
     static let instructions: Font = .headline
@@ -59,7 +58,6 @@ class AppearanceManager {
     static let statsLabel: Font = .footnote
     static let statsValue: Font = .title
     static let settingsButton: Font = .body
-    static let startUpSuperghost: Font = .largeTitle
     static let startUpSuperghostTapToPlay: Font = .subheadline
     static let youWonOrLost: Font = .largeTitle.bold()
     static let youWonOrLostSubtitle: Font = .headline
@@ -69,52 +67,13 @@ class AppearanceManager {
     static let leaderboardTitle: Font = .title.bold()
     static let playerViewTitle: Font = .largeTitle.bold()
 
-    struct QuitRematch: ButtonStyle {
-        let isPrimary: Bool
-
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .padding(.horizontal)
-                .padding()
-                .background(isPrimary ? Color.accent : .clear)
-                .background(isPrimary ? Material.thick : .thin)
-                .clipShape(.capsule)
-                .scaleEffect(configuration.isPressed ? 0.9 : 1)
-        }
-    }
-    struct StartGame: ButtonStyle {
-        @Environment(\.isEnabled) var isEnabled
-
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .foregroundStyle(isEnabled ? .black : .secondary)
-                .padding(.horizontal)
-                .padding()
-                .background(isEnabled ? .accent : .accent.opacity(0.5))
-                .background(Material.thick)
-                .clipShape(.capsule)
-                .scaleEffect(configuration.isPressed ? 0.9 : 1)
-                .font(AppearanceManager.startGame)
-        }
-    }
-    struct HostGame: ButtonStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .foregroundStyle(.white)
-                .padding(.horizontal)
-                .padding()
-                .background(Material.thin)
-                .clipShape(.capsule)
-                .scaleEffect(configuration.isPressed ? 0.9 : 1)
-                .font(AppearanceManager.hostGame)
-        }
-    }
     struct FullWidthButtonStyle: ButtonStyle {
         @Environment(\.isEnabled) var isEnabled
         let isSecondary: Bool
 
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
+                .buttonStyle(HapticStlye(buttonStyle: .plain))
                 .foregroundStyle(isEnabled ? (isSecondary ? .white : .black) : .secondary)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -124,4 +83,90 @@ class AppearanceManager {
                 .scaleEffect(configuration.isPressed ? 0.9 : 1)
         }
     }
+    struct HapticStlyeCustom<Style: ButtonStyle>: PrimitiveButtonStyle {
+        let buttonStyle: Style
+        @GestureState private var isPressed = false
+        @State private var gestureStart = Date.distantPast
+
+        func makeBody(configuration: Configuration) -> some View {
+            Button{} label: {
+                configuration.label
+            }
+            .buttonStyle(buttonStyle)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .updating($isPressed) { value, state, transaction in
+//                        let timeInterval = (-gestureStart.timeIntervalSinceNow)
+//                        if timeInterval > 0.1 {
+                            state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
+//                        }
+//                        gestureStart = .now
+                    }
+                    .onEnded{ value in
+                        if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
+                            configuration.trigger()
+                        }
+                    }
+            )
+#if !os(macOS)
+            .onChange(of: isPressed) { oldValue, newValue in
+                if newValue {
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                } else {
+                    UIImpactFeedbackGenerator().impactOccurred()
+                }
+            }
+#endif
+        }
+    }
+
+    struct HapticStlye<Style: PrimitiveButtonStyle>: PrimitiveButtonStyle {
+        let buttonStyle: Style
+        @GestureState private var isPressed = false
+        @State private var feedback = false
+
+        func makeBody(configuration: Configuration) -> some View {
+            Button{
+#if os(macOS)
+                configuration.trigger()
+#endif
+            } label: {
+                configuration.label
+            }
+            .buttonStyle(buttonStyle)
+#if !os(macOS)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .updating($isPressed) { value, state, transaction in
+                        state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
+                    }
+                    .onEnded{ value in
+                        if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
+                            configuration.trigger()
+                        }
+                    }
+            )
+            .onChange(of: isPressed) { oldValue, newValue in
+                if newValue {
+                    Task{
+                        try? await Task.sleep(for: .milliseconds(100))
+                        if isPressed {
+                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                            feedback = true
+                        }
+                    }
+                } else if feedback {
+                    UIImpactFeedbackGenerator().impactOccurred()
+                }
+            }
+#endif
+        }
+    }
+}
+
+#Preview{
+    Button("Lol"){
+        print("lol")
+    }
+    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
 }

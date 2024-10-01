@@ -30,7 +30,7 @@ class GKStore: ObservableObject {
         guard !hasUnlockedLeaderboard else {return}
         self.hasUnlockedLeaderboard = (try? await GKAchievement.loadAchievements().first(where: { $0.identifier == Achievement.leaderboardUnlock.rawValue })?.percentComplete) == 100
     }
-    nonisolated private func loadInitialData() async throws {
+    nonisolated func loadInitialData() async throws {
         //starting achievements task because it doesn't need anything else
         let achievementsTask = Task {
             try await loadAchievements()
@@ -95,20 +95,7 @@ class GKStore: ObservableObject {
         }
     }
 
-    private init(){
-        Task.detached(priority: .medium) {
-            do {
-                let timeout = Date() + 10
-                while !GKLocalPlayer.local.isAuthenticated,
-                      timeout > Date() {
-                    try? await Task.sleep(for: .seconds(2))
-                }
-                try await self.loadInitialData()
-            } catch {
-                Logger.general.error("Failed to load initial leaderboard data: \(error)")
-            }
-        }
-    }
+    private init(){}
 
     enum HKStoreError: Error {
         case noLeaderboard, noLeaderboardTitle, noLeaderboardImage

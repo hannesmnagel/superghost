@@ -36,7 +36,7 @@ struct SettingsButton: View {
                 .contentShape(.capsule)
         }
         .font(AppearanceManager.settingsButton)
-        .buttonStyle(.bordered)
+        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
         .buttonBorderShape(.capsule)
         .foregroundStyle(.accent)
 #endif
@@ -181,7 +181,7 @@ struct SettingsView: View {
                     } label: {
                         Image(systemName: "xmark")
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                     .buttonBorderShape(.bcCircle)
                 }
             }

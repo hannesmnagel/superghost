@@ -165,7 +165,7 @@ final class AppState: ObservableObject {
         conversation.send(message)
         lastMove = move
         NSUbiquitousKeyValueStore.default.set(Double(move.count), forKey: "\(conversation.storeKey).\(session!).lastMoveCount")
-        Logger.remoteLog("messages app \(layout.caption ?? "did something")")
+        Logger.remoteLog(.messagesMove)
     }
 }
 
@@ -188,7 +188,7 @@ struct ContentView: View {
                lastMove.player1Id == conversation.localParticipantIdentifier.uuidString ? lastMove.blockMoveForPlayer1 : !lastMove.blockMoveForPlayer1 || disabled,
                lastMove.winnerIsPlayer1 == nil{
                 Text("Sent...")
-                    .font(AppearanceManager.startUpSuperghost)
+                    .font(.largeTitle)
             } else {
                 GameView()
             }
@@ -338,7 +338,7 @@ struct GameView: View {
                 .background(Material.bar, ignoresSafeAreaEdges: .all)
             }
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
         .buttonBorderShape(.capsule)
     }
     func processPlayerMove(for word: String, currentUser: String, player1Id: String, player2Id: String, newCount: Int) async throws {

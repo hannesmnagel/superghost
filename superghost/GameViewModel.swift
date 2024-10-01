@@ -42,7 +42,12 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: .random(in: 48...52))
                             }
-                            Logger.remoteLog("finished game and won")
+                            Logger.remoteLog(
+                                .gameWon(
+                                    duration:
+                                        Int(ISO8601DateFormatter()
+                                        .date(from: newValue.createdAt)?.timeIntervalSinceNow.magnitude ?? 0))
+                            )
                         } else {
                             alertItem = .lost
 
@@ -58,7 +63,12 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
-                            Logger.remoteLog("finished game and won")
+                            Logger.remoteLog(
+                                .gameLost(
+                                    duration:
+                                        Int(ISO8601DateFormatter()
+                                            .date(from: newValue.createdAt)?.timeIntervalSinceNow.magnitude ?? 0))
+                            )
                         }
                         if (newValue.moves.last?.word.count ?? 0) > 5 {
                             Task.detached{
@@ -87,11 +97,6 @@ final class GameViewModel: ObservableObject {
     var withInvitation = false
 
     init() {
-        GKLocalPlayer.local.authenticateHandler = {vc, error in
-            if let error{
-                print(error)
-            }
-        }
         currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
         Task.detached{
             let games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
@@ -106,7 +111,6 @@ final class GameViewModel: ObservableObject {
         try await ApiLayer.shared.startGame(with: currentUser.id, isSuperghost: isSuperghost)
 
         Logger.userInteraction.info("Started Game")
-        Logger.remoteLog("Started Game")
         
         withInvitation = false
         ApiLayer.shared.$game
@@ -122,7 +126,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
 
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
-        Logger.remoteLog("Joined Game with ID: \(gameId)")
+        Logger.remoteLog(.joinedPrivateGame)
     }
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(with: currentUser.id, isSuperghost: true)
@@ -132,7 +136,6 @@ final class GameViewModel: ObservableObject {
             .assign(to: \.game, on: self)
             .store(in: &cancellables)
         Logger.userInteraction.info("Hosted Game")
-        Logger.remoteLog("Hosted Game")
     }
 
     func processPlayerMove(for letter: String, isSuperghost: Bool) async throws {
@@ -152,7 +155,6 @@ final class GameViewModel: ObservableObject {
     func quitGame(isSuperghost: Bool) async throws {
         try await ApiLayer.shared.quitGame(isPrivate: withInvitation, isSuperghost: isSuperghost)
         Logger.userInteraction.info("Quit Game")
-        Logger.remoteLog("Quit Game")
     }
 
 
@@ -181,8 +183,7 @@ final class GameViewModel: ObservableObject {
         alertItem = nil
         
         Logger.userInteraction.info("rematching")
-        Logger.remoteLog("rematching")
-        
+
         try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
     }
 

@@ -47,10 +47,7 @@ struct GameStat: Codable, Hashable, Identifiable {
     }
 
     static func submitScore(_ score: Int) async throws {
-        let start = Date()
-        while !GKLocalPlayer.local.isAuthenticated,
-        !(Date().timeIntervalSince(start) > 10)
-        { try? await Task.sleep(for: .seconds(1))}
+        guard GKLocalPlayer.local.isAuthenticated else {Logger.general.error("\(#function, privacy: .public) failed: Not authenticated"); return}
 
         let leaderboards = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"])
         for leaderboard in leaderboards{
@@ -61,6 +58,9 @@ struct GameStat: Codable, Hashable, Identifiable {
             try await reportAchievement(.midScore, percent: Double(score)/2500.0 * 100)
             try await reportAchievement(.highScore, percent: Double(score)/3000.0 * 100)
             try await reportAchievement(.leaderboardUnlock, percent: Double(score)/1050.0 * 100)
+            try await GKStore.shared.loadAchievements()
+            try await GKStore.shared.loadData()
+            try? await Task.sleep(for: .seconds(3))
             try await GKStore.shared.loadAchievements()
             try await GKStore.shared.loadData()
         }
@@ -91,7 +91,8 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
             Logger.achievements.warning("Player not authenticated. Achievement stored for later reporting.")
             return
         }
-        while !GKLocalPlayer.local.isAuthenticated{ try? await Task.sleep(for: .seconds(1))}
+        guard GKLocalPlayer.local.isAuthenticated else {Logger.general.error("\(#function, privacy: .public) failed: Not authenticated"); return}
+        
         let achievements = try await GKAchievement.loadAchievements()
         guard !achievements.contains(where: {$0.isCompleted && $0.identifier == achievement.rawValue}) else {return}
 

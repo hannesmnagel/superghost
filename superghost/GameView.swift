@@ -48,7 +48,7 @@ struct GameView: View {
                         if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
                             Text("Send Invitation Link")
                             ShareLink(item: url)
-                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
+                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
                         }
                     }
                     //MARK: Playing:
@@ -80,7 +80,7 @@ struct GameView: View {
                                 } label: {
                                     Text("There is no such word")
                                 }
-                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
                             }
                             //MARK: When you are challenged
                         } else if game.challengingUserId != viewModel.currentUser.id{
@@ -94,7 +94,7 @@ struct GameView: View {
                             } label: {
                                 Text("Yes, I lied")
                             }
-                            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
+                            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
                             //MARK: When you challenged
                         } else {
                             LoadingView()
@@ -113,15 +113,26 @@ struct GameView: View {
 #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction){
-                    AsyncButton{
-                        isPresented = false
-                        try await viewModel.quitGame(isSuperghost: isSuperghost)
+                    Menu{
+                        AsyncButton{
+
+                            if let createdAt = viewModel.game?.createdAt, let duration = ISO8601DateFormatter().date(from: createdAt)?.timeIntervalSinceNow.magnitude {
+                                Logger.remoteLog(.gameCancelled(duration: Int(duration)))
+                            }
+                            isPresented = false
+                            try await viewModel.quitGame(isSuperghost: isSuperghost)
+                        } label: {
+                            Text("Quit Game")
+                        }
+                        .buttonStyle(.plain)
                     } label: {
-                        Image(systemName: "xmark")
-                            .font(AppearanceManager.quitGame)
+                        Button{} label: {
+                            Image(systemName: "xmark")
+                                .font(AppearanceManager.quitGame)
+                        }
+                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                        .buttonBorderShape(.bcCircle)
                     }
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.bcCircle)
                 }
             }
         }

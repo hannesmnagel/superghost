@@ -22,7 +22,6 @@ struct superghostApp: App {
     @CloudStorage("rank") private var rank = -1
     @CloudStorage("doubleXPuntil") private var xpBoostUntil = Date.distantPast
 
-    @StateObject var viewModel = GameViewModel()
     @Environment(\.scenePhase) var scenePhase
     @State private var score = 0
     
@@ -34,8 +33,9 @@ struct superghostApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LaunchingView()
                 .tint(.accent)
+                .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: DefaultButtonStyle()))
                 .modifier(Messagable())
                 .onChange(of: scenePhase) {oldValue, newValue in
                     switch newValue {
@@ -52,12 +52,10 @@ struct superghostApp: App {
                 .onAppear{
                     try? SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
-                    Logger.remoteLog("App launched")
 #if !os(macOS)
                     scheduleLBNotifications()
 #endif
                 }
-                .environmentObject(viewModel)
 #if os(macOS)
                 .frame(minWidth: 1000, minHeight: 500)
 #endif
@@ -129,7 +127,6 @@ struct superghostApp: App {
                 NSApp.mainWindow?.becomeFirstResponder()
 
             }
-            .environmentObject(viewModel)
 
         }
 #endif

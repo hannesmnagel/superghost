@@ -6,44 +6,45 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct FirstUseView: View {
     @CloudStorage("isFirstUse") var isFirstUse = true
     @State var firstUseState = FirstUseState.tapToContinue
 
     enum FirstUseState: CaseIterable{
-        case tapToContinue, howTo, end
+        case tapToContinue, howTo, signIn, grantFriendsPermission, end
     }
 
     var body: some View {
-        TabView(selection: $firstUseState){
+        switch firstUseState {
+        case .tapToContinue:
             VStack{
                 Image(.ghostHeadingLeft)
                     .resizable()
                     .scaledToFit()
-                Text("Superghost")
-                    .font(AppearanceManager.startUpSuperghost)
+                Text("Welcome to Ghost!")
+                    .font(.largeTitle)
                     .fontWeight(.heavy)
                 Text("Tap to play")
-                    .font(AppearanceManager.startUpSuperghostTapToPlay)
+                    .font(.headline)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onTapGesture {
                 firstUseState.nextCase()
             }
-            .tag(FirstUseState.tapToContinue)
-            .tabItem {}
+        case .howTo:
             InstructionsView{firstUseState.nextCase()}
-                .tag(FirstUseState.howTo)
-                .tabItem {}
+        case .signIn:
+            SignInView{firstUseState.nextCase()}
+        case .grantFriendsPermission:
+            GrantFriendsPermissionView{firstUseState.nextCase()}
+        case .end:
             Text("Let's go")
-                .font(AppearanceManager.startUpSuperghost)
+                .font(.largeTitle.bold())
                 .task{
-                    try? await Task.sleep(for: .seconds(4))
                     finished()
                 }
-                .tag(FirstUseState.end)
-                .tabItem {}
         }
     }
 

@@ -12,6 +12,5 @@ struct PreviewModifier: ViewModifier {
         content
             .preferredColorScheme(.dark)
             .fontDesign(.rounded)
-            .environmentObject(GameViewModel())
     }
 }

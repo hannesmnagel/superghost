@@ -10,8 +10,12 @@
 		38102BF52C9B115500DABDA8 /* GKStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BF42C9B115500DABDA8 /* GKStore.swift */; };
 		38102BF92C9B5F7100DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */; };
 		38102BFB2C9B5FA300DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */; };
+		3821458C2CA95F06002466CE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3821458B2CA95F06002466CE /* SignInView.swift */; };
+		382BE10F2CA6D0FE0058E3DE /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		388FB1A92CA9A75100D983D4 /* LaunchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FB1A82CA9A75000D983D4 /* LaunchingView.swift */; };
+		388FB1AB2CA9AE6400D983D4 /* GrantFriendsPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FB1AA2CA9AE6400D983D4 /* GrantFriendsPermissionView.swift */; };
 		38AF919C2C46D683003D100B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
 		38AF919D2C46D683003D100B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38AF91A02C46D683003D100B /* gamestatsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AF919F2C46D683003D100B /* gamestatsWidgetBundle.swift */; };
@@ -147,7 +151,10 @@
 		38102BF42C9B115500DABDA8 /* GKStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKStore.swift; sourceTree = "<group>"; };
 		38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstancePlaceholders.swift; sourceTree = "<group>"; };
 		38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstancePlaceholders.swift; sourceTree = "<group>"; };
+		3821458B2CA95F06002466CE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		383C66822C2DE9EE003A62B3 /* SUPER-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SUPER-2.png"; sourceTree = "<group>"; };
+		388FB1A82CA9A75000D983D4 /* LaunchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchingView.swift; sourceTree = "<group>"; };
+		388FB1AA2CA9AE6400D983D4 /* GrantFriendsPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrantFriendsPermissionView.swift; sourceTree = "<group>"; };
 		38A46C212C46C50F004950E3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		38A46C232C46C50F004950E3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		38AE75042C1E094500DFB6A7 /* superghost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superghost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,6 +237,7 @@
 				38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */,
 				38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */,
 				38D75F742C418629000C0DDF /* RevenueCat in Frameworks */,
+				382BE10F2CA6D0FE0058E3DE /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,7 +336,10 @@
 				38B9A88A2C916F8100D7D3F6 /* Confetti.swift */,
 				38B9A88B2C916F8100D7D3F6 /* ContentPlaceHolderView.swift */,
 				38B9A88C2C916F8100D7D3F6 /* ContentView.swift */,
+				388FB1A82CA9A75000D983D4 /* LaunchingView.swift */,
+				3821458B2CA95F06002466CE /* SignInView.swift */,
 				38B9A88D2C916F8100D7D3F6 /* FirstUseView.swift */,
+				388FB1AA2CA9AE6400D983D4 /* GrantFriendsPermissionView.swift */,
 				38B9A88E2C916F8100D7D3F6 /* Game.swift */,
 				38B9A88F2C916F8100D7D3F6 /* GameCenterView.swift */,
 				38B9A8902C916F8100D7D3F6 /* GameStat.swift */,
@@ -407,6 +418,7 @@
 			packageProductDependencies = (
 				38D75F732C418629000C0DDF /* RevenueCat */,
 				38D75F752C418629000C0DDF /* RevenueCatUI */,
+				382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */,
 			);
 			productName = superghost;
 			productReference = 38AE75042C1E094500DFB6A7 /* superghost.app */;
@@ -478,6 +490,7 @@
 			mainGroup = 38AE74FB2C1E094500DFB6A7;
 			packageReferences = (
 				38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */,
 			);
 			productRefGroup = 38AE75052C1E094500DFB6A7 /* Products */;
 			projectDirPath = "";
@@ -577,11 +590,13 @@
 				38B9A8CD2C916F8100D7D3F6 /* GameViewModel.swift in Sources */,
 				38B9A8CE2C916F8100D7D3F6 /* GKAccessPoint.swift in Sources */,
 				38B9A8CF2C916F8100D7D3F6 /* HomeView.swift in Sources */,
+				388FB1A92CA9A75100D983D4 /* LaunchingView.swift in Sources */,
 				38B9A8D02C916F8100D7D3F6 /* InstructionsView.swift in Sources */,
 				38B9A8D12C916F8100D7D3F6 /* LeaderboardView.swift in Sources */,
 				38B9A8D22C916F8100D7D3F6 /* LetterPicker.swift in Sources */,
 				5CFB36482CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */,
 				38B9A8D32C916F8100D7D3F6 /* LoadingView.swift in Sources */,
+				388FB1AB2CA9AE6400D983D4 /* GrantFriendsPermissionView.swift in Sources */,
 				38B9A8D42C916F8100D7D3F6 /* Logger.swift in Sources */,
 				38B9A8D52C916F8100D7D3F6 /* Messages.swift in Sources */,
 				38B9A8D62C916F8100D7D3F6 /* NotUpdating.swift in Sources */,
@@ -593,6 +608,7 @@
 				38B9A8DB2C916F8100D7D3F6 /* SharedMessages.swift in Sources */,
 				38B9A8DC2C916F8100D7D3F6 /* SharedTopViewController.swift in Sources */,
 				38B9A8DD2C916F8100D7D3F6 /* SingleLetterPicker.swift in Sources */,
+				3821458C2CA95F06002466CE /* SignInView.swift in Sources */,
 				38B9A8DE2C916F8100D7D3F6 /* SoundManager.swift in Sources */,
 				38B9A8DF2C916F8100D7D3F6 /* StatsView.swift in Sources */,
 				38B9A8E02C916F8100D7D3F6 /* superghostApp.swift in Sources */,
@@ -1050,6 +1066,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
 		38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
@@ -1061,6 +1085,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
 		38D75F732C418629000C0DDF /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;

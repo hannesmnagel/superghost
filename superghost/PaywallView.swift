@@ -81,17 +81,14 @@ struct PaywallView: View {
                 Button(action: dismiss) {
                     Image(systemName: "xmark")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                 .buttonBorderShape(.bcCircle)
                 .background(.black)
                 .clipShape(.circle)
             }
         }
         .onAppear{
-            Logger.remoteLog("show paywall")
-        }
-        .onDisappear{
-            Logger.remoteLog("dismissed paywall")
+            Logger.remoteLog(.paywallViewed)
         }
         .task {
             do{

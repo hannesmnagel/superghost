@@ -36,10 +36,7 @@ struct LeaderboardView: View {
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)
                 }
             }
-            if !GKLocalPlayer.local.isAuthenticated{
-                ContentPlaceHolderView("Sign In to Game Center to see the leaderboard", systemImage: "person.3")
-                    .frame(maxWidth: .infinity, alignment: .center)
-            } else if !hasUnlockedLeaderboard {
+            if !gkStore.hasUnlockedLeaderboard {
                 ContentPlaceHolderView("Earn 1,050 XP to see the leaderboard", systemImage: "chart.bar.fill")
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
@@ -56,17 +53,11 @@ struct LeaderboardView: View {
                         .contentShape(.rect)
                     }
                     .foregroundStyle(.accent)
-                    .buttonStyle(.bordered)
+                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                     .buttonBorderShape(.bcCapsule)
                     .padding()
                 }
             }
-        }
-        .task(id: viewModel.games){
-            while !GKLocalPlayer.local.isAuthenticated{
-                try? await Task.sleep(for: .seconds(2))
-            }
-            hasUnlockedLeaderboard = (try? await GKAchievement.loadAchievements().first(where: { $0.identifier == Achievement.leaderboardUnlock.rawValue })?.percentComplete) == 100
         }
         .sheet(item: $selectedScore) { entry in
             scoreDetail(for: entry)
@@ -93,7 +84,7 @@ struct LeaderboardView: View {
                                     GKAccessPoint.shared.trigger(player: entry.player)
                                 }
                             }
-                            .buttonStyle(.bordered)
+                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                             .buttonBorderShape(.capsule)
                         }
 
@@ -106,7 +97,7 @@ struct LeaderboardView: View {
                                 GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
                             }
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                         .buttonBorderShape(.bcCapsule)
                     } else {
                         Text("Rank: \(entry.rank)")
@@ -140,7 +131,7 @@ struct LeaderboardView: View {
                         } label: {
                             Image(systemName: "xmark")
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                         .buttonBorderShape(.bcCircle)
                     }
                 }
@@ -168,7 +159,7 @@ struct LeaderboardView: View {
                 }
                 .contentShape(.rect)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
             .matchedGeometryEffect(id: entry.player.gamePlayerID, in: namespace)
         }
     }

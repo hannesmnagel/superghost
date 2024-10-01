@@ -48,7 +48,7 @@ struct AlertView: View {
                     } label: {
                         Text("Quit")
                     }
-                    .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
+                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
                     Spacer()
                 }
             } else {
@@ -63,7 +63,7 @@ struct AlertView: View {
                         } label: {
                             Text("   Quit    ")
                         }
-                        .buttonStyle(AppearanceManager.QuitRematch(isPrimary: player2Id == "botPlayer"))
+                        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: player2Id != "botPlayer"))
                         .keyboardShortcut(.cancelAction)
                     }
                     if let rematch, player2Id != "botPlayer" {
@@ -73,7 +73,7 @@ struct AlertView: View {
                         } label: {
                             Text("Rematch")
                         }
-                        .buttonStyle(AppearanceManager.QuitRematch(isPrimary: true))
+                        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
                         .keyboardShortcut(.defaultAction)
                     }
 
@@ -83,7 +83,6 @@ struct AlertView: View {
             }
         }
         .padding()
-        .buttonStyle(.bordered)
     }
 }
 

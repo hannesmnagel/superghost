@@ -28,7 +28,7 @@ struct AchievementsView: View {
                                     .frame(width: 200)
                                     .contentShape(.rect)
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
                         }
                     }
                     if let unachievedAchievements = gkStore.unachievedAchievements {
@@ -40,7 +40,7 @@ struct AchievementsView: View {
                                     .frame(width: 200)
                                     .contentShape(.rect)
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
                         }
                     }
                 }
@@ -56,7 +56,7 @@ struct AchievementsView: View {
                 }
                 .contentShape(.rect)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
             .buttonBorderShape(.bcCapsule)
             .padding()
         }

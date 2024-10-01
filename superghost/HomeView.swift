@@ -97,7 +97,7 @@ struct HomeView: View {
                 if url.absoluteString.hasPrefix("https://hannesnagel.com/open/ghost/") {
                     let command = url.absoluteString.replacingOccurrences(of: "https://hannesnagel.com/open/ghost/", with: "")
                     Logger.userInteraction.info("universal link open command: \(command, privacy: .public)")
-                    Logger.remoteLog("universal link open command: \(command)")
+                    
                     if command == "instructions" {
                         isFirstUse = true
                     } else if command == "paywall" {
@@ -118,7 +118,6 @@ struct HomeView: View {
                         let gameId = url.lastPathComponent
                         
                         Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
-                        Logger.remoteLog("Opened link to gameid: \(gameId)")
                         
                         try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
                         gameStatSelection = nil
@@ -156,6 +155,7 @@ struct HomeView: View {
                 isGameViewPresented = true
             } label: {
                 Text("Start")
+                    .font(.largeTitle)
             }
             .disabled(viewModel.games.today.lost.count >= (isSuperghost ? 10 : 5))
             .popover(isPresented: $startPopoverPresented) {
@@ -174,15 +174,16 @@ struct HomeView: View {
                 }
             }
             .keyboardShortcut(.defaultAction)
-            .buttonStyle(AppearanceManager.StartGame())
+            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
 
             AsyncButton {
                 try await viewModel.hostGame()
                 isGameViewPresented = true
             } label: {
                 Text("Host a Game")
+                    .font(.largeTitle)
             }
-            .buttonStyle(AppearanceManager.HostGame())
+            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
 
 
                 if let showTrialEndsIn {

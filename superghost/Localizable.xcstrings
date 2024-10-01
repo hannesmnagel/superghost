@@ -43,7 +43,13 @@
     "Add it to your home screen" : {
 
     },
+    "Add your Friends" : {
+
+    },
     "All day long. You could win the leaderboard, you know?" : {
+
+    },
+    "Allow Ghost to access your Game Center friends list" : {
 
     },
     "Allow notifications" : {
@@ -55,16 +61,28 @@
     "An error occured" : {
 
     },
+    "and challenge them!" : {
+
+    },
+    "And Compete with other players" : {
+
+    },
     "And earn 50 XP" : {
 
     },
     "And earn an extra 50 XP" : {
 
     },
+    "and sync it to all your devices" : {
+
+    },
     "Auto-Renews. Cancel Anytime." : {
 
     },
     "Become a Superghost" : {
+
+    },
+    "But Why?!" : {
 
     },
     "Can you think of a word that %@ %@?" : {
@@ -84,6 +102,9 @@
 
     },
     "Challenge" : {
+
+    },
+    "Climb the leaderboard" : {
 
     },
     "Configuration" : {
@@ -132,9 +153,6 @@
 
     },
     "Get revenge!" : {
-
-    },
-    "Got it" : {
 
     },
     "Grant Permission" : {
@@ -194,6 +212,9 @@
     "No" : {
 
     },
+    "No need for a seperate Account!" : {
+
+    },
     "No products found" : {
 
     },
@@ -203,10 +224,19 @@
     "Play a new game" : {
 
     },
+    "Play with Friends" : {
+
+    },
     "Player left" : {
 
     },
+    "Privacy first." : {
+
+    },
     "Quit" : {
+
+    },
+    "Quit Game" : {
 
     },
     "Rank" : {
@@ -222,6 +252,9 @@
 
     },
     "Restore Purchases" : {
+
+    },
+    "Save your progress" : {
 
     },
     "Search for superghost" : {
@@ -245,6 +278,12 @@
     "Show Paywall" : {
 
     },
+    "Sign In" : {
+
+    },
+    "Signing you in..." : {
+
+    },
     "Special Event Notifications" : {
 
     },
@@ -258,9 +297,6 @@
 
     },
     "Subscribe to Superghost" : {
-
-    },
-    "Superghost" : {
 
     },
     "Superghost for %lld more days" : {
@@ -315,6 +351,9 @@
     "There is nothing available to purchase" : {
 
     },
+    "This data will NOT be uploaded to my server" : {
+
+    },
     "This is an example widget." : {
 
     },
@@ -333,10 +372,19 @@
     "Waiting for player response..." : {
 
     },
+    "Wanna play with some Friends?" : {
+
+    },
+    "Welcome to Ghost!" : {
+
+    },
     "What are you waiting for?" : {
 
     },
     "What word did you think of?" : {
+
+    },
+    "Why do I have to sign in?" : {
 
     },
     "Win Rate" : {
@@ -358,6 +406,12 @@
 
     },
     "You are rank %lld" : {
+
+    },
+    "You can compete with them for challenges or on the leaderboard" : {
+
+    },
+    "You can sign in to Game Center" : {
 
     },
     "You can't upgrade right now" : {

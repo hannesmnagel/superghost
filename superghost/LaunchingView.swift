@@ -6,10 +6,26 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct LaunchingView: View {
+    @CloudStorage("isFirstUse") var isFirstUse = true
+    @State private var isAuthenticated = GKLocalPlayer.local.isAuthenticated
+    @Environment(\.scenePhase) var scenePhase
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if isFirstUse {
+            FirstUseView()
+        } else if isAuthenticated{
+            ContentView()
+                .onChange(of: scenePhase) { old, new in
+                    if new == .active {
+                        isAuthenticated = GKLocalPlayer.local.isAuthenticated
+                    }
+                }
+        } else {
+            SignInView{isAuthenticated = true}
+        }
     }
 }
 
