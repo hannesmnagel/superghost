@@ -47,6 +47,7 @@ struct PaywallView: View {
                                         } label: {
                                             Text("Cancel")
                                         }
+                                        .keyboardShortcut(.cancelAction)
                                     }
                                     ToolbarItem(placement: .cancellationAction){
                                         AsyncButton{
@@ -85,6 +86,7 @@ struct PaywallView: View {
                 .buttonBorderShape(.bcCircle)
                 .background(.black)
                 .clipShape(.circle)
+                .keyboardShortcut(.cancelAction)
             }
         }
         .onAppear{

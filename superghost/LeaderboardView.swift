@@ -133,6 +133,7 @@ struct LeaderboardView: View {
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                         .buttonBorderShape(.bcCircle)
+                        .keyboardShortcut(.cancelAction)
                     }
                 }
             }

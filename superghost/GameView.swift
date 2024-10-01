@@ -133,6 +133,9 @@ struct GameView: View {
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                         .buttonBorderShape(.bcCircle)
                     }
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.bcCircle)
+                    .keyboardShortcut(.cancelAction)
                 }
             }
         }

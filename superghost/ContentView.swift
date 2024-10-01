@@ -63,6 +63,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.black)
                 .transition(.move(edge: .bottom))
                 

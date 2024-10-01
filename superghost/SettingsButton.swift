@@ -183,6 +183,7 @@ struct SettingsView: View {
                     }
                     .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
                     .buttonBorderShape(.bcCircle)
+                    .keyboardShortcut(.cancelAction)
                 }
             }
 #else
