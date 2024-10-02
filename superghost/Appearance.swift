@@ -96,11 +96,7 @@ class AppearanceManager {
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .updating($isPressed) { value, state, transaction in
-//                        let timeInterval = (-gestureStart.timeIntervalSinceNow)
-//                        if timeInterval > 0.1 {
-                            state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
-//                        }
-//                        gestureStart = .now
+                        state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
                     }
                     .onEnded{ value in
                         if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
