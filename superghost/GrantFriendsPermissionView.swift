@@ -21,6 +21,13 @@ struct GrantFriendsPermissionView: View {
                     .foregroundStyle(.black)
             }
         }
+        .task{
+            if (try? await GKLocalPlayer.local.loadFriendsAuthorizationStatus()) == .authorized{
+                grantedPermission = true
+                try? await Task.sleep(for: .seconds(0.5))
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
             Image(grantedPermission ? .ghostHearts : .ghostThinking)
                 .resizable()
@@ -85,11 +92,14 @@ struct GrantFriendsPermissionView: View {
                 if authStatus == .notDetermined {
                     let _ = try? await GKLocalPlayer.local.loadFriends()
                 }
+                grantedPermission = true
+                try? await Task.sleep(for: .seconds(1))
                 onFinish()
             } label: {
                 Text("Continue")
             }
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .padding(.horizontal)
             Button("But Why?!") {
                 withAnimation{
                     showReasons.toggle()
