@@ -16,7 +16,20 @@
     " XP" : {
 
     },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%lld." : {
+
+    },
+    "+ " : {
 
     },
     "4x XP Boost!!" : {
@@ -46,6 +59,9 @@
     "Add your Friends" : {
 
     },
+    "Advanced Gameplay" : {
+
+    },
     "All day long. You could win the leaderboard, you know?" : {
 
     },
@@ -56,9 +72,6 @@
 
     },
     "Allow notifications now to earn 50XP" : {
-
-    },
-    "An error occured" : {
 
     },
     "and challenge them!" : {
@@ -74,9 +87,6 @@
 
     },
     "and sync it to all your devices" : {
-
-    },
-    "Auto-Renews. Cancel Anytime." : {
 
     },
     "Become a Superghost" : {
@@ -122,6 +132,9 @@
     "Couldn't get definitions!" : {
 
     },
+    "Customize App Icon" : {
+
+    },
     "Display Your current win rate" : {
 
     },
@@ -140,14 +153,21 @@
     "Enable Notifications" : {
 
     },
-    "For only %@ per Month. " : {
-
-    },
     "Game Center" : {
 
     },
     "Game started" : {
 
+    },
+    "Get Access to Superghost for %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Get Access to Superghost for %1$@ %2$@"
+          }
+        }
+      }
     },
     "Get Double XP for each Game" : {
 
@@ -200,7 +220,7 @@
     "Logs" : {
 
     },
-    "Manage subscription" : {
+    "Loose up to 10 times a day" : {
 
     },
     "Maybe later" : {
@@ -213,9 +233,6 @@
 
     },
     "No need for a seperate Account!" : {
-
-    },
-    "No products found" : {
 
     },
     "Notifications" : {
@@ -249,9 +266,6 @@
 
     },
     "Rematch" : {
-
-    },
-    "Restore Purchases" : {
 
     },
     "Save your progress" : {
@@ -348,9 +362,6 @@
     "There is no such word" : {
 
     },
-    "There is nothing available to purchase" : {
-
-    },
     "This data will NOT be uploaded to my server" : {
 
     },
@@ -358,6 +369,9 @@
 
     },
     "This is not a word" : {
+
+    },
+    "View All Plans" : {
 
     },
     "View their profile" : {
@@ -412,9 +426,6 @@
 
     },
     "You can sign in to Game Center" : {
-
-    },
-    "You can't upgrade right now" : {
 
     },
     "You lost against a friend on %@" : {

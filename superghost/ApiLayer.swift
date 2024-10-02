@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import RevenueCat
+import StoreKit
 
 
 private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> String {

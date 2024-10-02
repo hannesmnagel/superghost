@@ -6,17 +6,12 @@
 //
 
 import SwiftUI
-import RevenueCat
 import BackgroundTasks
 import UserNotifications
 import GameKit
 
 @main
 struct superghostApp: App {
-    init(){
-        Purchases.logLevel = .error
-        try! Purchases.configure(withAPIKey: String(contentsOf: Bundle.main.resourceURL!.appending(path: "revenuecatkey.txt")).trimmingCharacters(in: .whitespacesAndNewlines))
-    }
 
     @CloudStorage("isSuperghost") private var isSuperghost = false
     @CloudStorage("rank") private var rank = -1

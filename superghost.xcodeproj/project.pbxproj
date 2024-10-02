@@ -11,7 +11,6 @@
 		38102BF92C9B5F7100DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BF82C9B5F7100DABDA8 /* InstancePlaceholders.swift */; };
 		38102BFB2C9B5FA300DABDA8 /* InstancePlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38102BFA2C9B5FA300DABDA8 /* InstancePlaceholders.swift */; };
 		3821458C2CA95F06002466CE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3821458B2CA95F06002466CE /* SignInView.swift */; };
-		382BE10F2CA6D0FE0058E3DE /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		388FB1A92CA9A75100D983D4 /* LaunchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FB1A82CA9A75000D983D4 /* LaunchingView.swift */; };
@@ -29,8 +28,6 @@
 		38B9A8B32C916F8100D7D3F6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A87E2C916F8100D7D3F6 /* Preview Assets.xcassets */; };
 		38B9A8B42C916F8100D7D3F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8842C916F8100D7D3F6 /* Assets.xcassets */; };
 		38B9A8B62C916F8100D7D3F6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A89A2C916F8100D7D3F6 /* Localizable.xcstrings */; };
-		38B9A8B72C916F8100D7D3F6 /* revenuecatkey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8A12C916F8100D7D3F6 /* revenuecatkey.txt */; };
-		38B9A8B82C916F8100D7D3F6 /* superghosty.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8AA2C916F8100D7D3F6 /* superghosty.storekit */; };
 		38B9A8B92C916F8100D7D3F6 /* waitingGhost.mov in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8AE2C916F8100D7D3F6 /* waitingGhost.mov */; };
 		38B9A8BA2C916F8100D7D3F6 /* won.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8B02C916F8100D7D3F6 /* won.ahap */; };
 		38B9A8BB2C916F8100D7D3F6 /* won.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 38B9A8B12C916F8100D7D3F6 /* won.mp4 */; };
@@ -95,8 +92,6 @@
 		38B9A8F62C916F8100D7D3F6 /* SharedMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B9A8A32C916F8100D7D3F6 /* SharedMessages.swift */; };
 		38B9A8F72C916F8100D7D3F6 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B9A8852C916F8100D7D3F6 /* AsyncButton.swift */; };
 		38B9A8F82C916F8100D7D3F6 /* GameStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B9A8902C916F8100D7D3F6 /* GameStat.swift */; };
-		38D75F742C418629000C0DDF /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F732C418629000C0DDF /* RevenueCat */; };
-		38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 38D75F752C418629000C0DDF /* RevenueCatUI */; };
 		38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7C2C418643000C0DDF /* StoreKit.framework */; };
 		5C54C14A2C98C285004942FD /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C54C1492C98C285004942FD /* EventView.swift */; };
 		5CFB36482CA29BCE003CFAC5 /* ScoreChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB36472CA29BCE003CFAC5 /* ScoreChangeView.swift */; };
@@ -205,7 +200,6 @@
 		38B9A89E2C916F8100D7D3F6 /* onChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = onChange.swift; sourceTree = "<group>"; };
 		38B9A89F2C916F8100D7D3F6 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		38B9A8A02C916F8100D7D3F6 /* PreviewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewModifier.swift; sourceTree = "<group>"; };
-		38B9A8A12C916F8100D7D3F6 /* revenuecatkey.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = revenuecatkey.txt; sourceTree = "<group>"; };
 		38B9A8A22C916F8100D7D3F6 /* SettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
 		38B9A8A32C916F8100D7D3F6 /* SharedMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMessages.swift; sourceTree = "<group>"; };
 		38B9A8A42C916F8100D7D3F6 /* SharedTopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTopViewController.swift; sourceTree = "<group>"; };
@@ -214,7 +208,6 @@
 		38B9A8A72C916F8100D7D3F6 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		38B9A8A82C916F8100D7D3F6 /* superghost.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = superghost.entitlements; sourceTree = "<group>"; };
 		38B9A8A92C916F8100D7D3F6 /* superghostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = superghostApp.swift; sourceTree = "<group>"; };
-		38B9A8AA2C916F8100D7D3F6 /* superghosty.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = superghosty.storekit; sourceTree = "<group>"; };
 		38B9A8AB2C916F8100D7D3F6 /* TopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
 		38B9A8AC2C916F8100D7D3F6 /* TrialEndsInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialEndsInView.swift; sourceTree = "<group>"; };
 		38B9A8AD2C916F8100D7D3F6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -235,9 +228,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */,
-				38D75F762C418629000C0DDF /* RevenueCatUI in Frameworks */,
-				38D75F742C418629000C0DDF /* RevenueCat in Frameworks */,
-				382BE10F2CA6D0FE0058E3DE /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +350,6 @@
 				38B9A89E2C916F8100D7D3F6 /* onChange.swift */,
 				38B9A89F2C916F8100D7D3F6 /* PaywallView.swift */,
 				38B9A8A02C916F8100D7D3F6 /* PreviewModifier.swift */,
-				38B9A8A12C916F8100D7D3F6 /* revenuecatkey.txt */,
 				38B9A8A22C916F8100D7D3F6 /* SettingsButton.swift */,
 				38B9A8A32C916F8100D7D3F6 /* SharedMessages.swift */,
 				38B9A8A42C916F8100D7D3F6 /* SharedTopViewController.swift */,
@@ -369,7 +358,6 @@
 				38B9A8A72C916F8100D7D3F6 /* StatsView.swift */,
 				38B9A8A82C916F8100D7D3F6 /* superghost.entitlements */,
 				38B9A8A92C916F8100D7D3F6 /* superghostApp.swift */,
-				38B9A8AA2C916F8100D7D3F6 /* superghosty.storekit */,
 				38B9A8AB2C916F8100D7D3F6 /* TopViewController.swift */,
 				38B9A8AC2C916F8100D7D3F6 /* TrialEndsInView.swift */,
 				38B9A8AD2C916F8100D7D3F6 /* User.swift */,
@@ -416,9 +404,6 @@
 			);
 			name = superghost;
 			packageProductDependencies = (
-				38D75F732C418629000C0DDF /* RevenueCat */,
-				38D75F752C418629000C0DDF /* RevenueCatUI */,
-				382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */,
 			);
 			productName = superghost;
 			productReference = 38AE75042C1E094500DFB6A7 /* superghost.app */;
@@ -489,8 +474,6 @@
 			);
 			mainGroup = 38AE74FB2C1E094500DFB6A7;
 			packageReferences = (
-				38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */,
-				382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */,
 			);
 			productRefGroup = 38AE75052C1E094500DFB6A7 /* Products */;
 			projectDirPath = "";
@@ -511,8 +494,6 @@
 				38B9A8B32C916F8100D7D3F6 /* Preview Assets.xcassets in Resources */,
 				38B9A8B42C916F8100D7D3F6 /* Assets.xcassets in Resources */,
 				38B9A8B62C916F8100D7D3F6 /* Localizable.xcstrings in Resources */,
-				38B9A8B72C916F8100D7D3F6 /* revenuecatkey.txt in Resources */,
-				38B9A8B82C916F8100D7D3F6 /* superghosty.storekit in Resources */,
 				38B9A8B92C916F8100D7D3F6 /* waitingGhost.mov in Resources */,
 				38B9A8BA2C916F8100D7D3F6 /* won.ahap in Resources */,
 				38B9A8BB2C916F8100D7D3F6 /* won.mp4 in Resources */,
@@ -1064,43 +1045,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.0;
-			};
-		};
-		38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		382BE10E2CA6D0FE0058E3DE /* TelemetryDeck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 382BE10D2CA6D0FE0058E3DE /* XCRemoteSwiftPackageReference "SwiftSDK" */;
-			productName = TelemetryDeck;
-		};
-		38D75F732C418629000C0DDF /* RevenueCat */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCat;
-		};
-		38D75F752C418629000C0DDF /* RevenueCatUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 38D75F722C418629000C0DDF /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCatUI;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 38AE74FC2C1E094500DFB6A7 /* Project object */;
 }

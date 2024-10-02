@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import RevenueCat
 import GameKit
+import StoreKit
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
@@ -109,12 +109,19 @@ struct ContentView: View {
     }
 
     nonisolated func fetchSubscription() async throws {
-        let info = try await Purchases.shared.customerInfo()
+        let hasSubscribed = await {
+            for await entitlement in Transaction.currentEntitlements {
+                if let payLoadValue = try? entitlement.payloadValue{
+                    return true
+                }
+            }
+            return false
+        }()
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
         let wasSuperghost = await isSuperghost
         await MainActor.run{
-            isSuperghost = (info.entitlements["superghost"]?.isActive ?? false) || timeSinceTrialEnd < 0
+            isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
         }
 
 #if os(iOS)
@@ -126,7 +133,7 @@ struct ContentView: View {
 
 
         //is in trial:
-        if !(info.entitlements["superghost"]?.isActive ?? false) && timeSinceTrialEnd < 0 {
+        if !hasSubscribed && timeSinceTrialEnd < 0 {
             await MainActor.run{
                 showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
             }

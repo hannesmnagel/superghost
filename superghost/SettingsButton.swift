@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RevenueCat
 import UserNotifications
 import OSLog
 
@@ -47,7 +46,6 @@ import GameKit
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: GameViewModel
-    @State private var managementURL: URL?
     @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
     @CloudStorage("specialEventNotifications") var specialEventNotifications = true
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
@@ -80,7 +78,6 @@ struct SettingsView: View {
                             UserDefaults.standard.set(true, forKey: "showingPaywall")
                         }
 #endif
-                        if let managementURL{Link("Manage subscription", destination: managementURL)}
                     }
                 }
 #if os(iOS)
@@ -154,6 +151,7 @@ struct SettingsView: View {
                                     @unknown default:
                                         return
                                     }
+                                    notificationRefresh.toggle()
                                 }
                             }
                             .task{
@@ -169,9 +167,6 @@ struct SettingsView: View {
             }
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .task{
-                managementURL = try? await Purchases.shared.customerInfo().managementURL
-            }
             .navigationTitle("Settings")
 #if !os(macOS)
             .toolbar{

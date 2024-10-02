@@ -9,7 +9,7 @@ import SwiftUI
 import GameKit
 
 struct LaunchingView: View {
-    @CloudStorage("isFirstUse") var isFirstUse = true
+    @CloudStorage("showOnBoarding") var isFirstUse = true
     @State private var isAuthenticated = GKLocalPlayer.local.isAuthenticated
     @Environment(\.scenePhase) var scenePhase
 

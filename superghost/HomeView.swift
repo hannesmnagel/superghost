@@ -15,7 +15,7 @@ struct HomeView: View {
     @Binding var isGameViewPresented: Bool
     @CloudStorage("wordToday") private var wordToday = "-----"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
-    @CloudStorage("isFirstUse") var isFirstUse = true
+    @CloudStorage("showOnBoarding") var isFirstUse = true
 
     var body: some View {
         HStack {

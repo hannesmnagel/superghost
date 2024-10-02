@@ -6,75 +6,96 @@
 //
 
 import SwiftUI
-import RevenueCat
-import RevenueCatUI
+import StoreKit
+
 
 struct PaywallView: View {
     let dismiss: ()->Void
-    @State private var products : Result<Offerings,(any Error)>? = nil
-
+    
+    @State private var viewAllPlans = false
+    @State private var disabled = false
+    @State private var selectedProduct : Product? = nil
+    @State private var products = [Product]()
+    
+    
     var body: some View {
         VStack{
-            if let products{
-                switch products {
-                case .success(let offering):
-                    if let offering = offering.current {
-#if !os(macOS)
-                        RevenueCatUI.PaywallView(offering: offering)
-                            .onRestoreCompleted{ info in
-                                if (info.entitlements["superghost"]?.isActive ?? false) {
-                                    dismiss()
-                                }
-                            }
-                            .onPurchaseCompleted{ info in
-                                if (info.entitlements["superghost"]?.isActive ?? false) {
-                                    dismiss()
-                                }
-                            }
-#else
-                        if let package = offering.availablePackages.first {
-                            Spacer()
-                            Text("Become a Superghost")
-                                .font(.largeTitle)
-                            Spacer()
-                            Text("For only \(package.storeProduct.localizedPriceString) per Month. ")
-                            Text("Auto-Renews. Cancel Anytime.")
-                            Spacer()
-                                .toolbar{
-                                    ToolbarItem(placement: .destructiveAction){
-                                        AsyncButton{
-                                            dismiss()
-                                        } label: {
-                                            Text("Cancel")
-                                        }
-                                        .keyboardShortcut(.cancelAction)
-                                    }
-                                    ToolbarItem(placement: .cancellationAction){
-                                        AsyncButton{
-                                            let _ = try await Purchases.shared.restorePurchases()
-                                            dismiss()
-                                        } label: {
-                                            Text("Restore Purchases")
-                                        }
-                                    }
-                                    ToolbarItem(placement: .confirmationAction){
-                                        AsyncButton{
-                                            let _ = try await Purchases.shared.purchase(package: package)
-                                            dismiss()
-                                        } label: {
-                                            Text("Continue")
-                                        }
-                                        .buttonStyle(.borderedProminent)
-                                    }
-                                }
+            
+            VStack(spacing: 0){
+                Image(.ghostStars)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(.rect(bottomLeadingRadius: 20, bottomTrailingRadius: 20))
+                    .ignoresSafeArea(edges: .top)
+                    .layoutPriority(1)
+                    .padding(.bottom, -50)
+                Text("Become a Superghost")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.accent)
+                Spacer()
+                if viewAllPlans {
+                    ForEach(products) { product in
+                        Button{
+                            selectedProduct = product
+                        } label: {
+                            Text("\(product.displayPrice) \(subscriptionDuration(for: product))")
+                                .foregroundStyle(selectedProduct == product ? .accent : .secondary)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 25)
+                                        .stroke(selectedProduct == product ? .accent : .secondary)
+                                )
+                                .padding(.horizontal)
+                                .padding(.vertical, 5)
                         }
-#endif
-                    } else {
-                        ContentPlaceHolderView("There is nothing available to purchase", systemImage: "questionmark.folder", description: "No products found")
                     }
-                case .failure(_):
-                    ContentPlaceHolderView("You can't upgrade right now", systemImage: "network.slash", description: "An error occured")
+                    
+                } else {
+                    VStack(alignment: .leading){
+                        Text("+ ").foregroundColor(.accent) + Text("Loose up to 10 times a day")
+                        Text("+ ").foregroundColor(.accent) + Text("Advanced Gameplay")
+                        Text("+ ").foregroundColor(.accent) + Text("Customize App Icon")
+                    }
                 }
+                Spacer()
+                VStack{
+                    if let selectedProduct, !viewAllPlans {
+                        Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
+                            .font(.footnote)
+                    }
+                    Button("Continue"){
+                        Task{
+                            disabled = true
+                            defer{disabled = false}
+                            
+                            switch try await selectedProduct?.purchase(){
+                            case .success(_):
+                                dismiss()
+                            default: return
+                            }
+                        }
+                    }
+                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                    .bold()
+                    .disabled(disabled || selectedProduct == nil)
+                    
+                    if let selectedProduct, viewAllPlans {
+                        Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
+                            .font(.footnote)
+                    } else if !viewAllPlans {
+                        Button("View All Plans"){
+                            viewAllPlans = true
+                        }
+                        .disabled(disabled)
+                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+                    }
+                }
+            }
+            .font(.title2)
+            .task {
+                selectedProduct = try? await Product.products(for: ["monthly.superghost"]).first
+                products = (try? await Product.products(for: ["monthly.superghost", "annual.superghost","onetime.superghost"])) ?? []
             }
         }
         .toolbar {
@@ -92,12 +113,23 @@ struct PaywallView: View {
         .onAppear{
             Logger.remoteLog(.paywallViewed)
         }
-        .task {
-            do{
-                products = try await .success(Purchases.shared.offerings())
-            } catch{
-                products = .failure(error)
+    }
+    func subscriptionDuration(for product: Product) -> String {
+        if let subscriptionPeriod = product.subscription?.subscriptionPeriod {
+            switch subscriptionPeriod.unit {
+            case .day:
+                return "Daily"
+            case .week:
+                return "Weekly"
+            case .month:
+                return "Monthly"
+            case .year:
+                return "Annually"
+            @unknown default:
+                return "Unknown duration"
             }
+        } else {
+            return "Lifetime"
         }
     }
 }

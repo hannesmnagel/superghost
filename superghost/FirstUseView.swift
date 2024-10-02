@@ -9,7 +9,7 @@ import SwiftUI
 import GameKit
 
 struct FirstUseView: View {
-    @CloudStorage("isFirstUse") var isFirstUse = true
+    @CloudStorage("showOnBoarding") var isFirstUse = true
     @State var firstUseState = FirstUseState.tapToContinue
 
     enum FirstUseState: CaseIterable{
