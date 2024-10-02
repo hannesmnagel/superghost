@@ -11,7 +11,7 @@ struct HomeView: View {
     let isSuperghost: Bool
     let showTrialEndsIn: Int?
     @State private var gameStatSelection: GameStat?
-    @StateObject var viewModel: GameViewModel = .init()
+    @EnvironmentObject var viewModel: GameViewModel
     @Binding var isGameViewPresented: Bool
     @CloudStorage("wordToday") private var wordToday = "-----"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
@@ -149,7 +149,6 @@ struct HomeView: View {
                 }
             }
 #endif
-            .environmentObject(viewModel)
     }
     @MainActor @ViewBuilder
     var header: some View {
