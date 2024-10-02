@@ -20,14 +20,22 @@ struct SignInView: View {
                 pleaseSignInView
                     .foregroundStyle(.black)
             } else {
-                ProgressView("Signing you in...", value: progress)
+                ProgressView("    Signing you in...", value: progress)//
                     .task {
+                        if GKLocalPlayer.local.isAuthenticated {
+                            try? await GKStore.shared.loadInitialData()
+                            onFinish()
+                        }
+                        
                         GKLocalPlayer.local.authenticateHandler = {vc, error in
                             if error != nil {
                                 manualSignInRequired = true
                             } else {
                                 progress = 1
-                                onFinish()
+                                Task{
+                                    try await GKStore.shared.loadInitialData()
+                                    onFinish()
+                                }
                             }
                         }
                     }
@@ -36,7 +44,6 @@ struct SignInView: View {
                             try? await Task.sleep(for: .seconds(0.2))
                             progress = Double(i)/7
                         }
-                        if GKLocalPlayer.local.isAuthenticated {onFinish()}
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
@@ -50,9 +57,6 @@ struct SignInView: View {
             )
             .animation(.smooth, value: manualSignInRequired)
             .animation(.smooth, value: progress)
-            .onDisappear{
-                Task{try await GKStore.shared.loadInitialData()}
-            }
     }
     @ViewBuilder
     var pleaseSignInView: some View {
@@ -62,7 +66,8 @@ struct SignInView: View {
         Text("You can sign in to Game Center")
         Spacer()
         if showReasons {
-            VStack(spacing: 30){
+            VStack{
+                Spacer()
                 Group{
                     HStack{
                         Image(systemName: "person.3")
@@ -105,12 +110,13 @@ struct SignInView: View {
             }
             .frame(maxWidth: .infinity)
             .transition(.scale)
-            Spacer()
+            Spacer(minLength: 40)
         }
         Button("Sign In") {
                 GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
         }
         .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .padding(.horizontal)
         Button("Why do I have to sign in?") {
             withAnimation{
                 showReasons.toggle()
