@@ -108,7 +108,7 @@ class AppearanceManager {
                         }
                     }
             )
-#if !os(macOS)
+#if os(iOS)
             .onChange(of: isPressed) { oldValue, newValue in
                 if newValue {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
@@ -127,14 +127,14 @@ class AppearanceManager {
 
         func makeBody(configuration: Configuration) -> some View {
             Button{
-#if os(macOS)
+#if !os(iOS)
                 configuration.trigger()
 #endif
             } label: {
                 configuration.label
             }
             .buttonStyle(buttonStyle)
-#if !os(macOS)
+#if os(iOS)
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .updating($isPressed) { value, state, transaction in
