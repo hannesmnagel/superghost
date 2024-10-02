@@ -36,6 +36,7 @@ struct SignInView: View {
                             try? await Task.sleep(for: .seconds(0.2))
                             progress = Double(i)/7
                         }
+                        if GKLocalPlayer.local.isAuthenticated {onFinish()}
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
