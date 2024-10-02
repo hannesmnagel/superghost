@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "    Signing you in..." : {
+
+    },
     "   Quit    " : {
 
     },
@@ -25,6 +28,9 @@
           }
         }
       }
+    },
+    "%@ Losses left today" : {
+
     },
     "%lld." : {
 
@@ -293,9 +299,6 @@
 
     },
     "Sign In" : {
-
-    },
-    "Signing you in..." : {
 
     },
     "Special Event Notifications" : {

@@ -52,7 +52,10 @@ struct StatsView: View {
                 .contentShape(.rect)
             }
             .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
-            .listRowBackground(game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
+            .listRowBackground(
+                (game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
+                .background(Color.black.opacity(0.9))
+            )
         }
         if viewModel.games.count > listClosed {
             Button{

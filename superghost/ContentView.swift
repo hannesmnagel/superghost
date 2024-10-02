@@ -111,7 +111,7 @@ struct ContentView: View {
     nonisolated func fetchSubscription() async throws {
         let hasSubscribed = await {
             for await entitlement in Transaction.currentEntitlements {
-                if let payLoadValue = try? entitlement.payloadValue{
+                if let _ = try? entitlement.payloadValue{
                     return true
                 }
             }

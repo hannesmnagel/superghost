@@ -11,7 +11,7 @@ struct HomeView: View {
     let isSuperghost: Bool
     let showTrialEndsIn: Int?
     @State private var gameStatSelection: GameStat?
-    @EnvironmentObject var viewModel: GameViewModel
+    @StateObject var viewModel: GameViewModel = .init()
     @Binding var isGameViewPresented: Bool
     @CloudStorage("wordToday") private var wordToday = "-----"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
@@ -30,6 +30,7 @@ struct HomeView: View {
             VStack {
                 ScrollViewReader{scroll in
                     List{
+                        Spacer(minLength: 500).frame(height: 500).listRowBackground(Color.clear)
                         Section{
                             header
                                 .onAppear{
@@ -43,14 +44,17 @@ struct HomeView: View {
                         Section{
                             {
                                 var resultingText = Text("")
-                                for letter in wordToday {
-                                    resultingText = resultingText + ((letter == "-") ? Text(String(letter)).foregroundColor(.secondary) : Text(String(letter)).foregroundColor(.accent))
+                                for (index, letter) in wordToday.enumerated() {
+                                    resultingText = resultingText + ((letter == "-") ? Text(String(Array("SUPERGHOST")[index])).foregroundColor(.secondary.opacity(0.5)) : Text(String(letter)).foregroundColor(.accent))
                                 }
                                 return resultingText
                             }()
                                 .font(.largeTitle.bold())
                                 .textCase(.uppercase)
                                 .frame(maxWidth: .infinity)
+                            Text("\(wordToday.count(where: {$0 == "-"}), format: .number) losses left today")
+                                .font(.footnote)
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .id("wordtoday")
                         EventView()
@@ -71,6 +75,8 @@ struct HomeView: View {
                                 .frame(maxWidth: .infinity)
                         }
                     }
+                    .background(WaitingGhost())
+                    .scrollContentBackground(.hidden)
                 }
 #if os(macOS)
                 .overlay{
@@ -143,14 +149,12 @@ struct HomeView: View {
                 }
             }
 #endif
+            .environmentObject(viewModel)
     }
     @MainActor @ViewBuilder
     var header: some View {
 
         VStack{
-            WaitingGhost()
-                .frame(maxHeight: 300)
-
             AsyncButton {
                 try await viewModel.getTheGame(isSuperghost: isSuperghost)
                 isGameViewPresented = true
