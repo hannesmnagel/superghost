@@ -100,11 +100,12 @@ struct superghostApp: App {
 
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
-                    if await doubleXP15minNotifications && .random() && .random() && .random(),
+                    let xpBoostUntil = await xpBoostUntil
+                    if await doubleXP15minNotifications && .random() && (!Calendar.current.isDateInToday(xpBoostUntil) || .random()),
                     let in15mins = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) {
                         sendPushNotification(with: "Play NOW!", description: "It's double XP. But just for 15 minutes!")
                         await MainActor.run{
-                            xpBoostUntil = in15mins
+                            self.xpBoostUntil = in15mins
                         }
                         Logger.appRefresh.log("Sent push notification, because it's double XP time!")
                     }
@@ -131,8 +132,8 @@ struct superghostApp: App {
         //start the backgroundtask with: e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.nagel.superghost.lbnotifications"]
 
         let lbnotificationRequest = BGAppRefreshTaskRequest(identifier: "com.nagel.superghost.lbnotifications")
-        // Fetch no earlier than 30 minutes from now.
-        lbnotificationRequest.earliestBeginDate = Date(timeIntervalSinceNow: 30 * 60)
+        // Fetch no earlier than 10 minutes from now.
+        lbnotificationRequest.earliestBeginDate = Date(timeIntervalSinceNow: 10 * 60)
 
         do {
             try BGTaskScheduler.shared.submit(lbnotificationRequest)

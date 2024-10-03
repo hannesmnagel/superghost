@@ -45,7 +45,6 @@ struct SettingsButton: View {
 import GameKit
 
 struct SettingsView: View {
-    @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
     @CloudStorage("specialEventNotifications") var specialEventNotifications = true
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
@@ -190,7 +189,6 @@ struct SettingsView: View {
 #if os(iOS)
 struct AppIconPickerView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel: GameViewModel
 
     let isSuperghost: Bool
     let icons = AppearanceManager.AppIcon.allCases

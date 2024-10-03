@@ -25,10 +25,8 @@ extension Date: Swift.RawRepresentable{
 }
 
 struct ContentView: View {
-    @StateObject var viewModel = GameViewModel()
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @State var isGameViewPresented = false
-    @State private var showTrialEndsIn : Int?
     @CloudStorage("isSuperghost") private var isSuperghost = false
 
     @CloudStorage("winRate") private var winningRate = 0.0
@@ -57,7 +55,7 @@ struct ContentView: View {
                     Logger.userInteraction.info("Dismissed Paywall")
                     Task{
                         do{
-                            try await fetchSubscription()
+                            try await GKStore.shared.fetchSubscription()
                         } catch {
                             Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
                         }
@@ -71,7 +69,7 @@ struct ContentView: View {
                 SettingsView(isSuperghost: isSuperghost){settings = false}
                     .transition(.move(edge: .bottom))
             } else {
-                HomeView(isSuperghost: isSuperghost, showTrialEndsIn: showTrialEndsIn, isGameViewPresented: $isGameViewPresented)
+                HomeView(isSuperghost: isSuperghost, isGameViewPresented: $isGameViewPresented)
                     .transition(.move(edge: .top))
             }
         }
@@ -79,16 +77,9 @@ struct ContentView: View {
         .preferredColorScheme(.dark)
         .fontDesign(.rounded)
         .background(Color.black, ignoresSafeAreaEdges: .all)
-
-        .task(id: viewModel.games) {
-            await refreshScore()
-            if !viewModel.games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
-                _ = try? await UNUserNotificationCenter.current().requestAuthorization()
-            }
-        }
         .task(id: isSuperghost) {
             do{
-                try await fetchSubscription()
+                try await GKStore.shared.fetchSubscription()
             } catch {
                 Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
             }
@@ -104,46 +95,6 @@ struct ContentView: View {
             Task{
                 await promptUserForAction()
             }
-        }
-        .environmentObject(viewModel)
-    }
-
-    nonisolated func fetchSubscription() async throws {
-        let hasSubscribed = await {
-            for await entitlement in Transaction.currentEntitlements {
-                if let _ = try? entitlement.payloadValue{
-                    return true
-                }
-            }
-            return false
-        }()
-        let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
-        let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-        let wasSuperghost = await isSuperghost
-        await MainActor.run{
-            isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
-        }
-
-#if os(iOS)
-        if await !isSuperghost && AppearanceManager.shared.appIcon != .standard{
-            try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
-            AppearanceManager.shared.appIcon = .standard
-        }
-#endif
-
-
-        //is in trial:
-        if !hasSubscribed && timeSinceTrialEnd < 0 {
-            await MainActor.run{
-                showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
-            }
-        } else {
-            await MainActor.run{
-                showTrialEndsIn = nil
-            }
-        }
-        if await isSuperghost != wasSuperghost {
-            await refreshScore()
         }
     }
     nonisolated func promptUserForAction() async {
@@ -198,15 +149,15 @@ struct ContentView: View {
     }
 
     nonisolated func refreshScore() async {
-        if await viewModel.games.isEmpty{
+        if await GKStore.shared.games.isEmpty{
             try? await Task.sleep(for: .seconds(2))
         }
 
         await MainActor.run{
-            winningRate = viewModel.games.winningRate
-            winningStreak = viewModel.games.winningStreak
+            winningRate = GKStore.shared.games.winningRate
+            winningStreak = GKStore.shared.games.winningStreak
         }
-        let gamesToday = await viewModel.games.today
+        let gamesToday = await GKStore.shared.games.today
         await MainActor.run{
             winsToday = gamesToday.won.count
         }

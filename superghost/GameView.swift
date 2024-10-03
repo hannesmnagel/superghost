@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameView: View {
-    @EnvironmentObject var viewModel : GameViewModel
+    @ObservedObject var viewModel = GameViewModel.shared
     @Binding var isPresented: Bool
     let isSuperghost: Bool
     let appearingDate = Date()
@@ -58,7 +58,7 @@ struct GameView: View {
                             if game.blockMoveForPlayerId != viewModel.currentUser.id {
                                 ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
                                     .transition(.scale(scale: 0.1, anchor: .bottom))
-                                if viewModel.games.isEmpty{
+                                if GKStore.shared.games.isEmpty{
                                     if let word = game.moves.last?.word,
                                        !word.isEmpty {
                                         Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(word)?")
@@ -71,7 +71,7 @@ struct GameView: View {
                                 ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
                                     .transition(.scale(scale: 0.1, anchor: .bottom))
                             }
-                            LetterPicker(isSuperghost: isSuperghost)
+                            LetterPicker(isSuperghost: isSuperghost, word: viewModel.game?.moves.last?.word ?? "")
                             if viewModel.game?.moves.last?.word.count ?? 0 > 1 {
                                 AsyncButton{
                                     viewModel.game?.challengingUserId = viewModel.currentUser.id
@@ -147,13 +147,7 @@ struct GameView: View {
         .modifier(PreviewModifier())
 }
 #Preview{
-    let vm = {
-        let result = GameViewModel()
-        result.game = Game(id: "", player1Id: "", player2Id: "", blockMoveForPlayerId: "", rematchPlayerId: [], moves: [Move(isPlayer1: true, word: "WORD")])
-        return result
-    }()
-    return LetterPicker(isSuperghost: true)
-        .environmentObject(vm)
+    LetterPicker(isSuperghost: true, word: "word")
         .modifier(PreviewModifier())
 }
 
@@ -196,7 +190,6 @@ struct Definition: Codable, Hashable {
 }
 
 struct SayTheWordButton: View {
-    @EnvironmentObject var viewModel: GameViewModel
     let isSuperghost: Bool
     @State private var isExpanded = false
     @State private var word = ""
@@ -207,11 +200,11 @@ struct SayTheWordButton: View {
         AsyncButton {
             if isExpanded {
                 if try await isWord(word) && (
-                    (viewModel.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(viewModel.game?.moves.last?.word ?? "") : word.uppercased().hasPrefix((viewModel.game?.moves.last?.word ?? "").uppercased())
+                    (GameViewModel.shared.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(GameViewModel.shared.game?.moves.last?.word ?? "") : word.uppercased().hasPrefix((GameViewModel.shared.game?.moves.last?.word ?? "").uppercased())
                 ) {
-                    viewModel.game?.moves.append(.init(isPlayer1: viewModel.isPlayerOne(), word: word))
-                    viewModel.game!.winningPlayerId = viewModel.currentUser.id
-                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
+                    GameViewModel.shared.game?.moves.append(.init(isPlayer1: GameViewModel.shared.isPlayerOne(), word: word))
+                    GameViewModel.shared.game!.winningPlayerId = GameViewModel.shared.currentUser.id
+                    try await ApiLayer.shared.updateGame(GameViewModel.shared.game!, isPrivate: GameViewModel.shared.withInvitation, isSuperghost: isSuperghost)
                 } else{
                     word = "This doesn't fit"
                 }

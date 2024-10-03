@@ -19,7 +19,6 @@ private enum GameStatus {
 @MainActor
 final class GameViewModel: ObservableObject {
     @CloudStorage("score") private var score = 1000
-    @Published var games = [GameStat]()
 
     @Published var game: Game? {
         willSet {
@@ -38,7 +37,7 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            games.insert(stat, at: 0)
+                            GKStore.shared.games.insert(stat, at: 0)
                             Task{
                                 await changeScore(by: .random(in: 48...52))
                             }
@@ -59,7 +58,7 @@ final class GameViewModel: ObservableObject {
                                 id: UUID().uuidString
                             )
                             try? stat.save()
-                            games.insert(stat, at: 0)
+                            GKStore.shared.games.insert(stat, at: 0)
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
@@ -96,14 +95,10 @@ final class GameViewModel: ObservableObject {
 
     var withInvitation = false
 
-    init() {
+    static let shared = GameViewModel()
+    
+    private init() {
         currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
-        Task.detached{
-            let games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
-            await MainActor.run {
-                self.games = games
-            }
-        }
     }
 
 

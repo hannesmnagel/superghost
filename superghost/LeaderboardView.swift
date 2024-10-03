@@ -20,7 +20,6 @@ struct LeaderboardView: View {
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
     @State private var hasUnlockedLeaderboard = false
-    @EnvironmentObject var viewModel: GameViewModel
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
     @Namespace var namespace

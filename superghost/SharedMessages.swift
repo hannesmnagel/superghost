@@ -14,9 +14,9 @@ final class MessageModel: ObservableObject {
     @Published var message = [String]()
     @Published var showingAction = UserAction?.none
     @CloudStorage("score") private var score = 1000
-
+    
     func changeScore(by translation: Int) async {
-
+        UserDefaults.standard.set(true, forKey: "showingScoreChange")
         for _ in 1...translation.magnitude {
             if translation > 0 {
                 score += 1

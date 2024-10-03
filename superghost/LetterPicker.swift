@@ -8,18 +8,17 @@
 import SwiftUI
 
 struct LetterPicker: View {
-    @EnvironmentObject var viewModel: GameViewModel
     let isSuperghost: Bool
+    let word: String
     @State private var leadingLetter = ""
     @State private var trailingLetter = ""
     let allowedLetters = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
     @State var disabled = false
 
     var body: some View {
-        let word = viewModel.game?.moves.last?.word ?? ""
         HStack{
             if !word.isEmpty {
-                if viewModel.withInvitation || isSuperghost{
+                if GameViewModel.shared.withInvitation || isSuperghost{
                     SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
                         .disabled(!trailingLetter.isEmpty)
                 }
@@ -32,7 +31,7 @@ struct LetterPicker: View {
         }
 
         AsyncButton{
-            try await viewModel.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)", isSuperghost: isSuperghost)
+            try await GameViewModel.shared.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)", isSuperghost: isSuperghost)
             trailingLetter = ""
             leadingLetter = ""
         } label: {

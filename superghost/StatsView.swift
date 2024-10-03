@@ -23,7 +23,7 @@ struct StatsView: View {
 
     @State private var expandingList = false
 
-    @EnvironmentObject var viewModel: GameViewModel
+    @ObservedObject private var gkStore = GKStore.shared
 
     var body: some View {
 #if os(macOS)
@@ -42,7 +42,7 @@ struct StatsView: View {
         }
         let listClosed = 5
 #endif
-        ForEach(viewModel.games.prefix(expandingList ? .max : listClosed)){game in
+        ForEach(gkStore.games.prefix(expandingList ? .max : listClosed)){game in
             Button{selection = game} label: {
                 HStack{
                     Text(game.word)
@@ -57,7 +57,7 @@ struct StatsView: View {
                 .background(Color.black.opacity(0.9))
             )
         }
-        if viewModel.games.count > listClosed {
+        if gkStore.games.count > listClosed {
             Button{
                 withAnimation(.smooth){expandingList.toggle()}
             } label: {
@@ -156,9 +156,9 @@ struct StatsView: View {
             HStack{
                 GeometryReader{geo in
                     Rectangle()
-                        .fill(.red.opacity(0.5 + 0.1 * Double(viewModel.games.today.lost.count)))
+                        .fill(.red.opacity(0.5 + 0.1 * Double(gkStore.games.today.lost.count)))
                         .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(viewModel.games.today.lost.count) / CGFloat(wordToday.count)
+                                geo.frame(in: .named("rowbackground")).width * CGFloat(gkStore.games.today.lost.count) / CGFloat(wordToday.count)
                         )
                 }
             }

@@ -9,9 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     let isSuperghost: Bool
-    let showTrialEndsIn: Int?
     @State private var gameStatSelection: GameStat?
-    @EnvironmentObject var viewModel: GameViewModel
+    @ObservedObject var gkStore = GKStore.shared
     @Binding var isGameViewPresented: Bool
     @CloudStorage("wordToday") private var wordToday = "-----"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
@@ -110,12 +109,12 @@ struct HomeView: View {
                         UserDefaults.standard.set(true, forKey: "showingPaywall")
                     } else if command == "start" {
                         Task{
-                            try await viewModel.getTheGame(isSuperghost: isSuperghost)
+                            try await GameViewModel.shared.getTheGame(isSuperghost: isSuperghost)
                             isGameViewPresented = true
                         }
                     } else if command == "host" {
                         Task{
-                            try await viewModel.hostGame()
+                            try await GameViewModel.shared.hostGame()
                             isGameViewPresented = true
                         }
                     }
@@ -125,7 +124,7 @@ struct HomeView: View {
                         
                         Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
                         
-                        try await viewModel.joinGame(with: gameId, isSuperghost: isSuperghost)
+                        try await GameViewModel.shared.joinGame(with: gameId, isSuperghost: isSuperghost)
                         gameStatSelection = nil
                         isGameViewPresented = true
                     }
@@ -155,13 +154,13 @@ struct HomeView: View {
 
         VStack{
             AsyncButton {
-                try await viewModel.getTheGame(isSuperghost: isSuperghost)
+                try await GameViewModel.shared.getTheGame(isSuperghost: isSuperghost)
                 isGameViewPresented = true
             } label: {
                 Text("Start")
                     .font(.largeTitle)
             }
-            .disabled(viewModel.games.today.lost.count >= (isSuperghost ? 10 : 5))
+            .disabled(gkStore.games.today.lost.count >= (isSuperghost ? 10 : 5))
             .popover(isPresented: $startPopoverPresented) {
                 if #available(macOS 13.3, iOS 17.3, *) {
                     VStack{
@@ -173,7 +172,7 @@ struct HomeView: View {
                 }
             }
             .onTapGesture {
-                if !isSuperghost && viewModel.games.today.lost.count >= 5{
+                if !isSuperghost && gkStore.games.today.lost.count >= 5{
                     UserDefaults.standard.set(true, forKey: "showingPaywall")
                 }
             }
@@ -181,7 +180,7 @@ struct HomeView: View {
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
 
             AsyncButton {
-                try await viewModel.hostGame()
+                try await GameViewModel.shared.hostGame()
                 isGameViewPresented = true
             } label: {
                 Text("Host a Game")
@@ -190,12 +189,9 @@ struct HomeView: View {
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
 
 
-                if let showTrialEndsIn {
-                    TrialEndsInView(days: showTrialEndsIn)
-                        .transition(.move(edge: .top))
-                        .animation(.smooth, value: showTrialEndsIn)
-                        .padding()
-                }
+                
+            TrialEndsInView()
+                .padding()
         }
         .frame(maxWidth: .infinity)
         .padding(.bottom, 30)
@@ -204,6 +200,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(isSuperghost: true, showTrialEndsIn: 2, isGameViewPresented: .constant(false))
+    HomeView(isSuperghost: true, isGameViewPresented: .constant(false))
         .modifier(PreviewModifier())
 }
