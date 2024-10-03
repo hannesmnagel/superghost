@@ -29,6 +29,7 @@ struct superghostApp: App {
     var body: some Scene {
         WindowGroup {
             LaunchingView()
+                .preferredColorScheme(.dark)
                 .tint(.accent)
                 .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: DefaultButtonStyle()))
                 .modifier(Messagable())
@@ -45,6 +46,7 @@ struct superghostApp: App {
                     }
                 }
                 .onAppear{
+                    NSUbiquitousKeyValueStore.default.removeObject(forKey: "showOnBoarding")
                     try? SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
 #if !os(macOS)

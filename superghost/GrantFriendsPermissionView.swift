@@ -19,12 +19,17 @@ struct GrantFriendsPermissionView: View {
             if !grantedPermission {
                 pleaseGrantPermission
                     .foregroundStyle(.black)
+            } else {
+                VStack{}
+                    .task{
+                        try? await Task.sleep(for: .seconds(1))
+                        onFinish()
+                    }
             }
         }
         .task{
             if (try? await GKLocalPlayer.local.loadFriendsAuthorizationStatus()) == .authorized{
                 grantedPermission = true
-                try? await Task.sleep(for: .seconds(0.5))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -92,21 +97,24 @@ struct GrantFriendsPermissionView: View {
                 if authStatus == .notDetermined {
                     let _ = try? await GKLocalPlayer.local.loadFriends()
                 }
-                grantedPermission = true
-                try? await Task.sleep(for: .seconds(1))
-                onFinish()
+                grantedPermission = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus() == .authorized
             } label: {
                 Text("Continue")
             }
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
             .padding(.horizontal)
-            Button("But Why?!") {
-                withAnimation{
-                    showReasons.toggle()
+            if !showReasons {
+                Button(showReasons ? "Skip" : "But Why?!") {
+                    if showReasons {
+                        onFinish()
+                    } else {
+                        withAnimation{
+                            showReasons = true
+                        }
+                    }
                 }
+                .foregroundStyle(.primary)
             }
-            .foregroundStyle(.primary)
-            .opacity(showReasons ? 0 : 1)
         }
         .frame(maxWidth: .infinity)
         .background(
