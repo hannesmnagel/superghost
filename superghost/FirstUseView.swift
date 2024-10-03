@@ -17,35 +17,39 @@ struct FirstUseView: View {
     }
 
     var body: some View {
-        switch firstUseState {
-        case .tapToContinue:
-            VStack{
-                Image(.ghostHeadingLeft)
-                    .resizable()
-                    .scaledToFit()
-                Text("Welcome to Ghost!")
-                    .font(.largeTitle)
-                    .fontWeight(.heavy)
-                Text("Tap to play")
-                    .font(.headline)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onTapGesture {
-                firstUseState.nextCase()
-            }
-        case .howTo:
-            InstructionsView{firstUseState.nextCase()}
-        case .signIn:
-            SignInView{firstUseState.nextCase()}
-        case .grantFriendsPermission:
-            GrantFriendsPermissionView{firstUseState.nextCase()}
-        case .end:
-            Text("Let's go")
-                .font(.largeTitle.bold())
-                .task{
-                    finished()
+        Group{
+            switch firstUseState {
+            case .tapToContinue:
+                VStack{
+                    Image(.ghostHeadingLeft)
+                        .resizable()
+                        .scaledToFit()
+                    Text("Welcome to Ghost!")
+                        .font(.largeTitle)
+                        .fontWeight(.heavy)
+                    Text("Tap to play")
+                        .font(.headline)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onTapGesture {
+                    firstUseState.nextCase()
+                }
+            case .howTo:
+                InstructionsView{firstUseState.nextCase()}
+            case .signIn:
+                SignInView{firstUseState.nextCase()}
+            case .grantFriendsPermission:
+                GrantFriendsPermissionView{firstUseState.nextCase()}
+            case .end:
+                Text("Let's go")
+                    .font(.largeTitle.bold())
+                    .task{
+                        finished()
+                    }
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.black)
     }
 
     func finished(){

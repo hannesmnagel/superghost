@@ -8,6 +8,7 @@
 import SwiftUI
 import GameKit
 import StoreKit
+import UserNotifications
 
 @MainActor
 class GKStore: ObservableObject {

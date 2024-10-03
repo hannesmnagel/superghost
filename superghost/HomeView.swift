@@ -29,7 +29,9 @@ struct HomeView: View {
             VStack {
                 ScrollViewReader{scroll in
                     List{
+                        #if !os(macOS)
                         Spacer(minLength: 500).frame(height: 500).listRowBackground(Color.clear)
+                        #endif
                         Section{
                             header
                                 .onAppear{

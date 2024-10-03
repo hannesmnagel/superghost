@@ -46,7 +46,6 @@ struct superghostApp: App {
                     }
                 }
                 .onAppear{
-                    NSUbiquitousKeyValueStore.default.removeObject(forKey: "showOnBoarding")
                     try? SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
 #if !os(macOS)
