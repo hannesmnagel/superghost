@@ -104,7 +104,7 @@
 				GameStat.swift,
 				Logger.swift,
 				onChange.swift,
-				ScoreChangeView.swift,
+				PreviewModifier.swift,
 				SharedMessages.swift,
 				SharedTopViewController.swift,
 				SingleLetterPicker.swift,
