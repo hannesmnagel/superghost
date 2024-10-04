@@ -148,7 +148,7 @@ final class GameViewModel: ObservableObject {
         if try await isWord(newWord) {
             try await ApiLayer.shared.loseWithWord(word: newWord, playerId: currentUser.id)
         } else {
-            try await ApiLayer.shared.appendLetter(letter: letter)
+            try await ApiLayer.shared.prependLetter(letter: letter)
         }
     }
 
