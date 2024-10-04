@@ -59,6 +59,8 @@ struct GameView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .clipShape(.circle)
+                                .padding(5)
+                                .overlay(Circle().stroke(viewModel.isPlayerOne() == game.isBlockingMoveForPlayerOne ? Color.red : .blue, lineWidth: 5))
                                 .frame(maxWidth: 200)
                             Text(profile?.name ?? "")
                                 .font(.title.bold())
