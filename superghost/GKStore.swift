@@ -142,7 +142,7 @@ class GKStore: ObservableObject {
         await MainActor.run{
             winningRate = games.winningRate
             
-            if Int(winningStreak/3) < Int(games.winningStreak/3) && (winningStreak + 1) == games.winningStreak {
+            if Int(winningStreak/5) < Int(games.winningStreak/5) && (winningStreak + 1) == games.winningStreak {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
                 UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
                 Task{
