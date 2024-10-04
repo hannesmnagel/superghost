@@ -28,10 +28,7 @@ struct HomeView: View {
 #endif
             VStack {
                 List{
-#if !os(macOS)
-                    Spacer(minLength: 500).frame(height: 500).listRowBackground(Color.clear)
-#endif
-                    //                        PlayerProfileView()
+                    PlayerProfileView()
                     Section{
                         header
                             .listRowBackground(Color.clear)
@@ -72,7 +69,6 @@ struct HomeView: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .background(WaitingGhost())
                 .scrollContentBackground(.hidden)
 #if os(macOS)
                 .overlay{

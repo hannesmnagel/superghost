@@ -106,7 +106,10 @@ struct Messagable: ViewModifier {
         }
     }
     nonisolated private func dismissWhenAddedWidget() async throws {
-        while NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) != 100 {
+        while true {
+            if let lastWidgetUpdateString = NSUbiquitousKeyValueStore.default.string(forKey: "lastWidgetUpdate"),
+               let lastWidgetUpdate = ISO8601DateFormatter().date(from: lastWidgetUpdateString),
+               Calendar.current.isDateInToday(lastWidgetUpdate) {break}
             try? await Task.sleep(for: .seconds(1))
         }
         try? await GameStat.submitScore(score + 50)
@@ -199,18 +202,17 @@ struct Messagable: ViewModifier {
             Text("Add a Widget")
                 .font(.largeTitle.bold())
                 .padding(.top, 30)
-            Text("And earn an extra 50 XP")
+            Text("And earn an extra 50 XP + Unlock a new Skin")
                 .bold()
             Spacer()
 
-            Image(systemName: "apps.iphone.badge.plus")
+            Image(Skin.sailor.image)
                 .resizable()
                 .scaledToFit()
-                .imageScale(.large)
+                .clipShape(.circle)
                 .padding()
                 .padding(.top)
                 .padding(.horizontal, 70)
-                .fontWeight(.thin)
 
             Spacer()
             Button("Continue"){
