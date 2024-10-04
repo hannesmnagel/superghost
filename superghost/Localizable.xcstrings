@@ -16,9 +16,6 @@
     " elapsed - ETA:" : {
 
     },
-    " XP" : {
-
-    },
     "%@ %@" : {
       "localizations" : {
         "en" : {
@@ -30,6 +27,9 @@
       }
     },
     "%@ losses left today" : {
+
+    },
+    "%@ XP" : {
 
     },
     "%lld." : {
@@ -112,6 +112,9 @@
       }
     },
     "Can you win another one?" : {
+
+    },
+    "Can you win even more?" : {
 
     },
     "Cancel" : {
@@ -233,6 +236,9 @@
 
     },
     "More" : {
+
+    },
+    "Nice, FIVE wins in a row!" : {
 
     },
     "No" : {
@@ -407,6 +413,31 @@
     "Why do I have to sign in?" : {
 
     },
+    "Win %@ more games to get an extra day of Superghost" : {
+
+    },
+    "Win %lld more games to get an extra day of Superghost" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Win one more game to get an extra day of Superghost"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "Win %lld more games to get an extra day of Superghost"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Win Rate" : {
 
     },
@@ -432,6 +463,9 @@
 
     },
     "You can sign in to Game Center" : {
+
+    },
+    "You earned a free day of Superghost" : {
 
     },
     "You lost against a friend on %@" : {

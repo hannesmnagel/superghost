@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ScoreChangeView: View {
     @CloudStorage("score") private var score = 1000
+    @CloudStorage("winStreak") private var winningStreak = 0
     @State var increasing = Bool?.none
+    @CloudStorage("isPayingSuperghost") private var isPayingSuperghost = false
     
     var image : ImageResource {
         switch increasing {
@@ -36,10 +38,13 @@ struct ScoreChangeView: View {
                 .scaledToFit()
                 .clipShape(.capsule)
                 .animation(.spring, value: image)
-            Group{
-                Text(score, format: .number) + Text(" XP")
-            }
+                Text("\(score, format: .number) XP")
             .font(.system(size: 70))
+            if !isPayingSuperghost {
+                Text("Win \(5-(winningStreak%5)) more games to get an extra day of Superghost")
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
             Spacer()
             Button("Continue"){
                 UserDefaults.standard.set(false, forKey: "showingScoreChange")

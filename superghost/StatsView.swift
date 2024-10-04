@@ -146,11 +146,6 @@ struct StatsView: View {
 #endif
                     .frame(minWidth: 70)
                 }
-        .onChange(of: winningStreak) { newValue, oldValue in
-            if Int(oldValue/5) < Int(newValue/5) && (oldValue + 1) == newValue {
-                superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
-            }
-        }
         .multilineTextAlignment(.center)
         .listRowBackground(
             HStack{

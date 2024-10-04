@@ -38,12 +38,16 @@ struct ContentView: View {
     @AppStorage("showingSettings") private var settings = false
     @AppStorage("showingPaywall") private var showingPaywall = false
     @AppStorage("showingScoreChange") private var showingScoreChange = false
+    @AppStorage("showingFiveWinsStreak") private var showingFiveWinsStreak = false
     
     @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         NavigationStack{
-            if showingScoreChange {
+            if showingFiveWinsStreak{
+                FiveWinsStreakView()
+                    .transition(.scale)
+            } else if showingScoreChange {
                 ScoreChangeView()
                     .transition(.move(edge: .bottom))
             } else if isGameViewPresented{

@@ -42,6 +42,7 @@ class GKStore: ObservableObject {
     @CloudStorage("winsToday") private var winsToday = 0
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
     @CloudStorage("isSuperghost") private var isSuperghost = false
+    @CloudStorage("isPayingSuperghost") private var isPayingSuperghost = false
     @CloudStorage("showTrialEndsIn") private var showTrialEndsIn : Int? = nil
     
     
@@ -140,6 +141,14 @@ class GKStore: ObservableObject {
         }
         await MainActor.run{
             winningRate = games.winningRate
+            
+            if Int(winningStreak/3) < Int(games.winningStreak/3) && (winningStreak + 1) == games.winningStreak {
+                superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
+                UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
+                Task{
+                    try? await fetchSubscription()
+                }
+            }
             winningStreak = games.winningStreak
         }
         let gamesToday = await games.today
@@ -166,6 +175,9 @@ class GKStore: ObservableObject {
             }
             return false
         }()
+        await MainActor.run {
+            self.isPayingSuperghost = hasSubscribed
+        }
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
         let wasSuperghost = await isSuperghost
