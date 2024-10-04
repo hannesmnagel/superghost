@@ -120,6 +120,7 @@ class GKStore: ObservableObject {
         
         await MainActor.run{
             self.rank = localPlayerEntry?.rank ?? -1
+            PlayerProfileModel.shared.player.rank = self.rank
             self.localPlayerEntry = entries?.0
             self.leaderboardData = entries?.1
         }
