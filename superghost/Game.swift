@@ -14,7 +14,7 @@ struct Game: Equatable {
     var player1profile: PlayerProfile?
 
     var player2Id = ""
-    var player2profile: PlayerProfile?
+    var player2profile: PlayerProfile = .init(name: ["Heinz Gustav", "Otto128", "TressG", "ShitHappens"].randomElement()!)
 
     var isBlockingMoveForPlayerOne = true
 
