@@ -42,6 +42,7 @@ struct GameView: View {
                 //MARK: Private Game Share Link Screen
                 if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
                     LoadingView()
+                        .frame(maxWidth: .infinity)
                     if viewModel.game?.player2Id == "privateGame"{
                         if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
                             Text("Send Invitation Link")
@@ -53,6 +54,19 @@ struct GameView: View {
                 } else if let game = viewModel.game{
                     VStack {
                         if game.player1Challenges == nil {
+                            let profile = game.isBlockingMoveForPlayerOne ? game.player2profile : game.player1profile
+                            Image(profile?.image ?? Skin.cowboy.image)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(.circle)
+                                .frame(maxWidth: 200)
+                            Text(profile?.name ?? "")
+                                .font(.title.bold())
+                            if let rank = profile?.rank, rank > 0 {
+                                Text("Rank \(rank.formatted())")
+                            } else {
+                                Text("Not ranked")
+                            }
                             if game.blockMoveForPlayerId != viewModel.currentUser.id {
                                 ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
                                     .transition(.scale(scale: 0.1, anchor: .bottom))
@@ -92,6 +106,7 @@ struct GameView: View {
                             //MARK: When you challenged
                         } else {
                             LoadingView()
+                                .frame(maxWidth: .infinity)
                             Text("Waiting for player response...")
                         }
                     }

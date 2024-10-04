@@ -97,7 +97,10 @@ struct superghostApp: App {
                     ]
                     let notification = notifications.randomElement()!
                     sendPushNotification(with: notification.0, description: notification.1)
-                    await MainActor.run {self.rank = myCurrent}
+                    await MainActor.run {
+                        self.rank = myCurrent
+                        PlayerProfileModel.shared.player.rank = self.rank
+                    }
 
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {

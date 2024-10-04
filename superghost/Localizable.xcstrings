@@ -247,6 +247,9 @@
     "No need for a seperate Account!" : {
 
     },
+    "Not ranked" : {
+
+    },
     "Notifications" : {
 
     },
@@ -269,6 +272,9 @@
 
     },
     "Rank" : {
+
+    },
+    "Rank %@" : {
 
     },
     "Rank: %lld" : {
@@ -381,6 +387,9 @@
 
     },
     "This is not a word" : {
+
+    },
+    "Username" : {
 
     },
     "View All Plans" : {

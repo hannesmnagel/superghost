@@ -9,6 +9,7 @@ import SwiftUI
 #if canImport(WidgetKit)
 import WidgetKit
 #endif
+import GameKit
 
 struct Skin : Identifiable, Equatable{
     var id = UUID()
@@ -74,6 +75,8 @@ struct PlayerProfileView: View {
             return false
         }
     }()
+    
+    @CloudStorage("username") private var username = GKLocalPlayer.local.alias
 
     var body: some View {
         VStack{
@@ -87,6 +90,17 @@ struct PlayerProfileView: View {
                 .animation(.smooth, value: playerProfileModel.player.image)
                 .frame(maxWidth: 300)
             if expanded {
+                TextField("Username", text: $username)
+                    .frame(maxWidth: 300)
+                    .onAppear{
+                        playerProfileModel.player.name = username
+                    }
+                    .onChange(of: username) {_,_ in
+                        playerProfileModel.player.name = username
+                    }
+#if os(macOS)
+                    .textFieldStyle(.roundedBorder)
+#endif
                 LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 200))]) {
                     ForEach(skins){skin in
                         let isUnlocked = switch skin.unlockBy {
