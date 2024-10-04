@@ -24,7 +24,9 @@ struct LaunchingView: View {
                     }
                 }
         } else {
-            SignInView{isAuthenticated = true}
+            SignInView{
+                isAuthenticated = true
+            }
         }
     }
 }

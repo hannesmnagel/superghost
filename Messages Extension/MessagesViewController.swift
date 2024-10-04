@@ -121,7 +121,7 @@ final class AppState: ObservableObject {
                     if NSUbiquitousKeyValueStore.default.double(forKey: "\(conversation.storeKey).\(session).lastMoveCount") > 0 {
                         do{
                             try GameStat(
-                                player2: isPlayer1 ? move.player2Id : move.player1Id,
+                                player2: (isPlayer1 ? move.player2Id : move.player1Id, nil),
                                 withInvitation: true,
                                 won: winnerIsPlayer1 ? isPlayer1 : !isPlayer1,
                                 word: move.word,

@@ -31,9 +31,13 @@ struct LetterPicker: View {
         }
 
         AsyncButton{
-            try await GameViewModel.shared.processPlayerMove(for: "\(leadingLetter)\(word)\(trailingLetter)", isSuperghost: isSuperghost)
-            trailingLetter = ""
-            leadingLetter = ""
+            if !leadingLetter.isEmpty {
+                try await GameViewModel.shared.prepend(letter: leadingLetter)
+                leadingLetter = ""
+            } else {
+                try await GameViewModel.shared.append(letter: trailingLetter)
+                trailingLetter = ""
+            }
         } label: {
             Text("Submit Move")
         }

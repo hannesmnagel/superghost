@@ -24,16 +24,16 @@ final class GameViewModel: ObservableObject {
         willSet {
             //check the game status
             if let newValue {
-                if newValue.winningPlayerId != "" {
-                    if game?.winningPlayerId != newValue.winningPlayerId {
+                if let player1Wins = newValue.player1Wins {
+                    if game?.player1Wins != newValue.player1Wins {
                         if newValue.winningPlayerId == currentUser.id {
                             alertItem = .won
 
                             let stat = GameStat(
-                                player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                                player2: isPlayerOne() ? (newValue.player2Id, newValue.player2profile) : (newValue.player1Id, newValue.player1profile),
                                 withInvitation: withInvitation,
                                 won: true,
-                                word: newValue.moves.last?.word.uppercased() ?? "",
+                                word: newValue.word,
                                 id: UUID().uuidString
                             )
                             try? stat.save()
@@ -51,10 +51,10 @@ final class GameViewModel: ObservableObject {
                             alertItem = .lost
 
                             let stat = GameStat(
-                                player2: isPlayerOne() ? newValue.player2Id : newValue.player1Id,
+                                player2: isPlayerOne() ? (newValue.player2Id, newValue.player2profile) : (newValue.player1Id, newValue.player1profile),
                                 withInvitation: withInvitation,
                                 won: false,
-                                word: newValue.moves.last?.word.uppercased() ?? "",
+                                word: newValue.word,
                                 id: UUID().uuidString
                             )
                             try? stat.save()
@@ -69,16 +69,14 @@ final class GameViewModel: ObservableObject {
                                             .date(from: newValue.createdAt)?.timeIntervalSinceNow.magnitude ?? 0))
                             )
                         }
-                        if (newValue.moves.last?.word.count ?? 0) > 5 {
+                        if (newValue.word.count) > 5 {
                             Task.detached{
                                 try? await reportAchievement(.longWord, percent: 100)
                             }
                         }
                     }
                 } else {
-                    if newValue.rematchPlayerId.count != 1 {
-                        newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
-                    }
+                    newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)
                 }
             } else {
                 updateGameStatus(.playerLeft)
@@ -103,7 +101,7 @@ final class GameViewModel: ObservableObject {
 
 
     func getTheGame(isSuperghost: Bool) async throws {
-        try await ApiLayer.shared.startGame(with: currentUser.id, isSuperghost: isSuperghost)
+        try await ApiLayer.shared.startGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         Logger.userInteraction.info("Started Game")
         
@@ -113,7 +111,7 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     func joinGame(with gameId: String, isSuperghost: Bool) async throws {
-        try await ApiLayer.shared.joinGame(with: currentUser.id, in: gameId, isPrivate: true, isSuperghost: isSuperghost)
+        try await ApiLayer.shared.joinGame(with: gameId, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
         ApiLayer.shared.$game
@@ -124,7 +122,7 @@ final class GameViewModel: ObservableObject {
         Logger.remoteLog(.joinedPrivateGame)
     }
     func hostGame() async throws {
-        try await ApiLayer.shared.hostGame(with: currentUser.id, isSuperghost: true)
+        try await ApiLayer.shared.hostGame(isSuperghost: true, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
         ApiLayer.shared.$game
@@ -132,23 +130,30 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
         Logger.userInteraction.info("Hosted Game")
     }
-
-    func processPlayerMove(for letter: String, isSuperghost: Bool) async throws {
-
-        guard game != nil else { return }
-        game!.moves.append(Move(isPlayer1: isPlayerOne(), word: letter))
-
-        game!.blockMoveForPlayerId = currentUser.id
-
-        if try await isWord(letter){
-            game?.winningPlayerId = isPlayerOne() ? game!.player2Id : game!.player1Id
+    func submitWordAfterChallenge(word: String) async throws {
+        try await ApiLayer.shared.submitWordAfterChallenge(word: word, playerId: currentUser.id)
+    }
+    func append(letter: String) async throws {
+        guard let game else {return}
+        let newWord = game.word.appending(letter)
+        if try await isWord(newWord) {
+            try await ApiLayer.shared.loseWithWord(word: newWord, playerId: currentUser.id)
+        } else {
+            try await ApiLayer.shared.appendLetter(letter: letter)
         }
-
-        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
+    }
+    func prepend(letter: String) async throws {
+        guard let game else {return}
+        let newWord = "\(letter)\(game.word)"
+        if try await isWord(newWord) {
+            try await ApiLayer.shared.loseWithWord(word: newWord, playerId: currentUser.id)
+        } else {
+            try await ApiLayer.shared.appendLetter(letter: letter)
+        }
     }
 
-    func quitGame(isSuperghost: Bool) async throws {
-        try await ApiLayer.shared.quitGame(isPrivate: withInvitation, isSuperghost: isSuperghost)
+    func quitGame() async throws {
+        try await ApiLayer.shared.quitGame()
         Logger.userInteraction.info("Quit Game")
     }
 
@@ -158,28 +163,27 @@ final class GameViewModel: ObservableObject {
     }
 
     func resetGame(isSuperghost: Bool) async throws {
-        guard game != nil else {
+        guard let game else {
             alertItem = .playerLeft
             return
         }
-        if game!.rematchPlayerId.count == 1 {
-            //start new game
-            game!.moves = []
-            game!.winningPlayerId = ""
-            game!.blockMoveForPlayerId = game!.player2Id
-            game!.challengingUserId = ""
-            game!.createdAt = Date().ISO8601Format()
+        alertItem = nil
+        if let rematchGameId = game.rematchGameId {
+            try await quitGame()
+            try await joinGame(with: rematchGameId, isSuperghost: isSuperghost)
+        } else {
+            let id = try await ApiLayer.shared.createGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
+            try await joinGame(with: id, isSuperghost: isSuperghost)
 
-        } else if game!.rematchPlayerId.count == 2 {
-            game!.rematchPlayerId = []
         }
 
-        game!.rematchPlayerId.append(currentUser.id)
-        alertItem = nil
-        
         Logger.userInteraction.info("rematching")
-
-        try await ApiLayer.shared.updateGame(game!, isPrivate: withInvitation, isSuperghost: isSuperghost)
+    }
+    func challenge() async throws {
+        try await ApiLayer.shared.challenge(playerId: currentUser.id)
+    }
+    func yesIlied() async throws {
+        try await ApiLayer.shared.yesILiedAfterChallenge(playerId: currentUser.id)
     }
 
 

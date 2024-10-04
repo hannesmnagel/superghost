@@ -28,7 +28,6 @@ struct PaywallView: View {
                     .clipShape(.rect(bottomLeadingRadius: 20, bottomTrailingRadius: 20))
                     .ignoresSafeArea(edges: .top)
                     .layoutPriority(1)
-                    .padding(.bottom, -50)
                 Text("Become a Superghost")
                     .font(.largeTitle.bold())
                     .foregroundStyle(.accent)

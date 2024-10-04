@@ -21,14 +21,12 @@ struct GameView: View {
                 dismissParent: {isPresented = false},
                 isSuperghost: isSuperghost,
                 quitGame: {
-                    try await viewModel.quitGame(isSuperghost: isSuperghost)
+                    try await viewModel.quitGame()
                 },
                 rematch: {
-                    viewModel.game?.winningPlayerId.removeAll()
-                    viewModel.alertItem = nil
                     try await viewModel.resetGame(isSuperghost: isSuperghost)
                 },
-                word: viewModel.game?.moves.last?.word ?? "",
+                word: viewModel.game?.word ?? "",
                 player2Id: viewModel.game?.player2Id ?? ""
             )
         } else {
@@ -54,14 +52,13 @@ struct GameView: View {
                     //MARK: Playing:
                 } else if let game = viewModel.game{
                     VStack {
-                        if game.challengingUserId.isEmpty {
+                        if game.player1Challenges == nil {
                             if game.blockMoveForPlayerId != viewModel.currentUser.id {
                                 ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
                                     .transition(.scale(scale: 0.1, anchor: .bottom))
                                 if GKStore.shared.games.isEmpty{
-                                    if let word = game.moves.last?.word,
-                                       !word.isEmpty {
-                                        Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(word)?")
+                                    if !game.word.isEmpty {
+                                        Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(game.word)?")
                                         Text("Select a letter so that this still is the case or challenge your opponent")
                                     } else {
                                         Text("Select any Letter you want")
@@ -71,12 +68,10 @@ struct GameView: View {
                                 ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
                                     .transition(.scale(scale: 0.1, anchor: .bottom))
                             }
-                            LetterPicker(isSuperghost: isSuperghost, word: viewModel.game?.moves.last?.word ?? "")
-                            if viewModel.game?.moves.last?.word.count ?? 0 > 1 {
+                            LetterPicker(isSuperghost: isSuperghost, word: viewModel.game?.word ?? "")
+                            if viewModel.game?.word.count ?? 0 > 1 {
                                 AsyncButton{
-                                    viewModel.game?.challengingUserId = viewModel.currentUser.id
-                                    viewModel.game?.blockMoveForPlayerId = viewModel.currentUser.id
-                                    try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
+                                    try await viewModel.challenge()
                                 } label: {
                                     Text("There is no such word")
                                 }
@@ -85,12 +80,11 @@ struct GameView: View {
                             //MARK: When you are challenged
                         } else if game.challengingUserId != viewModel.currentUser.id{
                             ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
-                            Text(game.moves.last?.word ?? "")
+                            Text(game.word)
                                 .font(AppearanceManager.wordInGame)
                             SayTheWordButton(isSuperghost: isSuperghost)
                             AsyncButton{
-                                viewModel.game!.winningPlayerId = viewModel.game?.challengingUserId ?? ""
-                                try await ApiLayer.shared.updateGame(viewModel.game!, isPrivate: viewModel.withInvitation, isSuperghost: isSuperghost)
+                                try await viewModel.yesIlied()
                             } label: {
                                 Text("Yes, I lied")
                             }
@@ -120,7 +114,7 @@ struct GameView: View {
                                 Logger.remoteLog(.gameCancelled(duration: Int(duration)))
                             }
                             isPresented = false
-                            try await viewModel.quitGame(isSuperghost: isSuperghost)
+                            try await viewModel.quitGame()
                         } label: {
                             Text("Quit Game")
                         }
@@ -200,11 +194,9 @@ struct SayTheWordButton: View {
         AsyncButton {
             if isExpanded {
                 if try await isWord(word) && (
-                    (GameViewModel.shared.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(GameViewModel.shared.game?.moves.last?.word ?? "") : word.uppercased().hasPrefix((GameViewModel.shared.game?.moves.last?.word ?? "").uppercased())
+                    (GameViewModel.shared.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(GameViewModel.shared.game?.word ?? "") : word.uppercased().hasPrefix((GameViewModel.shared.game?.word ?? "").uppercased())
                 ) {
-                    GameViewModel.shared.game?.moves.append(.init(isPlayer1: GameViewModel.shared.isPlayerOne(), word: word))
-                    GameViewModel.shared.game!.winningPlayerId = GameViewModel.shared.currentUser.id
-                    try await ApiLayer.shared.updateGame(GameViewModel.shared.game!, isPrivate: GameViewModel.shared.withInvitation, isSuperghost: isSuperghost)
+                    try await GameViewModel.shared.submitWordAfterChallenge(word: word)
                 } else{
                     word = "This doesn't fit"
                 }

@@ -10,38 +10,86 @@ import Combine
 import StoreKit
 
 
-private func backendURL(_ option: RequestType, isSuperghost: Bool) async -> String {
-    "\(option.rawValue)://hannesnagel.com/api/v2/\(isSuperghost ? "superghost" : "ghost")"
-}
+let backendURL = "https://hannesnagel.com/api/v3/superghost"
+
+typealias Player = (id: String, profile: PlayerProfile)
+
 enum RequestType:String{case https, wss}
 final class ApiLayer: ObservableObject {
 
-    func startGame(with: String, isSuperghost: Bool) async throws {
+    func startGame(isSuperghost: Bool, as player: Player) async throws {
         do{
-            try await setGameVar(to: findEmptyGame(isSuperghost: isSuperghost))
-            try await joinGame(with: with, in: game?.id ?? "", isPrivate: false, isSuperghost: isSuperghost)
+            let id = try await ApiCaller.openGame()
+            self.game = .init(id: id, player2Id: player.id, player2profile: player.profile)
+            try await joinGame(with: id, as: player)
         } catch {
-            try await setGameVar(to: createGame(userId: with, isPrivate: false, isSuperghost: isSuperghost))
-            connectToWebSocket(gameId: game?.id ?? "", isPrivate: false, isSuperghost: isSuperghost)
+            let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
+            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+            connectToWebSocket(gameId: id)
         }
     }
-
-    func joinGame(with: String, in gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws {
-        try await setGameVar(to: joinGame(userId: with, gameId: gameId, isPrivate: isPrivate, isSuperghost: isSuperghost))
-        connectToWebSocket(gameId: gameId, isPrivate: isPrivate, isSuperghost: isSuperghost)
+    func createGame(isSuperghost: Bool, as player: Player) async throws -> String {
+        let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
+        self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+        connectToWebSocket(gameId: id)
+        return id
     }
 
-    func hostGame(with: String, isSuperghost: Bool) async throws {
-        try await setGameVar(to: createGame(userId: with, isPrivate: true, isSuperghost: true))
-        connectToWebSocket(gameId: game?.id ?? "", isPrivate: true, isSuperghost: isSuperghost)
+
+
+    func joinGame(with gameId: String, as player: Player) async throws {
+        try await ApiCaller.joinGame(gameId: gameId, playerId: player.id, playerProfile: player.profile)
+        self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile)
+        connectToWebSocket(gameId: gameId)
     }
 
-    func updateGame(_ game: Game, isPrivate: Bool, isSuperghost: Bool) async throws {
-        try await setGameVar(to: updateGame(updatedGame: game, isPrivate: isPrivate, isSuperghost: isSuperghost))
+    func hostGame(isSuperghost: Bool, as player: Player) async throws {
+        let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
+        self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile)
+        connectToWebSocket(gameId: gameId)
     }
 
-    func quitGame(isPrivate: Bool, isSuperghost: Bool) async throws {
-        try await deleteGame(gameId: game?.id ?? "", isPrivate: isPrivate, isSuperghost: isSuperghost)
+    func rematchGame(isSuperghost: Bool, as player: Player) async throws {
+        let oldGameId = game?.id ?? ""
+        let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
+        connectToWebSocket(gameId: gameId)
+        self.game?.id = gameId
+        self.game?.id = gameId
+        try await ApiCaller.rematchGame(oldGameId: oldGameId, newGameId: gameId)
+    }
+
+    func appendLetter(letter: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
+    }
+    func prependLetter(letter: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
+    }
+
+    func loseWithWord(word: String, playerId: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.loseWithWord(word: word, playerId: playerId, gameId: gameId)
+    }
+
+    func challenge(playerId: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.challenge(playerId: playerId, gameId: gameId)
+    }
+
+    func submitWordAfterChallenge(word: String, playerId: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.submitWordAfterChallenge(playerId: playerId, word: word, gameId: gameId)
+    }
+
+    func yesILiedAfterChallenge(playerId: String) async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.yesILiedAfterChallenge(playerId: playerId, gameId: gameId)
+    }
+
+    func quitGame() async throws {
+        guard let gameId = game?.id else { return }
+        try await ApiCaller.deleteGame(gameId: gameId)
         await setGameVar(to: nil)
         disconnectWebSocket()
     }
@@ -49,114 +97,19 @@ final class ApiLayer: ObservableObject {
     static let shared = ApiLayer()
     @Published var game: Game?
 
-    func createGame(userId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/create")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json = Game(id: UUID().uuidString, player1Id: userId, player2Id: isPrivate ? "privateGame" : "", blockMoveForPlayerId: userId, rematchPlayerId: [], moves: [])
-        request.httpBody = try JSONEncoder().encode(json)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let game: Game
-        do{
-            game = try JSONDecoder().decode(Game.self, from: data)
-        } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
-            throw error
-        }
-        return game
-    }
-
-    func findEmptyGame(isSuperghost: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isSuperghost))/game/findEmptyPlayer2Id")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let game: Game
-        do{
-            game = try JSONDecoder().decode(Game.self, from: data)
-        } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
-            throw error
-        }
-        return game
-    }
-
-    func joinGame(userId: String, gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/join/\(gameId)")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        request.httpBody = try JSONEncoder().encode(userId)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let game: Game
-        do{
-            game = try JSONDecoder().decode(Game.self, from: data)
-        } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
-            throw error
-        }
-
-        return game
-    }
-
-    func getGame(gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/\(gameId)")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let game: Game
-        do{
-            game = try JSONDecoder().decode(Game.self, from: data)
-        } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
-            throw error
-        }
-
-        return game
-    }
-
-    private func deleteGame(gameId: String, isPrivate: Bool, isSuperghost: Bool) async throws {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game/\(gameId)")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-
-        let (_, _) = try await URLSession.shared.data(for: request)
-    }
-
-    func updateGame(updatedGame: Game, isPrivate: Bool, isSuperghost: Bool) async throws -> Game {
-        let url = await URL(string: "\(backendURL(.https, isSuperghost: isPrivate ? true : isSuperghost))/game")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let jsonData = try JSONEncoder().encode(updatedGame)
-        request.httpBody = jsonData
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let game: Game
-        do{
-            game = try JSONDecoder().decode(Game.self, from: data)
-        } catch let error as DecodingError {
-            Logger.game.error("Could not decode game from: \(String(data: data, encoding: .utf8) ?? "", privacy: .public) from url: \(url.absoluteString, privacy: .public)")
-            throw error
-        }
-
-        return game
-    }
-
     private func setGameVar(to game: Game?) async {
         await MainActor.run {
             self.game = game
         }
     }
+
     //MARK: WebSocket
     private var webSocketTask: (URLSessionWebSocketTask)?
 
-    private func connectToWebSocket(gameId: String, isPrivate: Bool, isSuperghost: Bool) {
+    private func connectToWebSocket(gameId: String) {
         Task{
             let urlSession = URLSession(configuration: .default)
-            guard let url = await URL(string: "\(backendURL(.wss, isSuperghost: isPrivate ? true : isSuperghost))/game/subscribe/\(gameId)") else { return }
+            let url = URL(string: "wss://hannesnagel.com/api/v3/superghost/game/subscribe/\(gameId)")!
 
             webSocketTask = urlSession.webSocketTask(with: url)
             await withCheckedContinuation{con in
@@ -169,7 +122,7 @@ final class ApiLayer: ObservableObject {
                 }
                 webSocketTask?.resume()
             }
-            receiveMessage()
+            receiveMessage(for: gameId)
 
             while let webSocketTask{
                 webSocketTask.sendPing{ error in
@@ -182,18 +135,31 @@ final class ApiLayer: ObservableObject {
         }
     }
 
-    private func receiveMessage() {
+    private func receiveMessage(for gameId: String) {
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .success(.string(let text)):
                 print("Received text: \(text)")
                 if let data = Data(base64Encoded: text),
-                   let updatedGame = try? JSONDecoder().decode(Game.self, from: data) {
-                    Task{[weak self] in
-                        await self?.setGameVar(to: updatedGame)
+                   let updatedGame = try? JSONDecoder().decode(GameMove.self, from: data) {
+                    Task{
+                        await MainActor.run {[weak self] in
+                            if let self, var game {
+                                game.player1Id = updatedGame.player1Id ?? game.player1Id
+                                game.player2Id = updatedGame.player2Id ?? game.player2Id
+                                game.player1profile = updatedGame.player1Profile ?? game.player1profile
+                                game.player2profile = updatedGame.player2Profile ?? game.player2profile
+                                game.isBlockingMoveForPlayerOne = updatedGame.isBlockingMoveForPlayerOne
+                                game.player1Challenges = updatedGame.player1Challenges ?? game.player1Challenges
+                                game.player1Wins = updatedGame.player1Wins ?? game.player1Wins
+                                game.rematchGameId = updatedGame.rematchGameId ?? game.rematchGameId
+                                game.word = updatedGame.word ?? game.word
+                                self.game = game
+                            }
+                        }
                     }
                 }
-                self?.receiveMessage() // Continue to receive next message
+                self?.receiveMessage(for: gameId) // Continue to receive next message
             default:
                 print("Error receiving message: \(result)")
                 Task{[weak self] in
@@ -223,4 +189,190 @@ final class ApiLayer: ObservableObject {
             onClose()
         }
     }
+}
+
+
+private enum ApiCaller {
+    enum APIError: Error {
+        case requestFailed
+    }
+    static let baseURL = "https://hannesnagel.com/api/v3/superghost"
+
+    // MARK: - Create Game
+    struct CreateGameRequest: Codable {
+        let player1Id: String
+        let player1profile: PlayerProfile
+        let isPrivate: Bool
+        let isSuperghost: Bool
+    }
+
+    static func createGame(player1Id: String, player1Profile: PlayerProfile, isPrivate: Bool, isSuperghost: Bool) async throws -> String {
+        let url = URL(string: "\(baseURL)/game/create")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let createGameRequest = CreateGameRequest(player1Id: player1Id, player1profile: player1Profile, isPrivate: isPrivate, isSuperghost: isSuperghost)
+        request.httpBody = try JSONEncoder().encode(createGameRequest)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200,
+              let gameId = String(data: data, encoding: .utf8) else {
+            throw APIError.requestFailed
+        }
+
+        return gameId
+    }
+
+    // MARK: - Open Game
+    static func openGame() async throws -> String {
+        let url = URL(string: "\(baseURL)/game/open")!
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard (response as? HTTPURLResponse)?.statusCode == 200,
+              let gameId = String(data: data, encoding: .utf8) else {
+            throw APIError.requestFailed
+        }
+
+        return gameId
+    }
+
+    // MARK: - Join Game
+    struct JoinGameRequest: Codable {
+        let gameId: String
+        let playerId: String
+        let playerProfile: PlayerProfile
+    }
+
+    static func joinGame(gameId: String, playerId: String, playerProfile: PlayerProfile) async throws {
+        let url = URL(string: "\(baseURL)/game/join")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let joinGameRequest = JoinGameRequest(gameId: gameId, playerId: playerId, playerProfile: playerProfile)
+        request.httpBody = try JSONEncoder().encode(joinGameRequest)
+
+        _ = try await URLSession.shared.data(for: request)
+    }
+
+    // MARK: - Append Letter
+    struct AppendRequest: Codable {
+        let letter: String
+        let gameId: String
+    }
+
+    static func appendLetter(letter: String, gameId: String) async throws {
+        try await requestUpdate(route: "append", params: AppendRequest(letter: letter, gameId: gameId))
+    }
+
+    // MARK: - Prepend Letter
+    struct PrependRequest: Codable {
+        let letter: String
+        let gameId: String
+    }
+
+    static func prependLetter(letter: String, gameId: String) async throws {
+        try await requestUpdate(route: "prepend", params: PrependRequest(letter: letter, gameId: gameId))
+    }
+
+    // MARK: - Lose With Word
+    struct LooseWithWordRequest: Codable {
+        let word: String
+        let playerId: String
+        let gameId: String
+    }
+
+    static func loseWithWord(word: String, playerId: String, gameId: String) async throws {
+        try await requestUpdate(route: "looseWithWord", params: LooseWithWordRequest(word: word, playerId: playerId, gameId: gameId))
+    }
+
+    // MARK: - Challenge
+    struct ChallengeRequest: Codable {
+        let playerId: String
+        let gameId: String
+    }
+
+    static func challenge(playerId: String, gameId: String) async throws {
+        try await requestUpdate(route: "challenge", params: ChallengeRequest(playerId: playerId, gameId: gameId))
+    }
+
+    // MARK: - Submit Word After Challenge
+    struct WordSubmitRequest: Codable {
+        let playerId: String
+        let word: String
+        let gameId: String
+    }
+
+    static func submitWordAfterChallenge(playerId: String, word: String, gameId: String) async throws {
+        try await requestUpdate(route: "submitWordAfterChallenge", params: WordSubmitRequest(playerId: playerId, word: word, gameId: gameId))
+    }
+
+    // MARK: - Yes I Lied After Challenge
+    struct YesILiedRequest: Codable {
+        let playerId: String
+        let gameId: String
+    }
+    static func yesILiedAfterChallenge(playerId: String, gameId: String) async throws {
+        try await requestUpdate(route: "yesIliedAfterChallenge", params: YesILiedRequest(playerId: playerId, gameId: gameId))
+    }
+
+    // MARK: - rematch
+    struct RematchRequest: Codable {
+        let oldGameId: String
+        let newGameId: String
+    }
+
+    static func rematchGame(oldGameId: String, newGameId: String) async throws {
+        try await requestUpdate(route: "rematchGame", params: RematchRequest(oldGameId: oldGameId, newGameId: newGameId))
+    }
+
+    // MARK: - Delete Game
+    static func deleteGame(gameId: String) async throws {
+        let url = URL(string: "\(baseURL)/game")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(gameId)
+
+        _ = try await URLSession.shared.data(for: request)
+    }
+
+    // Helper for PUT requests
+    static private func requestUpdate<T: Codable>(route: String, params: T) async throws {
+        let url = URL(string: "\(baseURL)/game/\(route)")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(params)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        if let response = response as? HTTPURLResponse, response.statusCode != 200 {
+            print("ups")
+        }
+        print("success")
+    }
+}
+
+struct GameMove: Codable {
+    var word: String?
+
+    var player1Id: String?
+    var player1Profile: PlayerProfile?
+
+    var player2Id: String?
+    var player2Profile: PlayerProfile?
+
+    var isBlockingMoveForPlayerOne : Bool
+
+    var player1Wins = Bool?.none
+
+    var player1Challenges = Bool?.none
+
+    var rematchGameId = String?.none
 }

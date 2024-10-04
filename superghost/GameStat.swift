@@ -10,15 +10,17 @@ import GameKit
 
 struct GameStat: Codable, Hashable, Identifiable {
     var player2: String = "no player"
+    var player2profile: PlayerProfile?
     var won: Bool = Bool.random()
     var word: String = "sth went wrong"
     var withInvitation: Bool = Bool.random()
     var createdAt = Date()
     public var id = UUID()
 
-    init(player2: String, withInvitation: Bool, won: Bool, word: String, id: String) {
+    init(player2: (id: String, profile: PlayerProfile?), withInvitation: Bool, won: Bool, word: String, id: String) {
         self.id = UUID(uuidString: id) ?? UUID()
-        self.player2 = player2
+        self.player2 = player2.id
+        self.player2profile = player2.profile
         self.won = won
         self.word = word
         self.withInvitation = withInvitation
