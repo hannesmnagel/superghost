@@ -74,12 +74,12 @@ struct superghostApp: App {
                     try? await Task.sleep(for: .seconds(1))
                 }
                 if await leaderboardNotifications,
+                   rank > 0,
                    let entries = try await GKLeaderboard
                     .loadLeaderboards(IDs: ["global.score"])
                     .first?
                     .loadEntries(for: .global, timeScope: .allTime, range: NSRange(rank...rank)),
                    let myCurrent = entries.0?.rank,
-                   rank > 0,
                    myCurrent > rank {
 
                     let otherPlayer = entries.1.first{$0.rank == rank}?.player.alias ?? "Someone"

@@ -89,6 +89,17 @@ struct PlayerProfileView: View {
                 }
                 .animation(.smooth, value: playerProfileModel.player.image)
                 .frame(maxWidth: 300)
+                .task(id: scenePhase, priority: .background) {
+#if canImport(WidgetKit)
+                    hasWidget = (try? await !WidgetCenter.shared.currentConfigurations().isEmpty) ?? hasWidget
+#endif
+                    if let skin = Skin.skins.filter({$0.image == playerProfileModel.player.image}).first,
+                    !hasUnlocked(skin: skin){
+                        showMessage("You lost access to your Skin.")
+                        showMessage(skin.unlockBy.lockedDescription)
+                        playerProfileModel.player.image = Skin.cowboy.image
+                    }
+                }
             if expanded {
                 TextField("Username", text: $username)
                     .frame(maxWidth: 300)
@@ -98,25 +109,10 @@ struct PlayerProfileView: View {
                     .onChange(of: username) {_,_ in
                         playerProfileModel.player.name = username
                     }
-#if os(macOS)
                     .textFieldStyle(.roundedBorder)
-#endif
                 LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 200))]) {
                     ForEach(skins){skin in
-                        let isUnlocked = switch skin.unlockBy {
-                        case .widget:
-                            hasWidget
-                        case .score(let necessaryScore):
-                            score >= necessaryScore
-                        case .rank(let necessaryRank):
-                            rank > 0 && rank <= necessaryRank
-                        case .playedMatches(count: let count):
-                            GKStore.shared.games.count >= count
-                        case .winInMessages:
-                            Calendar.current.isDate(.now, equalTo: lastWinInMessages, toGranularity: .month)
-                        case .buy(_):
-                            false
-                        }
+                        let isUnlocked = hasUnlocked(skin: skin)
                         Button{
                             if isUnlocked {
                                 playerProfileModel.player.image = skin.image
@@ -158,16 +154,27 @@ struct PlayerProfileView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .transition(.move(edge: .top).combined(with: .scale))
-                .task(id: scenePhase) {
-#if canImport(WidgetKit)
-                    hasWidget = (try? await !WidgetCenter.shared.currentConfigurations().isEmpty) ?? hasWidget
-#endif
-                }
             }
         }
         .animation(.smooth, value: expanded)
         .frame(maxWidth: .infinity, alignment: .center)
         .listRowBackground(Color.clear)
+    }
+    private func hasUnlocked(skin: Skin) -> Bool {
+        switch skin.unlockBy {
+        case .widget:
+            hasWidget
+        case .score(let necessaryScore):
+            score >= necessaryScore
+        case .rank(let necessaryRank):
+            rank > 0 && rank <= necessaryRank
+        case .playedMatches(count: let count):
+            GKStore.shared.games.count >= count
+        case .winInMessages:
+            Calendar.current.isDate(.now, equalTo: lastWinInMessages, toGranularity: .month)
+        case .buy(_):
+            false
+        }
     }
 }
 

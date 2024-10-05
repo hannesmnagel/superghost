@@ -20,82 +20,87 @@ final class ApiLayer: ObservableObject {
     func startGame(isSuperghost: Bool, as player: Player) async throws {
         do{
             let id = try await ApiCaller.openGame()
-            self.game = .init(id: id, player2Id: player.id, player2profile: player.profile)
+            await MainActor.run{
+                self.game = .init(id: id, player2Id: player.id, player2profile: player.profile)
+            }
             try await joinGame(with: id, as: player)
         } catch {
             let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
-            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
-            connectToWebSocket(gameId: id)
+            await MainActor.run {
+                self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+            }
+            await connectToWebSocket(gameId: id)
         }
     }
-    func createGame(isSuperghost: Bool, as player: Player) async throws -> String {
-        let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
-        self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
-        connectToWebSocket(gameId: id)
-        return id
-    }
-
 
 
     func joinGame(with gameId: String, as player: Player) async throws {
+        await MainActor.run{
+            self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile)
+        }
+        await connectToWebSocket(gameId: gameId)
+        
         try await ApiCaller.joinGame(gameId: gameId, playerId: player.id, playerProfile: player.profile)
-        self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile)
-        connectToWebSocket(gameId: gameId)
     }
 
     func hostGame(isSuperghost: Bool, as player: Player) async throws {
         let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile)
-        connectToWebSocket(gameId: gameId)
+        await MainActor.run{
+            self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame")
+        }
+        await connectToWebSocket(gameId: gameId)
     }
 
     func rematchGame(isSuperghost: Bool, as player: Player) async throws {
-        let oldGameId = game?.id ?? ""
-        let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        connectToWebSocket(gameId: gameId)
-        self.game?.id = gameId
-        self.game?.id = gameId
-        try await ApiCaller.rematchGame(oldGameId: oldGameId, newGameId: gameId)
+        let oldGameId = await game?.id ?? ""
+        disconnectWebSocket()
+        let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
+        await MainActor.run{
+            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+        }
+        await connectToWebSocket(gameId: id)
+        
+        try await ApiCaller.rematchGame(oldGameId: oldGameId, newGameId: id)
     }
 
     func appendLetter(letter: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
     }
     func prependLetter(letter: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
     }
 
     func loseWithWord(word: String, playerId: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.loseWithWord(word: word, playerId: playerId, gameId: gameId)
     }
 
     func challenge(playerId: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.challenge(playerId: playerId, gameId: gameId)
     }
 
     func submitWordAfterChallenge(word: String, playerId: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.submitWordAfterChallenge(playerId: playerId, word: word, gameId: gameId)
     }
 
     func yesILiedAfterChallenge(playerId: String) async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.yesILiedAfterChallenge(playerId: playerId, gameId: gameId)
     }
 
     func quitGame() async throws {
-        guard let gameId = game?.id else { return }
+        guard let gameId = await game?.id else { return }
         try await ApiCaller.deleteGame(gameId: gameId)
         await setGameVar(to: nil)
         disconnectWebSocket()
     }
 
     static let shared = ApiLayer()
-    @Published var game: Game?
+    @MainActor @Published var game: Game?
 
     private func setGameVar(to game: Game?) async {
         await MainActor.run {
@@ -106,8 +111,7 @@ final class ApiLayer: ObservableObject {
     //MARK: WebSocket
     private var webSocketTask: (URLSessionWebSocketTask)?
 
-    private func connectToWebSocket(gameId: String) {
-        Task{
+    private func connectToWebSocket(gameId: String) async {
             let urlSession = URLSession(configuration: .default)
             let url = URL(string: "wss://hannesnagel.com/api/v3/superghost/game/subscribe/\(gameId)")!
 
@@ -123,7 +127,8 @@ final class ApiLayer: ObservableObject {
                 webSocketTask?.resume()
             }
             receiveMessage(for: gameId)
-
+        
+        Task{
             while let webSocketTask{
                 webSocketTask.sendPing{ error in
                     if let error{
@@ -351,11 +356,7 @@ private enum ApiCaller {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(params)
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-        if let response = response as? HTTPURLResponse, response.statusCode != 200 {
-            print("ups")
-        }
-        print("success")
+        let (_, _) = try await URLSession.shared.data(for: request)
     }
 }
 

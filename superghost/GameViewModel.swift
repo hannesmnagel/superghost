@@ -24,7 +24,7 @@ final class GameViewModel: ObservableObject {
         willSet {
             //check the game status
             if let newValue {
-                if let player1Wins = newValue.player1Wins {
+                if newValue.player1Wins != nil{
                     if game?.player1Wins != newValue.player1Wins {
                         if newValue.winningPlayerId == currentUser.id {
                             alertItem = .won
@@ -172,9 +172,7 @@ final class GameViewModel: ObservableObject {
             try await quitGame()
             try await joinGame(with: rematchGameId, isSuperghost: isSuperghost)
         } else {
-            let id = try await ApiLayer.shared.createGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
-            try await joinGame(with: id, isSuperghost: isSuperghost)
-
+            try await ApiLayer.shared.rematchGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
         }
 
         Logger.userInteraction.info("rematching")
@@ -186,7 +184,7 @@ final class GameViewModel: ObservableObject {
         try await ApiLayer.shared.yesILiedAfterChallenge(playerId: currentUser.id)
     }
 
-
+    @MainActor
     private func updateGameStatus(_ state: GameStatus?) {
         switch state{
         case .waitingForPlayer:

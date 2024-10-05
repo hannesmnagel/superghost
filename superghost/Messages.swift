@@ -8,6 +8,9 @@
 import SwiftUI
 import GameKit
 import UserNotifications
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 struct Messagable: ViewModifier {
     @ObservedObject var model = MessageModel.shared
@@ -106,10 +109,13 @@ struct Messagable: ViewModifier {
         }
     }
     nonisolated private func dismissWhenAddedWidget() async throws {
+#if canImport(WidgetKit)
+        WidgetCenter.shared.reloadAllTimelines()
+#endif
         while true {
             if let lastWidgetUpdateString = NSUbiquitousKeyValueStore.default.string(forKey: "lastWidgetUpdate"),
                let lastWidgetUpdate = ISO8601DateFormatter().date(from: lastWidgetUpdateString),
-               Calendar.current.isDateInToday(lastWidgetUpdate) {break}
+               lastWidgetUpdate.timeIntervalSinceNow.magnitude < 20 {break}
             try? await Task.sleep(for: .seconds(1))
         }
         try? await GameStat.submitScore(score + 50)
@@ -316,6 +322,9 @@ struct Messagable: ViewModifier {
                 model.showingAction = nil
             }
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            .onDisappear{
+                widgetExplanationStep = 0
+            }
         }
     }
     @MainActor @ViewBuilder
