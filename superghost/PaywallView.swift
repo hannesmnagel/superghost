@@ -88,6 +88,7 @@ struct PaywallView: View {
                 products = (try? await Product.products(for: ["monthly.superghost", "annual.superghost","onetime.superghost"])) ?? []
             }
         }
+        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button(action: dismiss) {
