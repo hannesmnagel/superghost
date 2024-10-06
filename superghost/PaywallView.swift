@@ -13,7 +13,6 @@ struct PaywallView: View {
     let dismiss: ()->Void
     
     @State private var viewAllPlans = false
-    @State private var disabled = false
     @State private var selectedProduct : Product? = nil
     @State private var products = [Product]()
     
@@ -63,22 +62,15 @@ struct PaywallView: View {
                         Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
                             .font(.footnote)
                     }
-                    Button("Continue"){
-                        Task{
-                            disabled = true
-                            defer{disabled = false}
-                            
-                            switch try await selectedProduct?.purchase(){
-                            case .success(_):
-                                dismiss()
-                            default: return
-                            }
+                    if #available(iOS 17, macOS 15, *) {
+                        PurchaseProductButton(product: selectedProduct) {
+                            dismiss()
+                        }
+                    } else {
+                        PurchaseProductButtonLegacy(product: selectedProduct) {
+                            dismiss()
                         }
                     }
-                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
-                    .bold()
-                    .disabled(disabled || selectedProduct == nil)
-                    
                     if let selectedProduct, viewAllPlans {
                         Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
                             .font(.footnote)
@@ -86,7 +78,6 @@ struct PaywallView: View {
                         Button("View All Plans"){
                             viewAllPlans = true
                         }
-                        .disabled(disabled)
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
                     }
                 }
@@ -130,6 +121,57 @@ struct PaywallView: View {
         } else {
             return "Lifetime"
         }
+    }
+}
+
+@available(iOS 17, macOS 15, *)
+struct PurchaseProductButton: View {
+    let product: Product?
+    let onPurchase: ()->Void
+    @Environment(\.purchase) var purchase
+    @State private var disabled = false
+    
+    var body: some View {
+        Button("Continue"){
+            Task{
+                guard let product else {return}
+                disabled = true
+                defer{disabled = false}
+                switch try await purchase(product){
+                case .success(_):
+                    onPurchase()
+                default: return
+                }
+            }
+        }
+        .disabled(disabled || product == nil)
+        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .bold()
+    }
+}
+
+struct PurchaseProductButtonLegacy: View {
+    let product: Product?
+    let onPurchase: ()->Void
+    
+    @State private var disabled = false
+    
+    var body: some View {
+        Button("Continue"){
+            Task{
+                guard let product else {return}
+                disabled = true
+                defer{disabled = false}
+                switch try await product.purchase(options: [.simulatesAskToBuyInSandbox(false)]){
+                case .success(_):
+                    onPurchase()
+                default: return
+                }
+            }
+        }
+        .disabled(disabled || product == nil)
+        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .bold()
     }
 }
 
