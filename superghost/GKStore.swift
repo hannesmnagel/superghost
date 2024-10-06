@@ -119,10 +119,10 @@ class GKStore: ObservableObject {
         let entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
         
         await MainActor.run{
-            self.rank = localPlayerEntry?.rank ?? -1
-            PlayerProfileModel.shared.player.rank = self.rank
             self.localPlayerEntry = entries?.0
             self.leaderboardData = entries?.1
+            self.rank = localPlayerEntry?.rank ?? -1
+            PlayerProfileModel.shared.player.rank = self.rank
         }
     }
     
