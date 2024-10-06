@@ -86,7 +86,7 @@ class AppearanceManager {
     struct HapticStlyeCustom<Style: ButtonStyle>: PrimitiveButtonStyle {
         let buttonStyle: Style
         @GestureState private var isPressed = false
-        @State private var gestureStart = Date.distantPast
+        @State private var feedback = false
 
         func makeBody(configuration: Configuration) -> some View {
             Button{} label: {
@@ -101,14 +101,23 @@ class AppearanceManager {
                     .onEnded{ value in
                         if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
                             configuration.trigger()
+                            if !feedback {
+                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                            }
                         }
                     }
             )
 #if os(iOS)
             .onChange(of: isPressed) { oldValue, newValue in
                 if newValue {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                } else {
+                    Task{
+                        try? await Task.sleep(for: .milliseconds(100))
+                        if isPressed {
+                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                            feedback = true
+                        }
+                    }
+                } else if feedback {
                     UIImpactFeedbackGenerator().impactOccurred()
                 }
             }
@@ -139,6 +148,9 @@ class AppearanceManager {
                     .onEnded{ value in
                         if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
                             configuration.trigger()
+                            if !feedback {
+                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                            }
                         }
                     }
             )
