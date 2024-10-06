@@ -156,7 +156,7 @@ struct PlayerProfileView: View {
                 .transition(.move(edge: .top).combined(with: .scale))
             }
         }
-        .animation(.smooth, value: expanded)
+        .animation(.spring, value: expanded)
         .frame(maxWidth: .infinity, alignment: .center)
         .listRowBackground(Color.clear)
     }
