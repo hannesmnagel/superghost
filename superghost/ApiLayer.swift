@@ -19,15 +19,15 @@ final class ApiLayer: ObservableObject {
 
     func startGame(isSuperghost: Bool, as player: Player) async throws {
         do{
-            let id = try await ApiCaller.openGame()
+            let id = try await ApiCaller.openGame(isSuperghost: isSuperghost)
             await MainActor.run{
-                self.game = .init(id: id, player2Id: player.id, player2profile: player.profile)
+                self.game = .init(id: id, player2Id: player.id, player2profile: player.profile, isSuperghost: isSuperghost)
             }
             try await joinGame(with: id, as: player)
         } catch {
             let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
             await MainActor.run {
-                self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+                self.game = .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost)
             }
             await connectToWebSocket(gameId: id)
         }
@@ -36,7 +36,7 @@ final class ApiLayer: ObservableObject {
 
     func joinGame(with gameId: String, as player: Player) async throws {
         await MainActor.run{
-            self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile)
+            self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile, isSuperghost: true)
         }
         await connectToWebSocket(gameId: gameId)
         
@@ -46,7 +46,7 @@ final class ApiLayer: ObservableObject {
     func hostGame(isSuperghost: Bool, as player: Player) async throws {
         let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
         await MainActor.run{
-            self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame")
+            self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame", isSuperghost: isSuperghost)
         }
         await connectToWebSocket(gameId: gameId)
     }
@@ -56,7 +56,7 @@ final class ApiLayer: ObservableObject {
         disconnectWebSocket()
         let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
         await MainActor.run{
-            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile)
+            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost)
         }
         await connectToWebSocket(gameId: id)
         
@@ -231,10 +231,13 @@ private enum ApiCaller {
     }
 
     // MARK: - Open Game
-    static func openGame() async throws -> String {
+    static func openGame(isSuperghost: Bool) async throws -> String {
         let url = URL(string: "\(baseURL)/game/open")!
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpBody = try JSONEncoder().encode(isSuperghost)
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
         guard (response as? HTTPURLResponse)?.statusCode == 200,
               let gameId = String(data: data, encoding: .utf8) else {
@@ -376,4 +379,6 @@ struct GameMove: Codable {
     var player1Challenges = Bool?.none
 
     var rematchGameId = String?.none
+    
+    var isSuperghost: Bool?
 }

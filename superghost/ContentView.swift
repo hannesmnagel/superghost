@@ -51,7 +51,7 @@ struct ContentView: View {
                 ScoreChangeView()
                     .transition(.move(edge: .bottom))
             } else if isGameViewPresented{
-                GameView(isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
+                GameView(isPresented: $isGameViewPresented)
                     .transition(.move(edge: .bottom))
             } else if showingPaywall {
                 PaywallView{

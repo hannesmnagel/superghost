@@ -162,7 +162,7 @@ final class GameViewModel: ObservableObject {
         return game != nil ? game!.player1Id == currentUser.id : false
     }
 
-    func resetGame(isSuperghost: Bool) async throws {
+    func resetGame() async throws {
         guard let game else {
             alertItem = .playerLeft
             return
@@ -170,9 +170,9 @@ final class GameViewModel: ObservableObject {
         alertItem = nil
         if let rematchGameId = game.rematchGameId {
             try await quitGame()
-            try await joinGame(with: rematchGameId, isSuperghost: isSuperghost)
+            try await joinGame(with: rematchGameId, isSuperghost: game.isSuperghost)
         } else {
-            try await ApiLayer.shared.rematchGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
+            try await ApiLayer.shared.rematchGame(isSuperghost: game.isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
         }
 
         Logger.userInteraction.info("rematching")

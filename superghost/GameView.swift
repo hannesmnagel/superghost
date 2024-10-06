@@ -10,7 +10,6 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var viewModel = GameViewModel.shared
     @Binding var isPresented: Bool
-    let isSuperghost: Bool
     let appearingDate = Date()
     @Namespace var namespace
 
@@ -20,12 +19,11 @@ struct GameView: View {
             AlertView(
                 alertItem: alertItem,
                 dismissParent: {isPresented = false},
-                isSuperghost: isSuperghost,
                 quitGame: {
                     try await viewModel.quitGame()
                 },
                 rematch: {
-                    try await viewModel.resetGame(isSuperghost: isSuperghost)
+                    try await viewModel.resetGame()
                 },
                 word: viewModel.game?.word ?? "",
                 player2Id: viewModel.game?.player2Id ?? ""
@@ -95,14 +93,14 @@ struct GameView: View {
                             if game.blockMoveForPlayerId != viewModel.currentUser.id {
                                 if GKStore.shared.games.isEmpty{
                                     if !game.word.isEmpty {
-                                        Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(game.word)?")
+                                        Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
                                         Text("Select a letter so that this still is the case or challenge your opponent")
                                     } else {
                                         Text("Select any Letter you want")
                                     }
                                 }
                             }
-                            LetterPicker(isSuperghost: isSuperghost, word: viewModel.game?.word ?? "")
+                            LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
                             if viewModel.game?.word.count ?? 0 > 1 {
                                 AsyncButton{
                                     try await viewModel.challenge()
@@ -116,7 +114,7 @@ struct GameView: View {
                             ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
                             Text(game.word)
                                 .font(AppearanceManager.wordInGame)
-                            SayTheWordButton(isSuperghost: isSuperghost)
+                            SayTheWordButton(isSuperghost: game.isSuperghost)
                             AsyncButton{
                                 try await viewModel.yesIlied()
                             } label: {
@@ -171,7 +169,7 @@ struct GameView: View {
 }
 
 #Preview{
-    GameView(isPresented: .constant(true), isSuperghost: true)
+    GameView(isPresented: .constant(true))
         .modifier(PreviewModifier())
 }
 #Preview{

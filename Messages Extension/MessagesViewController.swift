@@ -328,7 +328,6 @@ struct GameView: View {
                 AlertView(
                     alertItem: alertItem,
                     dismissParent: nil,
-                    isSuperghost: true,
                     quitGame: nil,
                     rematch: nil,
                     word: appState.lastMove?.word ?? "",
