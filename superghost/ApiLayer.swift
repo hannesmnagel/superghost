@@ -65,7 +65,7 @@ final class ApiLayer: ObservableObject {
 
     func appendLetter(letter: String) async throws {
         guard let gameId = await game?.id else { return }
-        try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
+        try await ApiCaller.appendLetter(letter: letter, gameId: gameId)
     }
     func prependLetter(letter: String) async throws {
         guard let gameId = await game?.id else { return }
