@@ -28,6 +28,7 @@ struct GameView: View {
                 word: viewModel.game?.word ?? "",
                 player2Id: viewModel.game?.player2Id ?? ""
             )
+            .frame(maxWidth: .infinity)
         } else {
             VStack {
                 if viewModel.gameStatusText == .waitingForPlayer{
@@ -41,7 +42,6 @@ struct GameView: View {
                 //MARK: Private Game Share Link Screen
                 if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
                     LoadingView()
-                        .frame(maxWidth: .infinity)
                     if viewModel.game?.player2Id == "privateGame"{
                         if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
                             Text("Send Invitation Link")
@@ -133,6 +133,7 @@ struct GameView: View {
                     Spacer()
                 }
             }
+            .frame(maxWidth: .infinity)
             .navigationTitle(viewModel.gameStatusText == .waitingForPlayer ? "Waiting for Player" : "Game started")
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)

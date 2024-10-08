@@ -37,16 +37,20 @@ struct Skin : Identifiable, Equatable{
             }
         }
     }
-    static let cowboy = Skin(image: "SkinCowboyGhost", unlockBy: .score(at: 0))
-    static let sailor = Skin(image: "SkinSailorGhost", unlockBy: .widget)
-    static let doctor = Skin(image: "SkinDoctorGhost", unlockBy: .playedMatches(count: 20))
-    static let knight = Skin(image: "SkinKnightGhost", unlockBy: .winInMessages)
+    static let cowboy = Skin(image: "Skin/Cowboy", unlockBy: .score(at: 0))
+    static let sailor = Skin(image: "Skin/Sailor", unlockBy: .widget)
+    static let doctor = Skin(image: "Skin/Doctor", unlockBy: .playedMatches(count: 20))
+    static let knight = Skin(image: "Skin/Knight", unlockBy: .winInMessages)
+    static let engineer = Skin(image: "Skin/Engineer", unlockBy: .rank(at: 2))
+    static let samurai = Skin(image: "Skin/Samurai", unlockBy: .score(at: 1700))
     
     static let skins = [
         cowboy,
         sailor,
         doctor,
         knight,
+        engineer,
+        samurai
     ]
 }
 

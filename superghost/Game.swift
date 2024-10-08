@@ -82,9 +82,9 @@ struct PlayerProfile: Equatable, Codable, Hashable {
 
     var imageView: Image {
 #if os(macOS)
-        return Image(nsImage: .init(named: image ?? "SkinCowboyGhost") ?? .init(named: "SkinCowboyGhost")!)
+        return Image(nsImage: .init(named: image ?? "Skin/Cowboy") ?? .init(named: "Skin/Cowboy")!)
 #else
-        return Image(uiImage: .init(named: image ?? "SkinCowboyGhost") ?? .init(named: "SkinCowboyGhost")!)
+        return Image(uiImage: .init(named: image ?? "Skin/Cowboy") ?? .init(named: "Skin/Cowboy")!)
 #endif
     }
 }
