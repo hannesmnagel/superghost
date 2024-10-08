@@ -142,7 +142,7 @@ struct PurchaseProductButton: View {
                 guard let product else {return}
                 disabled = true
                 defer{disabled = false}
-                switch try await purchase(product){
+                switch try await purchase(product, options: [.simulatesAskToBuyInSandbox(false)]){
                 case .success(_):
                     onPurchase()
                 default: return
