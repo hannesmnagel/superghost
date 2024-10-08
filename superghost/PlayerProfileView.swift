@@ -80,7 +80,6 @@ struct PlayerProfileView: View {
         }
     }()
     
-    @CloudStorage("username") private var username = GKLocalPlayer.local.alias
 
     var body: some View {
         VStack{
@@ -105,15 +104,6 @@ struct PlayerProfileView: View {
                     }
                 }
             if expanded {
-                TextField("Username", text: $username)
-                    .frame(maxWidth: 300)
-                    .onAppear{
-                        playerProfileModel.player.name = username
-                    }
-                    .onChange(of: username) {_,_ in
-                        playerProfileModel.player.name = username
-                    }
-                    .textFieldStyle(.roundedBorder)
                 LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 200))]) {
                     ForEach(skins){skin in
                         let isUnlocked = hasUnlocked(skin: skin)

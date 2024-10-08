@@ -81,6 +81,7 @@ class GKStore: ObservableObject {
             self.leaderboard = leaderboard
             self.leaderboardTitle = leaderboardTitle
             self.leaderboardImage = leaderboardImage
+            PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
         }
         
         try await loadData()
