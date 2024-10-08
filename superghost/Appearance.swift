@@ -101,7 +101,7 @@ class AppearanceManager {
                     .onEnded{ value in
                         if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
                             configuration.trigger()
-#if !os(macOS)
+#if os(iOS)
                             if !feedback {
                                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                             }

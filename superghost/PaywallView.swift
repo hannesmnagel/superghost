@@ -67,9 +67,11 @@ struct PaywallView: View {
                             dismiss()
                         }
                     } else {
+#if !os(visionOS)
                         PurchaseProductButtonLegacy(product: selectedProduct) {
                             dismiss()
                         }
+#endif
                     }
                     if let selectedProduct, viewAllPlans {
                         Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
@@ -152,7 +154,7 @@ struct PurchaseProductButton: View {
         .bold()
     }
 }
-
+#if !os(visionOS)
 struct PurchaseProductButtonLegacy: View {
     let product: Product?
     let onPurchase: ()->Void
@@ -177,6 +179,7 @@ struct PurchaseProductButtonLegacy: View {
         .bold()
     }
 }
+#endif
 
 #Preview {
     PaywallView{}
