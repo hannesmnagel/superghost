@@ -169,14 +169,8 @@ class GKStore: ObservableObject {
     }
     
     nonisolated func fetchSubscription() async throws {
-        let hasSubscribed = await {
-            for await entitlement in Transaction.currentEntitlements {
-                if let _ = try? entitlement.payloadValue{
-                    return true
-                }
-            }
-            return false
-        }()
+        let hasSubscribed = !StoreManager.shared.purchasedProductIDs.isEmpty
+
         await MainActor.run {
             self.isPayingSuperghost = hasSubscribed
         }

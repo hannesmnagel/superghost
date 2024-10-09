@@ -57,7 +57,7 @@ struct AchievementsView: View {
                 .contentShape(.rect)
             }
             .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-            .buttonBorderShape(.bcCapsule)
+            .buttonBorderShape(.capsule)
             .padding()
         }
         .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))

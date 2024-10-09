@@ -111,7 +111,11 @@ struct GameView: View {
                             }
                             //MARK: When you are challenged
                         } else if game.challengingUserId != viewModel.currentUser.id{
-                            ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
+                            ContentUnavailableView(
+                                "Uhhh, you got challenged!",
+                                systemImage: "questionmark.square.dashed",
+                                description: Text("Are you sure you didn't lie?!")
+                            )
                             Text(game.word)
                                 .font(AppearanceManager.wordInGame)
                             SayTheWordButton(isSuperghost: game.isSuperghost)
@@ -158,10 +162,10 @@ struct GameView: View {
                                 .font(AppearanceManager.quitGame)
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.bcCircle)
+                        .buttonBorderShape(.circle)
                     }
                     .buttonStyle(.bordered)
-                    .buttonBorderShape(.bcCircle)
+                    .buttonBorderShape(.circle)
                     .keyboardShortcut(.cancelAction)
                 }
             }

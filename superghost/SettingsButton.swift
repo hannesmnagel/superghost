@@ -126,7 +126,10 @@ struct SettingsView: View {
                             Toggle("Special Event Notifications", isOn: $specialEventNotifications)
                             Toggle("Leaderboard Notifications", isOn: $leaderboardNotifications)
                         } else {
-                            ContentPlaceHolderView("Notifications not allowed", systemImage: "bell.badge.slash")
+                            ContentUnavailableView(
+                                "Notifications not allowed",
+                                systemImage: "bell.badge.slash"
+                            )
                             Button("Grant Permission"){
                                 Task{
                                     switch authorization {
@@ -159,7 +162,7 @@ struct SettingsView: View {
                             }
                         }
                     } loading: {
-                        ContentPlaceHolderView("Loading authorization", systemImage: "bell.badge")
+                        ContentUnavailableView("Loading authorization", systemImage: "bell.badge")
                     }
                     .id([notificationRefresh, doubleXP15minNotifications, specialEventNotifications, leaderboardNotifications])
                 }
@@ -176,7 +179,7 @@ struct SettingsView: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                    .buttonBorderShape(.bcCircle)
+                    .buttonBorderShape(.circle)
                     .keyboardShortcut(.cancelAction)
                 }
             }

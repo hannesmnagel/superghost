@@ -95,6 +95,9 @@
     "and sync it to all your devices" : {
 
     },
+    "Are you sure you didn't lie?!" : {
+
+    },
     "Become a Superghost" : {
 
     },
@@ -154,6 +157,9 @@
 
     },
     "Display Your Wins today" : {
+
+    },
+    "Earn 1,050 XP to see the leaderboard" : {
 
     },
     "Earn Double XP" : {
@@ -226,6 +232,9 @@
     "Letter" : {
 
     },
+    "Loading authorization" : {
+
+    },
     "Logs" : {
 
     },
@@ -251,6 +260,9 @@
 
     },
     "Notifications" : {
+
+    },
+    "Notifications not allowed" : {
 
     },
     "Play a new game" : {
@@ -389,7 +401,7 @@
     "This is not a word" : {
 
     },
-    "Username" : {
+    "Uhhh, you got challenged!" : {
 
     },
     "View All Plans" : {

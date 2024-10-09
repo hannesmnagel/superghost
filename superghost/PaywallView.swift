@@ -62,16 +62,8 @@ struct PaywallView: View {
                         Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
                             .font(.footnote)
                     }
-                    if #available(iOS 17, macOS 15, *) {
-                        PurchaseProductButton(product: selectedProduct) {
-                            dismiss()
-                        }
-                    } else {
-#if !os(visionOS)
-                        PurchaseProductButtonLegacy(product: selectedProduct) {
-                            dismiss()
-                        }
-#endif
+                    PurchaseProductButton(product: selectedProduct) {
+                        dismiss()
                     }
                     if let selectedProduct, viewAllPlans {
                         Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
@@ -99,7 +91,7 @@ struct PaywallView: View {
                     Image(systemName: "xmark")
                 }
                 .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                .buttonBorderShape(.bcCircle)
+                .buttonBorderShape(.circle)
                 .background(.black)
                 .clipShape(.circle)
                 .keyboardShortcut(.cancelAction)
@@ -129,7 +121,6 @@ struct PaywallView: View {
     }
 }
 
-@available(iOS 17, macOS 15, *)
 struct PurchaseProductButton: View {
     let product: Product?
     let onPurchase: ()->Void
@@ -154,32 +145,7 @@ struct PurchaseProductButton: View {
         .bold()
     }
 }
-#if !os(visionOS)
-struct PurchaseProductButtonLegacy: View {
-    let product: Product?
-    let onPurchase: ()->Void
-    
-    @State private var disabled = false
-    
-    var body: some View {
-        Button("Continue"){
-            Task{
-                guard let product else {return}
-                disabled = true
-                defer{disabled = false}
-                switch try await product.purchase(options: [.simulatesAskToBuyInSandbox(false)]){
-                case .success(_):
-                    onPurchase()
-                default: return
-                }
-            }
-        }
-        .disabled(disabled || product == nil)
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
-        .bold()
-    }
-}
-#endif
+
 
 #Preview {
     PaywallView{}

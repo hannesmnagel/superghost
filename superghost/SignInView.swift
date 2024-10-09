@@ -18,6 +18,9 @@ struct SignInView: View {
         do{
             if GKLocalPlayer.local.isAuthenticated {
                 try await GKStore.shared.loadInitialData()
+                Task{
+                    await StoreManager.shared.updatePurchasedProducts()
+                }
                 onFinish()
             } else {
                 try? await Task.sleep(for: .seconds(1))

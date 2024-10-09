@@ -36,7 +36,10 @@ struct LeaderboardView: View {
                 }
             }
             if !gkStore.hasUnlockedLeaderboard {
-                ContentPlaceHolderView("Earn 1,050 XP to see the leaderboard", systemImage: "chart.bar.fill")
+                ContentUnavailableView(
+                    "Earn 1,050 XP to see the leaderboard",
+                    systemImage: "chart.bar.fill"
+                )
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 if let entries = gkStore.leaderboardData {
@@ -53,7 +56,7 @@ struct LeaderboardView: View {
                     }
                     .foregroundStyle(.accent)
                     .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                    .buttonBorderShape(.bcCapsule)
+                    .buttonBorderShape(.capsule)
                     .padding()
                 }
             }
@@ -97,18 +100,14 @@ struct LeaderboardView: View {
                             }
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.bcCapsule)
+                        .buttonBorderShape(.capsule)
                     } else {
                         Text("Rank: \(entry.rank)")
                     }
                     if entry.player.isInvitable {
                         Button("Challenge"){
                             let vc: ViewController
-                            if #available(iOS 17.0, macOS 14.0, *) {
-                                vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
-                            } else {
-                                vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completionHandler: nil)
-                            }
+                            vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
 
 #if os(macOS)
 
@@ -131,7 +130,7 @@ struct LeaderboardView: View {
                             Image(systemName: "xmark")
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.bcCircle)
+                        .buttonBorderShape(.circle)
                         .keyboardShortcut(.cancelAction)
                     }
                 }

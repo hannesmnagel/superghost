@@ -65,6 +65,9 @@ struct ContentView: View {
                         }
                     }
                 }
+                .task{
+                    try? await GKStore.shared.fetchSubscription()
+                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.black)
                 .transition(.move(edge: .bottom))

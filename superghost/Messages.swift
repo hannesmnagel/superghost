@@ -158,15 +158,9 @@ struct Messagable: ViewModifier {
     @MainActor @ViewBuilder
     var scoreChangeOverlay: some View {
         if showingScore{
-            let transition : ContentTransition =
-            if #available(iOS 17.0, macOS 14.0, *){
-                .numericText(value: Double(score))
-            } else {
-                .numericText()
-            }
             Text(score, format: .number)
                 .font(.system(size: 70))
-                .contentTransition(transition)
+                .contentTransition(.numericText(value: Double(score)))
         }
     }
     @MainActor @ViewBuilder
