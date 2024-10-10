@@ -44,6 +44,7 @@ class StoreManager: ObservableObject {
             }
             await transaction.finish()
         }
+        try? await GKStore.shared.fetchSubscription()
     }
     static let shared = StoreManager()
 }
