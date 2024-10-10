@@ -27,52 +27,67 @@ struct PaywallView: View {
                     .clipShape(.rect(bottomLeadingRadius: 20, bottomTrailingRadius: 20))
                     .ignoresSafeArea(edges: .top)
                     .layoutPriority(1)
-                Text("Become a Superghost")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.accent)
-                Spacer()
-                if viewAllPlans {
-                    ForEach(products) { product in
-                        Button{
-                            selectedProduct = product
-                        } label: {
-                            Text("\(product.displayPrice) \(subscriptionDuration(for: product))")
-                                .foregroundStyle(selectedProduct == product ? .accent : .secondary)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .stroke(selectedProduct == product ? .accent : .secondary)
-                                )
-                                .padding(.horizontal)
-                                .padding(.vertical, 5)
-                        }
-                    }
                     
-                } else {
-                    VStack(alignment: .leading){
-                        Text("+ ").foregroundColor(.accent) + Text("Loose up to 10 times a day")
-                        Text("+ ").foregroundColor(.accent) + Text("Advanced Gameplay")
-                        Text("+ ").foregroundColor(.accent) + Text("Customize App Icon")
-                    }
-                }
-                Spacer()
                 VStack{
-                    if let selectedProduct, !viewAllPlans {
-                        Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
-                            .font(.footnote)
-                    }
-                    PurchaseProductButton(product: selectedProduct) {
-                        dismiss()
-                    }
-                    if let selectedProduct, viewAllPlans {
-                        Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
-                            .font(.footnote)
-                    } else if !viewAllPlans {
-                        Button("View All Plans"){
-                            viewAllPlans = true
+                    Text("Become a Superghost")
+                        .font(.largeTitle.bold())
+                        .foregroundStyle(.accent)
+                    if viewAllPlans {
+                        ForEach(products) { product in
+                            Button{
+                                selectedProduct = product
+                            } label: {
+                                Text("\(product.displayPrice) \(subscriptionDuration(for: product))")
+                                    .foregroundStyle(selectedProduct == product ? .accent : .secondary)
+                                    .padding(.vertical, 5)
+                                    .frame(maxWidth: .infinity)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 25)
+                                            .stroke(selectedProduct == product ? .accent : .secondary)
+                                    )
+                                    .padding(.horizontal)
+                            }
                         }
-                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+
+                    } else {
+                        Spacer()
+                        VStack(alignment: .leading){
+                            Text("+ ").foregroundColor(.accent) + Text("Loose up to 10 times a day")
+                            Text("+ ").foregroundColor(.accent) + Text("Advanced Gameplay")
+                            Text("+ ").foregroundColor(.accent) + Text("Customize App Icon")
+                        }
+                    }
+                    Spacer()
+                    VStack{
+                        if let selectedProduct, !viewAllPlans {
+                            Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
+                                .font(.footnote)
+                        }
+                        PurchaseProductButton(product: selectedProduct) {
+                            dismiss()
+                        }
+                        if let selectedProduct, viewAllPlans {
+                            Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
+                                .font(.footnote)
+                        } else if !viewAllPlans {
+
+                            HStack{
+                                Link("Terms", destination: URL(string: "https://hannesnagel.com/ghost-tos")!)
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                Button("View All Plans"){
+                                    viewAllPlans = true
+                                }
+                                .foregroundStyle(.accent)
+                                .font(.body)
+                                Spacer()
+                                Link("Privacy", destination: URL(string: "https://hannesnagel.com/ghost-privacy")!)
+                                    .foregroundStyle(.primary)
+                            }
+                            .font(.callout)
+                            .padding(.horizontal)
+                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+                        }
                     }
                 }
             }
