@@ -28,10 +28,7 @@ struct HomeView: View {
 #endif
             VStack {
                 List{
-#if !os(macOS)
-                    Spacer(minLength: 500).frame(height: 500).listRowBackground(Color.clear)
-#endif
-                    //                        PlayerProfileView()
+                    PlayerProfileView()
                     Section{
                         header
                             .listRowBackground(Color.clear)
@@ -43,7 +40,13 @@ struct HomeView: View {
                         {
                             var resultingText = Text("")
                             for (index, letter) in wordToday.enumerated() {
-                                resultingText = resultingText + ((letter == "-") ? Text(String(Array("SUPERGHOST")[index])).foregroundColor(.secondary.opacity(0.5)) : Text(String(letter)).foregroundColor(.accent))
+                                resultingText = resultingText + (
+                                    (letter == "-") ? Text(
+                                        String(Array("SUPERGHOST".suffix(wordToday.count))[index])
+                                    )
+                                    .foregroundColor(.secondary.opacity(0.5)) : Text(String(letter))
+                                    .foregroundColor(.accent)
+                                )
                             }
                             return resultingText
                         }()
@@ -72,7 +75,6 @@ struct HomeView: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .background(WaitingGhost())
                 .scrollContentBackground(.hidden)
 #if os(macOS)
                 .overlay{
@@ -86,7 +88,7 @@ struct HomeView: View {
                                     Image(systemName: "xmark")
                                 }
                                 .keyboardShortcut(.cancelAction)
-                                .buttonBorderShape(.bcCapsule)
+                                .buttonBorderShape(.capsule)
                                 .padding(.top)
                                 .padding(.trailing)
                             }
@@ -159,14 +161,12 @@ struct HomeView: View {
             }
             .disabled(gkStore.games.today.lost.count >= (isSuperghost ? 10 : 5))
             .popover(isPresented: $startPopoverPresented) {
-                if #available(macOS 13.3, iOS 17.3, *) {
-                    VStack{
-                        Text("What are you waiting for?")
-                        Text("Let's go!!!")
-                    }
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
+                VStack{
+                    Text("What are you waiting for?")
+                    Text("Let's go!!!")
                 }
+                .padding()
+                .presentationCompactAdaptation(.popover)
             }
             .onTapGesture {
                 if !isSuperghost && gkStore.games.today.lost.count >= 5{

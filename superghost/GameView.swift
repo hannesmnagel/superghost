@@ -10,8 +10,8 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var viewModel = GameViewModel.shared
     @Binding var isPresented: Bool
-    let isSuperghost: Bool
     let appearingDate = Date()
+    @Namespace var namespace
 
     var body: some View {
         if let alertItem = viewModel.alertItem {
@@ -19,16 +19,16 @@ struct GameView: View {
             AlertView(
                 alertItem: alertItem,
                 dismissParent: {isPresented = false},
-                isSuperghost: isSuperghost,
                 quitGame: {
                     try await viewModel.quitGame()
                 },
                 rematch: {
-                    try await viewModel.resetGame(isSuperghost: isSuperghost)
+                    try await viewModel.resetGame()
                 },
                 word: viewModel.game?.word ?? "",
                 player2Id: viewModel.game?.player2Id ?? ""
             )
+            .frame(maxWidth: .infinity)
         } else {
             VStack {
                 if viewModel.gameStatusText == .waitingForPlayer{
@@ -52,23 +52,55 @@ struct GameView: View {
                     //MARK: Playing:
                 } else if let game = viewModel.game{
                     VStack {
+                        VStack{
+                            let profile = viewModel.isPlayerOne() ? game.player2profile : game.player1profile
+                            Image(profile?.image ?? Skin.cowboy.image)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(.circle)
+                                .padding(5)
+                                .overlay(Circle().stroke(.red, lineWidth: 5))
+                                .frame(maxWidth: 200)
+                            Text(profile?.name ?? "")
+                                .font(.title.bold())
+                            if let rank = profile?.rank, rank > 0 {
+                                Text("Rank \(rank.formatted())")
+                            } else {
+                                Text("Not ranked")
+                            }
+                        }
+                        .modifier(FlippingModifier(isActive: game.challengingUserId == viewModel.currentUser.id))
+                        .scaleEffect(game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 1 : 0.5)
+                        VStack{
+                            let profile = viewModel.isPlayerOne() ? game.player1profile : game.player2profile
+                            Image(profile?.image ?? Skin.cowboy.image)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(.circle)
+                                .padding(5)
+                                .overlay(Circle().stroke(.blue, lineWidth: 5))
+                                .frame(maxWidth: 200)
+                            Text(profile?.name ?? "")
+                                .font(.title.bold())
+                            if let rank = profile?.rank, rank > 0 {
+                                Text("Rank \(rank.formatted())")
+                            } else {
+                                Text("Not ranked")
+                            }
+                        }
+                        .scaleEffect(game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 0.5 : 1)
                         if game.player1Challenges == nil {
                             if game.blockMoveForPlayerId != viewModel.currentUser.id {
-                                ContentPlaceHolderView("It's your turn", systemImage: "scribble", description: "Make your move!")
-                                    .transition(.scale(scale: 0.1, anchor: .bottom))
                                 if GKStore.shared.games.isEmpty{
                                     if !game.word.isEmpty {
-                                        Text("Can you think of a word that \(isSuperghost ? "contains" : "starts with") \(game.word)?")
+                                        Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
                                         Text("Select a letter so that this still is the case or challenge your opponent")
                                     } else {
                                         Text("Select any Letter you want")
                                     }
                                 }
-                            } else {
-                                ContentPlaceHolderView("Waiting for Player", systemImage: "ellipsis.curlybraces", description: "Bla, Bla, Bla...")
-                                    .transition(.scale(scale: 0.1, anchor: .bottom))
                             }
-                            LetterPicker(isSuperghost: isSuperghost, word: viewModel.game?.word ?? "")
+                            LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
                             if viewModel.game?.word.count ?? 0 > 1 {
                                 AsyncButton{
                                     try await viewModel.challenge()
@@ -79,10 +111,14 @@ struct GameView: View {
                             }
                             //MARK: When you are challenged
                         } else if game.challengingUserId != viewModel.currentUser.id{
-                            ContentPlaceHolderView("Uhhh, you got challenged!", systemImage: "questionmark.square.dashed", description: "Are you sure you didn't lie?!")
+                            ContentUnavailableView(
+                                "Uhhh, you got challenged!",
+                                systemImage: "questionmark.square.dashed",
+                                description: Text("Are you sure you didn't lie?!")
+                            )
                             Text(game.word)
                                 .font(AppearanceManager.wordInGame)
-                            SayTheWordButton(isSuperghost: isSuperghost)
+                            SayTheWordButton(isSuperghost: game.isSuperghost)
                             AsyncButton{
                                 try await viewModel.yesIlied()
                             } label: {
@@ -91,16 +127,17 @@ struct GameView: View {
                             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
                             //MARK: When you challenged
                         } else {
-                            LoadingView()
                             Text("Waiting for player response...")
                         }
                     }
+                    .animation(.smooth, value: game.isBlockingMoveForPlayerOne)
                     .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                     .padding()
                     .animation(.bouncy, value: game)
                     Spacer()
                 }
             }
+            .frame(maxWidth: .infinity)
             .navigationTitle(viewModel.gameStatusText == .waitingForPlayer ? "Waiting for Player" : "Game started")
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -121,10 +158,10 @@ struct GameView: View {
                                 .font(AppearanceManager.quitGame)
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.bcCircle)
+                        .buttonBorderShape(.circle)
                     }
                     .buttonStyle(.bordered)
-                    .buttonBorderShape(.bcCircle)
+                    .buttonBorderShape(.circle)
                     .keyboardShortcut(.cancelAction)
                 }
             }
@@ -133,7 +170,7 @@ struct GameView: View {
 }
 
 #Preview{
-    GameView(isPresented: .constant(true), isSuperghost: true)
+    GameView(isPresented: .constant(true))
         .modifier(PreviewModifier())
 }
 #Preview{
@@ -183,9 +220,14 @@ struct SayTheWordButton: View {
     let isSuperghost: Bool
     @State private var isExpanded = false
     @State private var word = ""
+    @FocusState var focused : Bool
     var body: some View {
         if isExpanded{
             TextField("What word did you think of?", text: $word)
+                .focused($focused)
+                .onAppear{
+                    focused = true
+                }
         }
         AsyncButton {
             if isExpanded {
@@ -216,5 +258,22 @@ func retry<R:Sendable>(count: Int = 3, _ action: () async throws ->R) async reth
             return try await action()
         }
 
+    }
+}
+
+
+struct FlippingModifier: ViewModifier {
+    let isActive : Bool
+    @State private var trigger = CGFloat(0)
+    
+    func body(content: Content) -> some View {
+        content
+            .rotation3DEffect(isActive ? .degrees(trigger*360) : .zero, axis: (x: trigger, y: trigger, z: trigger))
+            .onAppear{
+                if isActive {
+                    trigger += 1
+                }
+            }
+            .animation(.bouncy.repeatForever(), value: trigger)
     }
 }

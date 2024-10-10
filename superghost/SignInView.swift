@@ -14,28 +14,48 @@ struct SignInView: View {
     @State private var showReasons = false
     let onFinish: () -> Void
 
+    func loadDataAndDismiss() async throws {
+        do{
+            if GKLocalPlayer.local.isAuthenticated {
+                try await GKStore.shared.loadInitialData()
+                Task{
+                    await StoreManager.shared.updatePurchasedProducts()
+                }
+                onFinish()
+            } else {
+                try? await Task.sleep(for: .seconds(1))
+                try await loadDataAndDismiss()
+            }
+        } catch {
+            try await loadDataAndDismiss()
+        }
+    }
+    
     var body: some View {
         VStack{
+            if GKLocalPlayer.local.isAuthenticated {
+                Text("Welcome \(GKLocalPlayer.local.displayName)")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.black)
+                    .padding(20)
+                    .background(Material.ultraThin)
+                    .clipShape(.capsule)
+                    .task{
+                        try? await loadDataAndDismiss()
+                    }
+                    .frame(maxHeight: .infinity, alignment: .center)
+            } else
             if manualSignInRequired {
                 pleaseSignInView
                     .foregroundStyle(.black)
             } else {
                 ProgressView("    Signing you in...", value: progress)//
                     .task {
-                        if GKLocalPlayer.local.isAuthenticated {
-                            try? await GKStore.shared.loadInitialData()
-                            onFinish()
-                        }
-                        
                         GKLocalPlayer.local.authenticateHandler = {vc, error in
                             if error != nil {
                                 manualSignInRequired = true
                             } else {
                                 progress = 1
-                                Task{
-                                    try await GKStore.shared.loadInitialData()
-                                    onFinish()
-                                }
                             }
                         }
                     }
@@ -45,10 +65,11 @@ struct SignInView: View {
                             progress = Double(i)/7
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
+            
         }
-            .background(
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .background(
                 Image(manualSignInRequired ? .ghostSad : .ghostThinking)
                     .resizable()
                     .scaledToFill()

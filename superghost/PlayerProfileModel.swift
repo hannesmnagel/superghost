@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GameKit
 
 final class PlayerProfileModel: ObservableObject {
     @Published var player: PlayerProfile {
@@ -24,7 +25,7 @@ final class PlayerProfileModel: ObservableObject {
            let player = try? JSONDecoder().decode(PlayerProfile.self, from: data) {
             self.player = player
         } else {
-            self.player = .init(name: "Unnamed Player")
+            self.player = .init(name: GKLocalPlayer.local.alias)
         }
     }
 }

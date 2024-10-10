@@ -69,8 +69,8 @@ struct StatsView: View {
             }
             .foregroundStyle(.accent)
             .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                .buttonBorderShape(.bcCapsule)
-                .frame(maxWidth: .infinity)
+            .buttonBorderShape(.capsule)
+            .frame(maxWidth: .infinity)
         }
     }
     @ViewBuilder @MainActor

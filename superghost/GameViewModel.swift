@@ -24,7 +24,7 @@ final class GameViewModel: ObservableObject {
         willSet {
             //check the game status
             if let newValue {
-                if let player1Wins = newValue.player1Wins {
+                if newValue.player1Wins != nil{
                     if game?.player1Wins != newValue.player1Wins {
                         if newValue.winningPlayerId == currentUser.id {
                             alertItem = .won
@@ -135,7 +135,7 @@ final class GameViewModel: ObservableObject {
         if try await isWord(newWord) {
             try await ApiLayer.shared.loseWithWord(word: newWord, playerId: currentUser.id)
         } else {
-            try await ApiLayer.shared.appendLetter(letter: letter)
+            try await ApiLayer.shared.prependLetter(letter: letter)
         }
     }
 
@@ -149,7 +149,7 @@ final class GameViewModel: ObservableObject {
         return game != nil ? game!.player1Id == currentUser.id : false
     }
 
-    func resetGame(isSuperghost: Bool) async throws {
+    func resetGame() async throws {
         guard let game else {
             alertItem = .playerLeft
             return
@@ -157,11 +157,9 @@ final class GameViewModel: ObservableObject {
         alertItem = nil
         if let rematchGameId = game.rematchGameId {
             try await quitGame()
-            try await joinGame(with: rematchGameId, isSuperghost: isSuperghost)
+            try await joinGame(with: rematchGameId, isSuperghost: game.isSuperghost)
         } else {
-            let id = try await ApiLayer.shared.createGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
-            try await joinGame(with: id, isSuperghost: isSuperghost)
-
+            try await ApiLayer.shared.rematchGame(isSuperghost: game.isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
         }
 
         Logger.userInteraction.info("rematching")
@@ -173,7 +171,7 @@ final class GameViewModel: ObservableObject {
         try await ApiLayer.shared.yesILiedAfterChallenge(playerId: currentUser.id)
     }
 
-
+    @MainActor
     private func updateGameStatus(_ state: GameStatus?) {
         switch state{
         case .waitingForPlayer:

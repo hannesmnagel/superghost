@@ -81,6 +81,7 @@ class GKStore: ObservableObject {
             self.leaderboard = leaderboard
             self.leaderboardTitle = leaderboardTitle
             self.leaderboardImage = leaderboardImage
+            PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
         }
         
         try await loadData()
@@ -119,9 +120,10 @@ class GKStore: ObservableObject {
         let entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
         
         await MainActor.run{
-            self.rank = localPlayerEntry?.rank ?? -1
             self.localPlayerEntry = entries?.0
             self.leaderboardData = entries?.1
+            self.rank = localPlayerEntry?.rank ?? -1
+            PlayerProfileModel.shared.player.rank = self.rank
         }
     }
     
@@ -142,7 +144,7 @@ class GKStore: ObservableObject {
         await MainActor.run{
             winningRate = games.winningRate
             
-            if Int(winningStreak/3) < Int(games.winningStreak/3) && (winningStreak + 1) == games.winningStreak {
+            if Int(winningStreak/5) < Int(games.winningStreak/5) && (winningStreak + 1) == games.winningStreak {
                 superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
                 UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
                 Task{
@@ -167,14 +169,8 @@ class GKStore: ObservableObject {
     }
     
     nonisolated func fetchSubscription() async throws {
-        let hasSubscribed = await {
-            for await entitlement in Transaction.currentEntitlements {
-                if let _ = try? entitlement.payloadValue{
-                    return true
-                }
-            }
-            return false
-        }()
+        let hasSubscribed = !StoreManager.shared.purchasedProductIDs.isEmpty
+
         await MainActor.run {
             self.isPayingSuperghost = hasSubscribed
         }

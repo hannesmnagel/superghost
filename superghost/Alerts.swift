@@ -16,7 +16,6 @@ struct AlertView: View {
     @State var alertItem: AlertItem
 
     let dismissParent: (() -> Void)?
-    let isSuperghost: Bool
     let quitGame: (() async throws -> Void)?
     let rematch: (() async throws -> Void)?
     let word: String
@@ -88,11 +87,11 @@ struct AlertView: View {
 
 
 #Preview{
-    AlertView(alertItem: .lost, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
+    AlertView(alertItem: .lost, dismissParent: {}, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }
 #Preview{
-    AlertView(alertItem: .playerLeft, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
+    AlertView(alertItem: .playerLeft, dismissParent: {}, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }
 #Preview{
-    AlertView(alertItem: .won, dismissParent: {}, isSuperghost: true, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
+    AlertView(alertItem: .won, dismissParent: {}, quitGame: {}, rematch: {}, word: "word", player2Id: "player2Id")
 }

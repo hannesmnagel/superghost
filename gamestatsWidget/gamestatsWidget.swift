@@ -54,6 +54,7 @@ struct Provider: AppIntentTimelineProvider {
         }()
         if !context.isPreview {
             Task.detached{
+                NSUbiquitousKeyValueStore.default.set(Date().ISO8601Format(), forKey: "lastWidgetUpdate")
                 try? await reportAchievement(.widgetAdd, percent: 100)
             }
         }
@@ -100,6 +101,7 @@ struct Provider: AppIntentTimelineProvider {
         let entry = SimpleEntry(text: string, configuration: configuration)
         if !context.isPreview {
             Task.detached{
+                NSUbiquitousKeyValueStore.default.set(Date().ISO8601Format(), forKey: "lastWidgetUpdate")
                 try? await reportAchievement(.widgetAdd, percent: 100)
             }
         }

@@ -25,12 +25,6 @@ struct ScoreChangeView: View {
     }
 
     var body: some View {
-        let transition : ContentTransition =
-        if #available(iOS 17.0, macOS 14.0, *){
-            .numericText(value: Double(score))
-        } else {
-            .numericText()
-        }
         VStack{
             Spacer()
             Image(image)
@@ -54,7 +48,7 @@ struct ScoreChangeView: View {
             .font(.title2)
         }
         .foregroundStyle(increasing == true ? .black : .primary)
-            .contentTransition(transition)
+        .contentTransition(.numericText(value: Double(score)))
             .onDisappear{
                 increasing = nil
             }

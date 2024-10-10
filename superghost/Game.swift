@@ -14,7 +14,7 @@ struct Game: Equatable {
     var player1profile: PlayerProfile?
 
     var player2Id = ""
-    var player2profile: PlayerProfile?
+    var player2profile: PlayerProfile = .init(name: ["Heinz Gustav", "Otto128", "TressG", "ShitHappens"].randomElement()!)
 
     var isBlockingMoveForPlayerOne = true
 
@@ -23,6 +23,8 @@ struct Game: Equatable {
     var player1Challenges = Bool?.none
 
     var rematchGameId = String?.none
+    
+    var isSuperghost: Bool
 
     var word = ""
 
@@ -80,9 +82,9 @@ struct PlayerProfile: Equatable, Codable, Hashable {
 
     var imageView: Image {
 #if os(macOS)
-        return Image(nsImage: .init(named: image ?? "SkinCowboyGhost") ?? .init(named: "SkinCowboyGhost")!)
+        return Image(nsImage: .init(named: image ?? "Skin/Cowboy") ?? .init(named: "Skin/Cowboy")!)
 #else
-        return Image(uiImage: .init(named: image ?? "SkinCowboyGhost") ?? .init(named: "SkinCowboyGhost")!)
+        return Image(uiImage: .init(named: image ?? "Skin/Cowboy") ?? .init(named: "Skin/Cowboy")!)
 #endif
     }
 }

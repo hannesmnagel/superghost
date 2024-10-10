@@ -8,38 +8,19 @@
 import SwiftUI
 
 struct LoadingView: View {
-    let date = Date()
-
+    @State private var trigger = CGFloat(0)
+    
     var body: some View {
-
-        VStack {
-            GeometryReader{geo in
-                TimelineView(.animation){context in
-                    let timeInterval = context.date.timeIntervalSince(date)
-                    let sineValue = sin(timeInterval * .pi) // Adjust the frequency of the sine wave
-                    let cosineValue = cos(timeInterval * .pi / 2)
-
-                    let offsetY = CGFloat(sineValue)*25
-                    let offsetX = CGFloat(cosineValue)*15
-
-                    Image(.ghost)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .offset(x: offsetX, y: offsetY)
-                    Circle()
-                        .fill()
-                        .scaleEffect(y: 0.2)
-                        .scaleEffect(max(0,offsetY/40))
-                        .blur(radius: 3)
-                        .opacity(max(0.2, offsetY/50))
-                        .offset(x: offsetX)
-                }
-                .position(x: geo.size.width/2)
-                .offset(y: geo.size.height/2)
+        Image(PlayerProfileModel.shared.player.image ?? Skin.cowboy.image)
+            .resizable()
+            .scaledToFit()
+            .clipShape(.circle)
+            .rotation3DEffect(.degrees(trigger*360), axis: (x: trigger, y: trigger, z: trigger))
+            .onAppear{
+                trigger += 1
             }
-        }
-        .offset(y: 40)
-        .notUpdating()
+            .animation(.bouncy.repeatForever(), value: trigger)
+            .frame(maxWidth: 300)
     }
 }
 

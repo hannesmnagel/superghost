@@ -327,7 +327,6 @@ struct GameView: View {
                 AlertView(
                     alertItem: alertItem,
                     dismissParent: nil,
-                    isSuperghost: true,
                     quitGame: nil,
                     rematch: nil,
                     word: appState.lastMove?.word ?? "",
@@ -335,6 +334,12 @@ struct GameView: View {
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Material.bar, ignoresSafeAreaEdges: .all)
+                .onAppear{
+                    if alertItem == .won,
+                       let data = try? JSONEncoder().encode(Date()){
+                        NSUbiquitousKeyValueStore.default.set(data, forKey: "lastWinInMessages")
+                    }
+                }
             }
         }
         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))

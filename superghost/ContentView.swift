@@ -51,7 +51,7 @@ struct ContentView: View {
                 ScoreChangeView()
                     .transition(.move(edge: .bottom))
             } else if isGameViewPresented{
-                GameView(isPresented: $isGameViewPresented, isSuperghost: isSuperghost)
+                GameView(isPresented: $isGameViewPresented)
                     .transition(.move(edge: .bottom))
             } else if showingPaywall {
                 PaywallView{
@@ -64,6 +64,9 @@ struct ContentView: View {
                             Logger.subscription.error("Error fetching subscription: \(error, privacy: .public)")
                         }
                     }
+                }
+                .task{
+                    try? await GKStore.shared.fetchSubscription()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.black)

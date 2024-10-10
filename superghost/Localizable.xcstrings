@@ -89,10 +89,13 @@
     "And earn 50 XP" : {
 
     },
-    "And earn an extra 50 XP" : {
+    "And earn an extra 50 XP + Unlock a new Skin" : {
 
     },
     "and sync it to all your devices" : {
+
+    },
+    "Are you sure you didn't lie?!" : {
 
     },
     "Become a Superghost" : {
@@ -154,6 +157,9 @@
 
     },
     "Display Your Wins today" : {
+
+    },
+    "Earn 1,050 XP to see the leaderboard" : {
 
     },
     "Earn Double XP" : {
@@ -226,6 +232,9 @@
     "Letter" : {
 
     },
+    "Loading authorization" : {
+
+    },
     "Logs" : {
 
     },
@@ -247,7 +256,13 @@
     "No need for a seperate Account!" : {
 
     },
+    "Not ranked" : {
+
+    },
     "Notifications" : {
+
+    },
+    "Notifications not allowed" : {
 
     },
     "Play a new game" : {
@@ -269,6 +284,9 @@
 
     },
     "Rank" : {
+
+    },
+    "Rank %@" : {
 
     },
     "Rank: %lld" : {
@@ -383,6 +401,9 @@
     "This is not a word" : {
 
     },
+    "Uhhh, you got challenged!" : {
+
+    },
     "View All Plans" : {
 
     },
@@ -399,6 +420,9 @@
 
     },
     "Wanna play with some Friends?" : {
+
+    },
+    "Welcome %@" : {
 
     },
     "Welcome to Ghost!" : {
