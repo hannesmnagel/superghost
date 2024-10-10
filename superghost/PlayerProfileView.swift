@@ -27,7 +27,7 @@ struct Skin : Identifiable, Equatable{
             case .score(let score):
                 "Earn a score of \(score)"
             case .rank(let rank):
-                "Climb the leaderboard to rank \(rank)"
+                "Become \(rank.ordinalString()) on the Leaderboard"
             case .playedMatches(let count):
                 "Play \(count) matches"
             case .winInMessages:
@@ -52,6 +52,28 @@ struct Skin : Identifiable, Equatable{
         engineer,
         samurai
     ]
+}
+
+extension Int {
+    func ordinalString() -> String {
+        let suffix: String
+
+        // Handle special cases like 11th, 12th, 13th
+        let lastTwoDigits = self % 100
+        if lastTwoDigits >= 11 && lastTwoDigits <= 13 {
+            suffix = "th"
+        } else {
+            // Otherwise use 1st, 2nd, 3rd, etc.
+            switch self % 10 {
+            case 1: suffix = "st"
+            case 2: suffix = "nd"
+            case 3: suffix = "rd"
+            default: suffix = "th"
+            }
+        }
+
+        return "\(self)\(suffix)"
+    }
 }
 
 struct PlayerProfileView: View {
@@ -140,6 +162,7 @@ struct PlayerProfileView: View {
                                     .clipShape(.circle)
                                 Text(skin.unlockBy.lockedDescription)
                                     .lineLimit(2, reservesSpace: true)
+                                    .multilineTextAlignment(.center)
                                     .opacity(isUnlocked ? 0 : 1)
                             }
                         }
