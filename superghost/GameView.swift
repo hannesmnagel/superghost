@@ -109,10 +109,6 @@ struct GameView: View {
                 ToolbarItem(placement: .cancellationAction){
                     Menu{
                         AsyncButton{
-
-                            if let createdAt = viewModel.game?.createdAt, let duration = ISO8601DateFormatter().date(from: createdAt)?.timeIntervalSinceNow.magnitude {
-                                Logger.remoteLog(.gameCancelled(duration: Int(duration)))
-                            }
                             isPresented = false
                             try await viewModel.quitGame()
                         } label: {

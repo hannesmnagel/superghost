@@ -109,9 +109,6 @@ struct PaywallView: View {
                 .keyboardShortcut(.cancelAction)
             }
         }
-        .onAppear{
-            Logger.remoteLog(.paywallViewed)
-        }
     }
     func subscriptionDuration(for product: Product) -> String {
         if let subscriptionPeriod = product.subscription?.subscriptionPeriod {

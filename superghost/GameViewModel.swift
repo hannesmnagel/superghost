@@ -41,12 +41,6 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: .random(in: 48...52))
                             }
-                            Logger.remoteLog(
-                                .gameWon(
-                                    duration:
-                                        Int(ISO8601DateFormatter()
-                                        .date(from: newValue.createdAt)?.timeIntervalSinceNow.magnitude ?? 0))
-                            )
                         } else {
                             alertItem = .lost
 
@@ -62,12 +56,6 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
-                            Logger.remoteLog(
-                                .gameLost(
-                                    duration:
-                                        Int(ISO8601DateFormatter()
-                                            .date(from: newValue.createdAt)?.timeIntervalSinceNow.magnitude ?? 0))
-                            )
                         }
                         if (newValue.word.count) > 5 {
                             Task.detached{
@@ -119,7 +107,6 @@ final class GameViewModel: ObservableObject {
             .store(in: &cancellables)
 
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
-        Logger.remoteLog(.joinedPrivateGame)
     }
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(isSuperghost: true, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
