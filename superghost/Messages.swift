@@ -369,20 +369,20 @@ struct Messagable: ViewModifier {
 
         Spacer()
         Button("Allow notifications"){
-            Task{
-                let settings = await UNUserNotificationCenter.current().notificationSettings()
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+
                 switch settings.authorizationStatus{
                 case .notDetermined:
-                    _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in}
                 case .denied:
-                    #if os(macOS)
+#if os(macOS)
                     showMessage("Open settings to allow notifications.")
-                    #else
+#else
                     if let appSettingsURL = URL(string: UIApplication.openSettingsURLString),
                        UIApplication.shared.canOpenURL(appSettingsURL) {
-                        await UIApplication.shared.open(appSettingsURL)
+                        UIApplication.shared.open(appSettingsURL)
                     }
-                    #endif
+#endif
                 case .authorized:
                     return
                 case .provisional:

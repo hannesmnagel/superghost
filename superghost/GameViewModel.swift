@@ -94,17 +94,11 @@ final class GameViewModel: ObservableObject {
         Logger.userInteraction.info("Started Game")
         
         withInvitation = false
-        ApiLayer.shared.$game
-            .assign(to: \.game, on: self)
-            .store(in: &cancellables)
     }
     func joinGame(with gameId: String, isSuperghost: Bool) async throws {
         try await ApiLayer.shared.joinGame(with: gameId, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
-        ApiLayer.shared.$game
-            .assign(to: \.game, on: self)
-            .store(in: &cancellables)
 
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
     }
@@ -112,9 +106,6 @@ final class GameViewModel: ObservableObject {
         try await ApiLayer.shared.hostGame(isSuperghost: true, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
-        ApiLayer.shared.$game
-            .assign(to: \.game, on: self)
-            .store(in: &cancellables)
         Logger.userInteraction.info("Hosted Game")
     }
     func submitWordAfterChallenge(word: String) async throws {

@@ -95,7 +95,11 @@ struct GrantFriendsPermissionView: View {
             AsyncButton {
                 let authStatus = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus()
                 if authStatus == .notDetermined {
-                    let _ = try? await GKLocalPlayer.local.loadFriends()
+                    await withCheckedContinuation{con in
+                        GKLocalPlayer.local.loadFriends { _, _ in
+                            con.resume()
+                        }
+                    }
                 }
                 grantedPermission = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus() == .authorized
             } label: {

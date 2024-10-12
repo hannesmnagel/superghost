@@ -32,7 +32,7 @@ struct GameStat: Codable, Hashable, Identifiable {
     static func loadAll() async throws -> [GameStat] {
         do{
             let fetchedGames = try await GKLocalPlayer.local.fetchSavedGames()
-            let games = await fetchedGames.concurrentMap {
+            let games = await fetchedGames.asyncMap {
                 do{
                     let data = try await $0.loadData()
                     let decoded = try? JSONDecoder().decode(Self.self, from: data)
@@ -106,11 +106,13 @@ func reportAchievement(_ achievement: Achievement, percent: Double) async throws
 
         guard percent >= 100 else {return}
         await showMessage("You earned an Achievement!")
+        
+        let achievementId = achievement.identifier
         Task{
             try? await Task.sleep(for: .seconds(2))
             await MainActor.run{
                 if #available(iOSApplicationExtension 18.0, macOSApplicationExtension 15.0, *) {
-                    GKAccessPoint.shared.trigger(achievementID: achievement.identifier){}
+                    GKAccessPoint.shared.trigger(achievementID: achievementId){}
                 }
             }
         }

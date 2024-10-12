@@ -8,6 +8,7 @@
 import SwiftUI
 import GameKit
 
+@MainActor
 final class PlayerProfileModel: ObservableObject {
     @Published var player: PlayerProfile {
         didSet {

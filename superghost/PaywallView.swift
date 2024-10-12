@@ -137,14 +137,11 @@ struct PurchaseProductButton: View {
     let product: Product?
     let onPurchase: ()->Void
     @Environment(\.purchase) var purchase
-    @State private var disabled = false
     
     var body: some View {
         Button("Continue"){
             Task{
                 guard let product else {return}
-                disabled = true
-                defer{disabled = false}
                 switch try await purchase(product, options: [.simulatesAskToBuyInSandbox(false)]){
                 case .success(_):
                     onPurchase()
@@ -152,9 +149,6 @@ struct PurchaseProductButton: View {
                 }
             }
         }
-        .disabled(disabled || product == nil)
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
-        .bold()
     }
 }
 

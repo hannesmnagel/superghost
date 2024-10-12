@@ -18,6 +18,7 @@ private let os = OS.macOS
 private let os = OS.visionOS
 #endif
 
+@MainActor
 class AppearanceManager {
     @Published var appIcon: AppIcon = .standard {
         didSet {
@@ -30,17 +31,7 @@ class AppearanceManager {
     enum AppIcon: String, CaseIterable{
         case standard = "AppIcon.standard",
              blue = "AppIcon.blue",
-             blueSuper = "AppIcon.blue.super.blue",
-             gray = "AppIcon.gray",
-             graySuper = "AppIcon.gray.super.gray",
-             yellow = "AppIcon.yellow",
-             yellowSuper = "AppIcon.yellow.super.yellow",
-             yellowSuperPuple = "AppIcon.yellow.super.purple",
-             purple = "AppIcon.purple",
-             purpleSuperPurple = "AppIcon.purple.super.purple",
-             red = "AppIcon.red",
-             redSuper = "AppIcon.red.super.red",
-             redSuperGreen = "AppIcon.red.super.green"
+             green = "AppIcon.green"
     }
 
     private init(){

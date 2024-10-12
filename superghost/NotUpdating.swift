@@ -20,7 +20,7 @@ extension View{
 private struct NotUpdatingView<Content: View>: View, Equatable {
     @ViewBuilder let content: Content
 
-    static func == (lhs: NotUpdatingView, rhs: NotUpdatingView) -> Bool {true}
+    nonisolated static func == (lhs: NotUpdatingView, rhs: NotUpdatingView) -> Bool {true}
 
     var body: some View{
         content

@@ -73,11 +73,16 @@ extension GKAchievementDescription {
     @MainActor @ViewBuilder
     func asyncImage(achieved: Bool) -> some View {
         if achieved{
-            AsyncView {
-                await Task.detached(priority: .low){
-                    try? await Image(uiImage: self.loadImage())
-                        .resizable().scaledToFit().clipShape(.circle)
-                }.value
+            AsyncProfileImageView {
+                try await withCheckedThrowingContinuation { con in
+                    self.loadImage { image, error in
+                        if let image {
+                            con.resume(returning: Image(uiImage: image))
+                        } else {
+                            con.resume(throwing: error ?? NSError(domain: "Ouch", code: 0))
+                        }
+                    }
+                }
             } loading: {
                 Image(uiImage: Self.placeholderCompletedAchievementImage())
             }
@@ -85,8 +90,21 @@ extension GKAchievementDescription {
             Image(uiImage: Self.incompleteAchievementImage())
         }
     }
-}
+    struct AsyncProfileImageView<Loading: View>: View {
+        let closure: () async throws -> Image
+        @State var image: Image?
+        @ViewBuilder let loading: Loading
 
+        var body: some View {
+            if let image {
+                image
+                    .resizable().scaledToFit().clipShape(.circle)
+            } else {
+                loading
+            }
+        }
+    }
+}
 
 struct AchievementView: View {
     let achievement: (GKAchievementDescription,GKAchievement?)

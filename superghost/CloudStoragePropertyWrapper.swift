@@ -32,11 +32,7 @@ private final class UbiquitousStorageObserver<Value: Codable>: ObservableObject 
                 guard let self = self else { return }
                 if !self.sendFromSelf{
                     if let newValue = notification.object as? Value {
-                        Task{ [weak self] in
-                            await MainActor.run{[weak self] in
-                                self?.value = newValue
-                            }
-                        }
+                        self.value = newValue
                     }
                 }
                 if let userInfo = notification.userInfo,
@@ -46,20 +42,14 @@ private final class UbiquitousStorageObserver<Value: Codable>: ObservableObject 
                    keys.contains(self.key) {
                     if let data = NSUbiquitousKeyValueStore.default.data(forKey: self.key),
                        let newValue = try? JSONDecoder().decode(Value.self, from: data) {
-                        Task{ [weak self] in
-                            await MainActor.run{[weak self] in
-                                self?.value = newValue
-                            }
-                        }
+                        self.value = newValue
                     }
                 }
             }
     }
 
     func updateValue(_ newValue: Value) {
-        Task{@MainActor in
-            value = newValue
-        }
+        value = newValue
         
         if let data = try? JSONEncoder().encode(newValue) {
             NSUbiquitousKeyValueStore.default.set(data, forKey: key)

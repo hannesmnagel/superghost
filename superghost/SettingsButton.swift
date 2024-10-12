@@ -48,7 +48,7 @@ struct SettingsView: View {
     @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
     @CloudStorage("specialEventNotifications") var specialEventNotifications = true
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
-    @State private var notificationRefresh = false
+    @State private var notificationAuthorization = UNAuthorizationStatus?.none
 
     let isSuperghost: Bool
 
@@ -119,9 +119,8 @@ struct SettingsView: View {
 #endif
                 
                 Section("Notifications"){
-                    AsyncView {
-                        let authorization = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
-                        if authorization == .authorized {
+                    if let notificationAuthorization {
+                        if notificationAuthorization == .authorized {
                             Toggle("15 minute Double XP", isOn: $doubleXP15minNotifications)
                             Toggle("Special Event Notifications", isOn: $specialEventNotifications)
                             Toggle("Leaderboard Notifications", isOn: $leaderboardNotifications)
@@ -132,7 +131,7 @@ struct SettingsView: View {
                             )
                             Button("Grant Permission"){
                                 Task{
-                                    switch authorization {
+                                    switch notificationAuthorization {
                                     case .notDetermined:
                                         _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                                     case .denied:
@@ -153,18 +152,20 @@ struct SettingsView: View {
                                     @unknown default:
                                         return
                                     }
-                                    notificationRefresh.toggle()
+
                                 }
                             }
-                            .task{
-                                try? await Task.sleep(for: .seconds(1))
-                                notificationRefresh.toggle()
-                            }
                         }
-                    } loading: {
+                    } else {
                         ContentUnavailableView("Loading authorization", systemImage: "bell.badge")
+                            .task{
+                                self.notificationAuthorization = await withCheckedContinuation({ con in
+                                    UNUserNotificationCenter.current().getNotificationSettings { settings in
+                                        con.resume(returning: settings.authorizationStatus)
+                                    }
+                                })
+                            }
                     }
-                    .id([notificationRefresh, doubleXP15minNotifications, specialEventNotifications, leaderboardNotifications])
                 }
             }
             .font(AppearanceManager.buttonsInSettings)

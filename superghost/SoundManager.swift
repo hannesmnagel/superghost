@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 import CoreHaptics
 
-class SoundManager{
+actor SoundManager{
     let hapticsEngine = try? CHHapticEngine()
 
     private var players = [Sound:AVAudioPlayer]()
@@ -46,7 +46,9 @@ class SoundManager{
         player.prepareToPlay()
         player.volume = 1
         if let ahap = sound.ahap{
-            try? await hapticsEngine?.start()
+            await withCheckedContinuation{con in
+                hapticsEngine?.start{_ in con.resume()}
+            }
             let url = URL(fileURLWithPath: Bundle.main.path(forResource: ahap, ofType: nil)!)
             try? hapticsEngine?.playPattern(from: url)
         }

@@ -5,7 +5,7 @@
 //  Created by Hannes Nagel on 6/15/24.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 import StoreKit
 
@@ -15,29 +15,30 @@ let backendURL = "https://hannesnagel.com/api/v3/superghost"
 typealias Player = (id: String, profile: PlayerProfile)
 
 enum RequestType:String{case https, wss}
+
+@globalActor
+actor ApiLayerActor: GlobalActor {
+    static let shared = ApiLayerActor()
+}
+
+@ApiLayerActor
 final class ApiLayer: ObservableObject {
 
     func startGame(isSuperghost: Bool, as player: Player) async throws {
         do{
             let id = try await ApiCaller.openGame(isSuperghost: isSuperghost)
-            await MainActor.run{
-                self.game = .init(id: id, player2Id: player.id, player2profile: player.profile, isSuperghost: isSuperghost)
-            }
+            await setGameVar(to: .init(id: id, player2Id: player.id, player2profile: player.profile, isSuperghost: isSuperghost))
             try await joinGame(with: id, as: player)
         } catch {
             let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
-            await MainActor.run {
-                self.game = .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost)
-            }
+            await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost))
             await connectToWebSocket(gameId: id)
         }
     }
 
 
     func joinGame(with gameId: String, as player: Player) async throws {
-        await MainActor.run{
-            self.game = .init(id: gameId, player2Id: player.id, player2profile: player.profile, isSuperghost: true)
-        }
+        await setGameVar(to: .init(id: gameId, player2Id: player.id, player2profile: player.profile, isSuperghost: true))
         await connectToWebSocket(gameId: gameId)
         
         try await ApiCaller.joinGame(gameId: gameId, playerId: player.id, playerProfile: player.profile)
@@ -45,66 +46,61 @@ final class ApiLayer: ObservableObject {
 
     func hostGame(isSuperghost: Bool, as player: Player) async throws {
         let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        await MainActor.run{
-            self.game = .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame", isSuperghost: isSuperghost)
-        }
+        await setGameVar(to: .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame", isSuperghost: isSuperghost))
         await connectToWebSocket(gameId: gameId)
     }
 
     func rematchGame(isSuperghost: Bool, as player: Player) async throws {
-        let oldGameId = await game?.id ?? ""
+        let oldGameId = await GameViewModel.shared.game?.id ?? ""
         disconnectWebSocket()
         let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        await MainActor.run{
-            self.game = .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost)
-        }
+        await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost))
         await connectToWebSocket(gameId: id)
         
         try await ApiCaller.rematchGame(oldGameId: oldGameId, newGameId: id)
     }
 
     func appendLetter(letter: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.appendLetter(letter: letter, gameId: gameId)
     }
     func prependLetter(letter: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.prependLetter(letter: letter, gameId: gameId)
     }
 
     func loseWithWord(word: String, playerId: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.loseWithWord(word: word, playerId: playerId, gameId: gameId)
     }
 
     func challenge(playerId: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.challenge(playerId: playerId, gameId: gameId)
     }
 
     func submitWordAfterChallenge(word: String, playerId: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.submitWordAfterChallenge(playerId: playerId, word: word, gameId: gameId)
     }
 
     func yesILiedAfterChallenge(playerId: String) async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.yesILiedAfterChallenge(playerId: playerId, gameId: gameId)
     }
 
     func quitGame() async throws {
-        guard let gameId = await game?.id else { return }
+        guard let gameId = await GameViewModel.shared.game?.id else { return }
         try await ApiCaller.deleteGame(gameId: gameId)
         await setGameVar(to: nil)
         disconnectWebSocket()
     }
 
     static let shared = ApiLayer()
-    @MainActor @Published var game: Game?
 
     private func setGameVar(to game: Game?) async {
         await MainActor.run {
-            self.game = game
+            GameViewModel.shared.game = game
         }
     }
 
@@ -139,7 +135,22 @@ final class ApiLayer: ObservableObject {
             }
         }
     }
-
+    nonisolated private func updateGame(with updatedGame: GameMove) {
+        Task{@MainActor in
+            if var game = GameViewModel.shared.game {
+                game.player1Id = updatedGame.player1Id ?? game.player1Id
+                game.player2Id = updatedGame.player2Id ?? game.player2Id
+                game.player1profile = updatedGame.player1Profile ?? game.player1profile
+                game.player2profile = updatedGame.player2Profile ?? game.player2profile
+                game.isBlockingMoveForPlayerOne = updatedGame.isBlockingMoveForPlayerOne
+                game.player1Challenges = updatedGame.player1Challenges ?? game.player1Challenges
+                game.player1Wins = updatedGame.player1Wins ?? game.player1Wins
+                game.rematchGameId = updatedGame.rematchGameId ?? game.rematchGameId
+                game.word = updatedGame.word ?? game.word
+                GameViewModel.shared.game = game
+            }
+        }
+    }
     private func receiveMessage(for gameId: String) {
         webSocketTask?.receive { [weak self] result in
             switch result {
@@ -147,30 +158,19 @@ final class ApiLayer: ObservableObject {
                 print("Received text: \(text)")
                 if let data = Data(base64Encoded: text),
                    let updatedGame = try? JSONDecoder().decode(GameMove.self, from: data) {
-                    Task{
-                        await MainActor.run {[weak self] in
-                            if let self, var game {
-                                game.player1Id = updatedGame.player1Id ?? game.player1Id
-                                game.player2Id = updatedGame.player2Id ?? game.player2Id
-                                game.player1profile = updatedGame.player1Profile ?? game.player1profile
-                                game.player2profile = updatedGame.player2Profile ?? game.player2profile
-                                game.isBlockingMoveForPlayerOne = updatedGame.isBlockingMoveForPlayerOne
-                                game.player1Challenges = updatedGame.player1Challenges ?? game.player1Challenges
-                                game.player1Wins = updatedGame.player1Wins ?? game.player1Wins
-                                game.rematchGameId = updatedGame.rematchGameId ?? game.rematchGameId
-                                game.word = updatedGame.word ?? game.word
-                                self.game = game
-                            }
-                        }
-                    }
+                    self?.updateGame(with: updatedGame)
                 }
-                self?.receiveMessage(for: gameId) // Continue to receive next message
+                Task{@ApiLayerActor in
+                    self?.receiveMessage(for: gameId) // Continue to receive next message
+                }
             default:
                 print("Error receiving message: \(result)")
                 Task{[weak self] in
                     await self?.setGameVar(to: nil)
                 }
-                self?.disconnectWebSocket()
+                Task{@ApiLayerActor in
+                    self?.disconnectWebSocket()
+                }
             }
         }
     }
@@ -179,11 +179,11 @@ final class ApiLayer: ObservableObject {
         webSocketTask?.cancel(with: .goingAway, reason: nil)
         webSocketTask = nil
     }
-    private class WebSocketDelegateOnClose: NSObject, URLSessionWebSocketDelegate{
-        let onClose: ()->Void
-        let onOpen: ()->Void
+    private final class WebSocketDelegateOnClose: NSObject, URLSessionWebSocketDelegate{
+        let onClose: @Sendable ()->Void
+        let onOpen: @Sendable ()->Void
 
-        init(onOpen: @escaping () -> Void, onClose: @escaping () -> Void) {
+        init(onOpen: @escaping @Sendable () -> Void, onClose: @escaping @Sendable () -> Void) {
             self.onClose = onClose
             self.onOpen = onOpen
         }

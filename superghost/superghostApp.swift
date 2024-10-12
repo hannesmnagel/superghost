@@ -36,17 +36,17 @@ struct superghostApp: App {
                 .onChange(of: scenePhase) {oldValue, newValue in
                     switch newValue {
                     case .background:
-                        Logger.appDidDeactivate()
+                        Task{await Logger.appDidDeactivate()}
                     case .inactive:
-                        Logger.appDidActivate()
+                        Task{await Logger.appDidActivate()}
                     case .active:
-                        Logger.appDidActivate()
+                        Task{await Logger.appDidActivate()}
                     @unknown default:
                         return
                     }
                 }
-                .onAppear{
-                    try? SoundManager.shared.setActive()
+                .task{
+                    try? await SoundManager.shared.setActive()
                     Logger.userInteraction.info("App launched")
 #if !os(macOS)
                     scheduleLBNotifications()

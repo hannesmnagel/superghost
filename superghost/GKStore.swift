@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import GameKit
+@preconcurrency import GameKit
 import StoreKit
 import UserNotifications
 
@@ -49,9 +49,15 @@ class GKStore: ObservableObject {
     
     private func checkIfLeaderboardIsUnlocked() async {
         guard !hasUnlockedLeaderboard else {return}
-        self.hasUnlockedLeaderboard = (try? await GKAchievement.loadAchievements().first(where: { $0.identifier == Achievement.leaderboardUnlock.rawValue })?.percentComplete) == 100
+        self.hasUnlockedLeaderboard = (
+            await withCheckedContinuation{ con in
+                GKAchievement.loadAchievements { achievements, error in
+                    con.resume(returning: achievements?.contains(where: {$0.identifier == Achievement.leaderboardUnlock.rawValue && $0.percentComplete == 100}) ?? false)
+                }
+            }
+        )
     }
-    nonisolated func loadInitialData() async throws {
+    func loadInitialData() async throws {
         //starting achievements task because it doesn't need anything else
         let achievementsTask = Task {
             try await loadAchievements()
@@ -63,7 +69,7 @@ class GKStore: ObservableObject {
                 self.games = games
             }
         }
-        
+
         guard let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first else {throw HKStoreError.noLeaderboard}
         guard let leaderboardTitle = leaderboard.title else {throw HKStoreError.noLeaderboardTitle}
         let leaderboardImage = try await withCheckedThrowingContinuation{con in
@@ -91,22 +97,22 @@ class GKStore: ObservableObject {
     nonisolated func loadAchievements() async throws {
         let achievements = try await GKAchievement.loadAchievements()
         let achievementDescriptions = try await GKAchievementDescription.loadAchievementDescriptions()
-        
-        let achieved = achievementDescriptions.compactMap{achievementDescription in
-            if let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier}),
-               achievement.isCompleted{
-                (achievementDescription, achievement)
-            } else { nil }
-        }
-        let unachieved = achievementDescriptions.compactMap{achievementDescription in
-            let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier})
-            if achievement?.isCompleted == true {
-                return nil as (GKAchievementDescription, GKAchievement?)?
-            } else {
-                return (achievementDescription, achievement)
-            }
-        }
+
         await MainActor.run {
+            let achieved = achievementDescriptions.compactMap{achievementDescription in
+                if let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier}),
+                   achievement.isCompleted{
+                    (achievementDescription, achievement)
+                } else { nil }
+            }
+            let unachieved = achievementDescriptions.compactMap{achievementDescription in
+                let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier})
+                if achievement?.isCompleted == true {
+                    return nil as (GKAchievementDescription, GKAchievement?)?
+                } else {
+                    return (achievementDescription, achievement)
+                }
+            }
             self.achievedAchievements = achieved
             self.unachievedAchievements = unachieved
         }
@@ -169,7 +175,7 @@ class GKStore: ObservableObject {
     }
     
     nonisolated func fetchSubscription() async throws {
-        let hasSubscribed = !StoreManager.shared.purchasedProductIDs.isEmpty
+        let hasSubscribed = await !StoreManager.shared.purchasedProductIDs.isEmpty
 
         await MainActor.run {
             self.isPayingSuperghost = hasSubscribed
@@ -182,9 +188,12 @@ class GKStore: ObservableObject {
         }
 
 #if os(iOS)
-        if await !isSuperghost && AppearanceManager.shared.appIcon != .standard{
-            try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
-            AppearanceManager.shared.appIcon = .standard
+        if await !isSuperghost,
+           await AppearanceManager.shared.appIcon != .standard{
+            Task{@MainActor in
+                try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
+                AppearanceManager.shared.appIcon = .standard
+            }
         }
 #endif
 

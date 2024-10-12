@@ -62,80 +62,8 @@ struct LeaderboardView: View {
             }
         }
         .sheet(item: $selectedScore) { entry in
-            scoreDetail(for: entry)
+            ScoreDetailView(entry: entry)
         }
-    }
-    @ViewBuilder @MainActor
-    func scoreDetail(for entry: GKLeaderboard.Entry) -> some View{
-            NavigationStack{
-                entry.player.asyncImage(.normal)
-                    .frame(maxWidth: 200, maxHeight: 200)
-                Text(entry.player.displayName)
-                    .font(AppearanceManager.playerViewTitle)
-                Text(entry.formattedScore).bold()
-
-                AsyncView {
-                    let friends = try? await GKLocalPlayer.local.loadFriends()
-                    if friends?.contains(entry.player) ?? false {
-                        Text("A friend of yours ranked at \(entry.rank)")
-                        if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *){
-                            Button("View their profile"){
-                                selectedScore = nil
-
-                                DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
-                                    GKAccessPoint.shared.trigger(player: entry.player)
-                                }
-                            }
-                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                            .buttonBorderShape(.capsule)
-                        }
-
-                    } else if entry.player == GKLocalPlayer.local {
-                        Text("You are rank \(entry.rank)")
-                        Button("View your profile"){
-                            selectedScore = nil
-
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
-                                GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
-                            }
-                        }
-                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.capsule)
-                    } else {
-                        Text("Rank: \(entry.rank)")
-                    }
-                    if entry.player.isInvitable {
-                        Button("Challenge"){
-                            let vc: ViewController
-                            vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
-
-#if os(macOS)
-
-                            let window = NSWindow(contentViewController: vc)
-                            NSWindowController(window: window).showWindow(nil)
-                            #else
-                            UIApplication.shared.topViewController()?.present(vc, animated: true)
-#endif
-
-                        }
-                    }
-                } loading: {
-                    ProgressView()
-                }
-                .toolbar{
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button{
-                            selectedScore = nil
-                        } label: {
-                            Image(systemName: "xmark")
-                        }
-                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.circle)
-                        .keyboardShortcut(.cancelAction)
-                    }
-                }
-            }
-//        }
     }
     @ViewBuilder @MainActor
     func inlineLeaderboard(entries: [GKLeaderboard.Entry]) -> some View {
@@ -163,28 +91,119 @@ struct LeaderboardView: View {
         }
     }
 }
+
+struct ScoreDetailView: View {
+    let entry : GKLeaderboard.Entry
+    @State private var friends = [GKPlayer]?.none
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        NavigationStack{
+            entry.player.asyncImage(.normal)
+                .frame(maxWidth: 200, maxHeight: 200)
+            Text(entry.player.displayName)
+                .font(AppearanceManager.playerViewTitle)
+            Text(entry.formattedScore).bold()
+            Group{
+            if let friends {
+                if friends.contains(entry.player) {
+                    Text("A friend of yours ranked at \(entry.rank)")
+                    if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *){
+                        Button("View their profile"){
+                            dismiss()
+
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
+                                GKAccessPoint.shared.trigger(player: entry.player)
+                            }
+                        }
+                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                        .buttonBorderShape(.capsule)
+                    }
+
+                } else if entry.player == GKLocalPlayer.local {
+                    Text("You are rank \(entry.rank)")
+                    Button("View your profile"){
+                        dismiss()
+
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.7){
+                            GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
+                        }
+                    }
+                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonBorderShape(.capsule)
+                } else {
+                    Text("Rank: \(entry.rank)")
+                }
+                if entry.player.isInvitable {
+                    Button("Challenge"){
+                        let vc: ViewController
+                        vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
+
+#if os(macOS)
+
+                        let window = NSWindow(contentViewController: vc)
+                        NSWindowController(window: window).showWindow(nil)
+#else
+                        UIApplication.shared.topViewController()?.present(vc, animated: true)
+#endif
+
+                    }
+                }
+            } else {
+                ProgressView()
+                    .task{
+                        GKLocalPlayer.local.loadFriends { players, error in
+                            if let players {
+                                self.friends = players
+                            }
+                        }
+                    }
+            }
+        }
+            .toolbar{
+                ToolbarItem(placement: .cancellationAction) {
+                    Button{
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonBorderShape(.circle)
+                    .keyboardShortcut(.cancelAction)
+                }
+            }
+        }
+    }
+}
 extension GKPlayer {
     @MainActor
     func asyncImage(_ size: PhotoSize) -> some View {
-        AsyncView {
-            await Task<Image?, Never>{
-                while !GKLocalPlayer.local.isAuthenticated{
-                    try? await Task.sleep(for: .seconds(1))
-                }
-                return try? await withCheckedThrowingContinuation{con in
-                    self.loadPhoto(for: size) { image, error in
-                        if let image {
-                            con.resume(returning: Image(uiImage: image))
-                        } else {
-                            con.resume(throwing: error!)
-                        }
+        AsyncProfileImageView {
+            try await withCheckedThrowingContinuation { con in
+                self.loadPhoto(for: size) { image, error in
+                    if let image {
+                        con.resume(returning: Image(uiImage: image))
+                    } else {
+                        con.resume(throwing: error ?? NSError(domain: "Ouch", code: 0))
                     }
-
                 }
-            }.value?
-            .resizable().scaledToFit().clipShape(.circle)
+            }
         } loading: {
             ProgressView()
+        }
+    }
+    struct AsyncProfileImageView<Loading: View>: View {
+        let closure: () async throws -> Image
+        @State var image: Image?
+        @ViewBuilder let loading: Loading
+
+        var body: some View {
+            if let image {
+                image
+                    .resizable().scaledToFit().clipShape(.circle)
+            } else {
+                loading
+            }
         }
     }
 }

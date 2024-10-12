@@ -81,20 +81,23 @@ private class ParticleScene: SKScene {
         }
     }
 
+
     private func beginParticles() {
         guard let view else { return }
         spawnTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / spawnRate, repeats: true) { timer in
             // Generate particle and add it to the scene
-            let particle = self.createParticleNode(
-                color: self.generateColor(),
-                size: self.generateSize(),
-                direction: self.generateDirection(),
-                rotationX: self.generateRotationSpeed(),
-                rotationY: self.generateRotationSpeed(),
-                rotationZ: self.generateRotationSpeed(),
-                scaleSpeed: self.generateScaleSpeed())
-            particle.position = self.generateInitialPosition(in: view.frame.size)
-            self.addChild(particle)
+            Task{@MainActor in
+                let particle = self.createParticleNode(
+                    color: self.generateColor(),
+                    size: self.generateSize(),
+                    direction: self.generateDirection(),
+                    rotationX: self.generateRotationSpeed(),
+                    rotationY: self.generateRotationSpeed(),
+                    rotationZ: self.generateRotationSpeed(),
+                    scaleSpeed: self.generateScaleSpeed())
+                particle.position = self.generateInitialPosition(in: view.frame.size)
+                self.addChild(particle)
+            }
         }
     }
 
@@ -154,6 +157,7 @@ private struct ParticleView: View {
     }
 }
 
+@MainActor
 func showConfetti() {
     #if !os(macOS)
     let hostingController = UIHostingController(rootView: ParticleView())
@@ -163,7 +167,7 @@ func showConfetti() {
         .present(hostingController, animated: false)
     Task{
         try? await Task.sleep(for: .seconds(3))
-        _ = await hostingController.dismiss(animated: true)
+        hostingController.dismiss(animated: true)
     }
     #endif
 }

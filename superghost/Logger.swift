@@ -8,7 +8,7 @@
 import Foundation
 import os
 import GameKit
-import UserNotifications
+@preconcurrency import UserNotifications
 import SwiftUI
 
 final class Logger {
@@ -25,18 +25,21 @@ final class Logger {
     static let game = os.Logger(subsystem: subsystem, category: Category.game.rawValue)
     static let general = os.Logger(subsystem: subsystem, category: Category.general.rawValue)
 
-    static func appDidActivate() {
-        analyzer.appDidActivate()
+    static func appDidActivate() async {
+        await analyzer.appDidActivate()
     }
-    static func appDidDeactivate() {
-        analyzer.appDidDeactivate()
+
+    static func appDidDeactivate() async {
+        await analyzer.appDidDeactivate()
     }
-    static func checkForNotificationStatusChange(onDeny: (()->Void)? = nil) async {
+    @MainActor
+    static func checkForNotificationStatusChange(onDeny: (@Sendable () -> Void)? = nil) async {
         await analyzer.checkForNotificationStatusChange(onDeny: onDeny)
     }
+    @MainActor
     static private let analyzer = Analyzer()
 
-    final class Analyzer {
+    actor Analyzer {
         @AppStorage("anonymousUserID") private var anonymousUserID = UUID().uuidString
         @AppStorage("notificationsEnabled") private var notificationsEnabled = "not determined"
         @AppStorage("osVersion") private var osVersion = "undetermined"
@@ -46,10 +49,6 @@ final class Logger {
         @CloudStorage("timeSpentInGhost") private var timeSpentInGhost = 0.0//in minutes
         private var activated : Date?
 
-
-        init(){
-            self.anonymousUserID = self.anonymousUserID
-        }
 
         func checkForNotificationStatusChange(onDeny: (()->Void)? = nil) async {
             let settings = await UNUserNotificationCenter.current().notificationSettings()
@@ -72,9 +71,11 @@ final class Logger {
         func appDidActivate() {
             activated = .now
         }
-        func appDidDeactivate() {
+        func appDidDeactivate() async {
             if let activated {
-                timeSpentInGhost += (Date.now.timeIntervalSince(activated)/60)
+                await MainActor.run {
+                    timeSpentInGhost += (Date.now.timeIntervalSince(activated)/60)
+                }
                 self.activated = nil
             }
         }
