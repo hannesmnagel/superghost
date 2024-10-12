@@ -101,6 +101,9 @@ extension GKAchievementDescription {
                     .resizable().scaledToFit().clipShape(.circle)
             } else {
                 loading
+                    .task{
+                        image = try? await closure()
+                    }
             }
         }
     }

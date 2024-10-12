@@ -203,6 +203,9 @@ extension GKPlayer {
                     .resizable().scaledToFit().clipShape(.circle)
             } else {
                 loading
+                    .task{
+                        image = try? await closure()
+                    }
             }
         }
     }
