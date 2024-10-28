@@ -198,7 +198,7 @@ struct AppIconPickerView: View {
     let icons = AppearanceManager.AppIcon.allCases
     var body: some View {
         ScrollView{
-            LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 400))]) {
+            LazyVGrid(columns: [.init(.adaptive(minimum: 150, maximum: 300))]) {
                 ForEach(icons, id: \.self) { icon in
                     Button{
                         if isSuperghost || icon == .standard {
@@ -212,11 +212,11 @@ struct AppIconPickerView: View {
                         Image(icon.rawValue.appending(".image"))
                             .resizable()
                             .scaledToFit()
-                            .clipShape(.rect(cornerRadius: 10))
+                            .clipShape(.rect(cornerRadius: 25))
                     }
                     .overlay{
                         if AppearanceManager.shared.appIcon == icon {
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: 25)
                                 .stroke(Color.accent, lineWidth: 3)
                         }
                     }
@@ -225,9 +225,11 @@ struct AppIconPickerView: View {
                             Image(systemName: "lock.fill")
                         }
                     }
+                    .padding()
                 }
             }
         }
+        .navigationTitle("App Icon")
     }
 }
 #endif

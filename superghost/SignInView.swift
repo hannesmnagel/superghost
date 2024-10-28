@@ -12,24 +12,8 @@ struct SignInView: View {
     @State private var progress = 0.0
     @State private var manualSignInRequired = false
     @State private var showReasons = false
+    @Environment(\.scenePhase) var scenePhase
     let onFinish: () -> Void
-
-    func loadDataAndDismiss() async throws {
-        do{
-            if GKLocalPlayer.local.isAuthenticated {
-                try await GKStore.shared.loadInitialData()
-                Task{
-                    await StoreManager.shared.updatePurchasedProducts()
-                }
-                onFinish()
-            } else {
-                try? await Task.sleep(for: .seconds(1))
-                try await loadDataAndDismiss()
-            }
-        } catch {
-            try await loadDataAndDismiss()
-        }
-    }
     
     var body: some View {
         VStack{
@@ -40,10 +24,15 @@ struct SignInView: View {
                     .padding(20)
                     .background(Material.ultraThin)
                     .clipShape(.capsule)
-                    .task{
-                        try? await loadDataAndDismiss()
+                    .task(id: scenePhase){
+                        do{
+                            try await GKStore.shared.loadInitialData()
+                            Task{
+                                await StoreManager.shared.updatePurchasedProducts()
+                            }
+                            onFinish()
+                        } catch {}
                     }
-                    .frame(maxHeight: .infinity, alignment: .center)
             } else
             if manualSignInRequired {
                 pleaseSignInView
@@ -51,6 +40,8 @@ struct SignInView: View {
             } else {
                 ProgressView("    Signing you in...", value: progress)//
                     .task {
+                        GKAccessPoint.shared.showHighlights = true
+
                         GKLocalPlayer.local.authenticateHandler = {vc, error in
                             if error != nil {
                                 manualSignInRequired = true
