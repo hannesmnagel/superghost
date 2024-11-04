@@ -8,7 +8,7 @@
 import SwiftUI
 import GameKit
 import StoreKit
-#if canImport(WidgetKit)
+#if os(iOS)
 import WidgetKit
 #endif
 import UserNotifications
@@ -187,7 +187,7 @@ struct ContentView: View {
         let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
         await updateLocalWordTo(lettersOfWord.appending(actualPlaceHolders))
 
-#if canImport(WidgetKit)
+#if os(iOS)
         WidgetCenter.shared.reloadAllTimelines()
 #endif
     }

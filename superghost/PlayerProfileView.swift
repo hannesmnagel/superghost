@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-#if canImport(WidgetKit)
+#if os(iOS)
 import WidgetKit
 #endif
 import GameKit
@@ -88,7 +88,7 @@ struct PlayerProfileView: View {
     
     @CloudStorage("lastWinInMessages") private var lastWinInMessages = Date.distantPast
     
-    @CloudStorage("hasWidget") var hasWidget = {
+    @AppStorage("hasWidget") var hasWidget = {
         if
             let lastWidgetUpdateString = NSUbiquitousKeyValueStore.default.string(forKey: "lastWidgetUpdate"),
            
@@ -115,7 +115,7 @@ struct PlayerProfileView: View {
                 .animation(.smooth, value: playerProfileModel.player.image)
                 .frame(maxWidth: 300)
                 .task(id: scenePhase, priority: .background) {
-#if canImport(WidgetKit)
+#if os(iOS)
                     hasWidget = (try? await !WidgetCenter.shared.currentConfigurations().isEmpty) ?? hasWidget
 #endif
                     if let skin = Skin.skins.filter({$0.image == playerProfileModel.player.image}).first,
