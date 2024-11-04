@@ -64,10 +64,7 @@ class GKStore: ObservableObject {
         }
         
         let gamesTask = Task{
-            let games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
-            await MainActor.run {
-                self.games = games
-            }
+            self.games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
         }
 
         guard let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first else {throw HKStoreError.noLeaderboard}
@@ -82,55 +79,50 @@ class GKStore: ObservableObject {
             }
             
         }
-        
-        await MainActor.run{
-            self.leaderboard = leaderboard
-            self.leaderboardTitle = leaderboardTitle
-            self.leaderboardImage = leaderboardImage
-            PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
-        }
-        
+
+        self.leaderboard = leaderboard
+        self.leaderboardTitle = leaderboardTitle
+        self.leaderboardImage = leaderboardImage
+        PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
+
         try await loadData()
         try await achievementsTask.value
         await gamesTask.value
     }
-    nonisolated func loadAchievements() async throws {
+    func loadAchievements() async throws {
         let achievements = try await GKAchievement.loadAchievements()
         let achievementDescriptions = try await GKAchievementDescription.loadAchievementDescriptions()
 
-        await MainActor.run {
-            let achieved = achievementDescriptions.compactMap{achievementDescription in
-                if let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier}),
-                   achievement.isCompleted{
-                    (achievementDescription, achievement)
-                } else { nil }
-            }
-            let unachieved = achievementDescriptions.compactMap{achievementDescription in
-                let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier})
-                if achievement?.isCompleted == true {
-                    return nil as (GKAchievementDescription, GKAchievement?)?
-                } else {
-                    return (achievementDescription, achievement)
-                }
-            }
-            self.achievedAchievements = achieved
-            self.unachievedAchievements = unachieved
+        let achieved = achievementDescriptions.compactMap{achievementDescription in
+            if let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier}),
+               achievement.isCompleted{
+                (achievementDescription, achievement)
+            } else { nil }
         }
+        let unachieved = achievementDescriptions.compactMap{achievementDescription in
+            let achievement = achievements.first(where: {$0.identifier == achievementDescription.identifier})
+            if achievement?.isCompleted == true {
+                return nil as (GKAchievementDescription, GKAchievement?)?
+            } else {
+                return (achievementDescription, achievement)
+            }
+        }
+        self.achievedAchievements = achieved
+        self.unachievedAchievements = unachieved
     }
-    nonisolated func loadData() async throws {
+    func loadData() async throws {
         await checkIfLeaderboardIsUnlocked()
-        if await leaderboardImage == nil {
+        if leaderboardImage == nil {
             try await loadInitialData()
         }
-        
         let entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
-        
-        await MainActor.run{
-            self.localPlayerEntry = entries?.0
-            self.leaderboardData = entries?.1
-            self.rank = localPlayerEntry?.rank ?? -1
-            PlayerProfileModel.shared.player.rank = self.rank
-        }
+
+
+        self.localPlayerEntry = entries?.0
+        self.leaderboardData = entries?.1
+        self.rank = localPlayerEntry?.rank ?? -1
+        PlayerProfileModel.shared.player.rank = self.rank
+
     }
     
     private init(){}
@@ -139,58 +131,63 @@ class GKStore: ObservableObject {
         case noLeaderboard, noLeaderboardTitle, noLeaderboardImage
     }
     
-    nonisolated func refreshScore() async {
-        if await games.isEmpty{
+    func refreshScore() async {
+        if games.isEmpty{
             try? await Task.sleep(for: .seconds(2))
         }
-        
-        if await !games.isEmpty, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .notDetermined{
+
+        if !games.isEmpty,
+           await withCheckedContinuation({con in
+               UNUserNotificationCenter.current().getNotificationSettings { settings in
+                   con.resume(returning: settings.authorizationStatus == .notDetermined)
+               }
+           })
+        {
             _ = try? await UNUserNotificationCenter.current().requestAuthorization()
         }
-        await MainActor.run{
-            winningRate = games.winningRate
-            
-            if Int(winningStreak/5) < Int(games.winningStreak/5) && (winningStreak + 1) == games.winningStreak {
-                superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
-                UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
-                Task{
-                    try? await fetchSubscription()
-                }
+
+        winningRate = games.winningRate
+
+        if Int(winningStreak/5) < Int(games.winningStreak/5) && (winningStreak + 1) == games.winningStreak {
+            superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
+            UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
+            Task{
+                try? await fetchSubscription()
             }
-            winningStreak = games.winningStreak
         }
-        let gamesToday = await games.today
-        await MainActor.run{
-            winsToday = gamesToday.won.count
-        }
+        winningStreak = games.winningStreak
+
+        let gamesToday = games.today
+
+        winsToday = gamesToday.won.count
+
         let gamesLostToday = gamesToday.lost
-        
-        let word = await isSuperghost ? "SUPERGHOST" : "GHOST"
+
+        let word = isSuperghost ? "SUPERGHOST" : "GHOST"
         let lettersOfWord = word.prefix(gamesLostToday.count)
         let placeHolders = Array(repeating: "-", count: word.count).joined()
         let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
-        await MainActor.run{
-            wordToday = lettersOfWord.appending(actualPlaceHolders)
-        }
+
+        wordToday = lettersOfWord.appending(actualPlaceHolders)
+
     }
     
-    nonisolated func fetchSubscription() async throws {
+    func fetchSubscription() async throws {
         let hasSubscribed = await !StoreManager.shared.purchasedProductIDs.isEmpty
 
-        await MainActor.run {
-            self.isPayingSuperghost = hasSubscribed
-        }
-        let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
+
+        self.isPayingSuperghost = hasSubscribed
+        let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-        let wasSuperghost = await isSuperghost
-        await MainActor.run{
-            isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
-        }
+        let wasSuperghost = isSuperghost
+
+        isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
+
 
 #if os(iOS)
-        if await !isSuperghost,
-           await AppearanceManager.shared.appIcon != .standard{
-            Task{@MainActor in
+        if !isSuperghost,
+           AppearanceManager.shared.appIcon != .standard{
+            Task{
                 try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
                 AppearanceManager.shared.appIcon = .standard
             }
@@ -200,15 +197,11 @@ class GKStore: ObservableObject {
 
         //is in trial:
         if !hasSubscribed && timeSinceTrialEnd < 0 {
-            await MainActor.run{
-                showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
-            }
+            showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
         } else {
-            await MainActor.run{
-                showTrialEndsIn = nil
-            }
+            showTrialEndsIn = nil
         }
-        if await isSuperghost != wasSuperghost {
+        if isSuperghost != wasSuperghost {
             await refreshScore()
         }
     }

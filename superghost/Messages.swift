@@ -90,26 +90,28 @@ struct Messagable: ViewModifier {
             }
 
     }
-    nonisolated private func dismissWhenAddedFriends() async throws {
-        while try await GKLocalPlayer.local.loadFriends().isEmpty {
+    private func dismissWhenAddedFriends() async throws {
+        while try await withCheckedThrowingContinuation({con in
+            GKLocalPlayer.local.loadFriends { players, error in
+                if let players { con.resume(returning: players.isEmpty)} else {con.resume(throwing: error ?? MessagableError.couldntLoadFriends)}
+            }
+        }) {
             try? await Task.sleep(for: .seconds(1))
         }
         try? await GameStat.submitScore(score + 50)
-        await MainActor.run{
-            showingScore = true
-        }
-        await MainActor.run{
-            Task{await changeScore(by: 50)}
-            Logger.score.info("Increased score by 50 because user added a friend.")
-        }
+
+        showingScore = true
+        Task{await changeScore(by: 50)}
+        Logger.score.info("Increased score by 50 because user added a friend.")
+
         try? await Task.sleep(for: .seconds(6))
-        await MainActor.run{
-            model.showingAction = nil
-            showingScore = false
-        }
+
+        model.showingAction = nil
+        showingScore = false
+
     }
-    nonisolated private func dismissWhenAddedWidget() async throws {
-#if canImport(WidgetKit)
+    private func dismissWhenAddedWidget() async throws {
+#if os(iOS)
         WidgetCenter.shared.reloadAllTimelines()
 #endif
         while true {
@@ -119,40 +121,41 @@ struct Messagable: ViewModifier {
             try? await Task.sleep(for: .seconds(1))
         }
         try? await GameStat.submitScore(score + 50)
-        await MainActor.run{
-            showingScore = true
-        }
-        await MainActor.run{
-            Task{await changeScore(by: 50)}
-            Logger.score.info("Increased score by 50 because user added a widget.")
-        }
+
+        showingScore = true
+
+
+        Task{await changeScore(by: 50)}
+        Logger.score.info("Increased score by 50 because user added a widget.")
+
         try? await Task.sleep(for: .seconds(6))
-        await MainActor.run{
-            model.showingAction = nil
-            showingScore = false
-        }
+
+        model.showingAction = nil
+        showingScore = false
     }
-    nonisolated private func dismissWhenNotificationsAllowed() async throws {
-        
-        while await (UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized) {
+    private func dismissWhenNotificationsAllowed() async throws {
+
+        while await withCheckedContinuation({con in
+            UNUserNotificationCenter.current().getNotificationSettings { notificationSettings in
+                con.resume(returning: notificationSettings.authorizationStatus != .authorized)
+            }
+        }) {
             try? await Task.sleep(for: .seconds(1))
         }
-        Task.detached{
+        Task{
             try? await GameStat.submitScore(score + 50)
         }
-        await MainActor.run{
-            showingScore = true
-        }
-        await MainActor.run{
-            Task{await changeScore(by: 50)}
-            Logger.score.info("Increased score by 50 because user allowed notifications")
-        }
+
+        showingScore = true
+        Task{await changeScore(by: 50)}
+        Logger.score.info("Increased score by 50 because user allowed notifications")
+
         try? await Task.sleep(for: .seconds(6))
         await Logger.checkForNotificationStatusChange()
-        await MainActor.run{
-            model.showingAction = nil
-            showingScore = false
-        }
+
+        model.showingAction = nil
+        showingScore = false
+
     }
 
     @MainActor @ViewBuilder

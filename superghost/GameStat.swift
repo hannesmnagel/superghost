@@ -86,7 +86,7 @@ enum Achievement: String, CaseIterable {
     case lowScore = "score.low", midScore = "score.mid", highScore = "score.high", longWord = "word.long", friendAdd = "friend.add", leaderboardUnlock = "leaderboard.unlock", widgetAdd = "widget.add"
 }
 
-func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
+nonisolated func reportAchievement(_ achievement: Achievement, percent: Double) async throws {
     do{
         guard Bundle.main.bundleIdentifier == "com.nagel.superghost" else {
             NSUbiquitousKeyValueStore.default.set(percent, forKey: achievement.rawValue)

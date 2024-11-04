@@ -98,10 +98,9 @@ final class ApiLayer: ObservableObject {
 
     static let shared = ApiLayer()
 
+    @MainActor
     private func setGameVar(to game: Game?) async {
-        await MainActor.run {
-            GameViewModel.shared.game = game
-        }
+        GameViewModel.shared.game = game
     }
 
     //MARK: WebSocket

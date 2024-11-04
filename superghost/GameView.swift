@@ -111,10 +111,10 @@ struct GameView: View {
                             }
                             //MARK: When you are challenged
                         } else if game.challengingUserId != viewModel.currentUser.id{
-                            ContentUnavailableView(
+                            ContentPlaceHolderView(
                                 "Uhhh, you got challenged!",
                                 systemImage: "questionmark.square.dashed",
-                                description: Text("Are you sure you didn't lie?!")
+                                description: "Are you sure you didn't lie?!"
                             )
                             Text(game.word)
                                 .font(AppearanceManager.wordInGame)

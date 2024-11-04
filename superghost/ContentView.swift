@@ -104,6 +104,9 @@ struct ContentView: View {
             }
         }
     }
+    func showPaywall() {
+        UserDefaults.standard.set(true, forKey: "showingPaywall")
+    }
     nonisolated func promptUserForAction() async {
         let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
         let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
@@ -129,9 +132,7 @@ struct ContentView: View {
         if await !isSuperghost,
            (Int(daysSinceTrialEnd) % 4 == 0 || daysSinceTrialEnd < 3), .random()
         {
-            await MainActor.run{
-                UserDefaults.standard.set(true, forKey: "showingPaywall")
-            }
+            await showPaywall()
             Logger.userInteraction.info("presenting paywall")
         } else if Int.random(in: 0...2) == 0,
                   await UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized{
@@ -155,28 +156,36 @@ struct ContentView: View {
         }
     }
 
+    func updateLocalWinningRate() {
+        winningRate = GKStore.shared.games.winningRate
+    }
+    func updateLocalWinningStreak() {
+        winningStreak = GKStore.shared.games.winningStreak
+    }
+    func updateLocalWinCount(_ count: Int) {
+        winsToday = count
+    }
+    func updateLocalWordTo(_ string: String) {
+        wordToday = string
+    }
+
     nonisolated func refreshScore() async {
         if await GKStore.shared.games.isEmpty{
             try? await Task.sleep(for: .seconds(2))
         }
 
-        await MainActor.run{
-            winningRate = GKStore.shared.games.winningRate
-            winningStreak = GKStore.shared.games.winningStreak
-        }
+        await updateLocalWinningRate()
+        await updateLocalWinningStreak()
+
         let gamesToday = await GKStore.shared.games.today
-        await MainActor.run{
-            winsToday = gamesToday.won.count
-        }
+        await updateLocalWinCount(gamesToday.won.count)
         let gamesLostToday = gamesToday.lost
 
         let word = await isSuperghost ? "SUPERGHOST" : "GHOST"
         let lettersOfWord = word.prefix(gamesLostToday.count)
         let placeHolders = Array(repeating: "-", count: word.count).joined()
         let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
-        await MainActor.run{
-            wordToday = lettersOfWord.appending(actualPlaceHolders)
-        }
+        await updateLocalWordTo(lettersOfWord.appending(actualPlaceHolders))
 
 #if canImport(WidgetKit)
         WidgetCenter.shared.reloadAllTimelines()
