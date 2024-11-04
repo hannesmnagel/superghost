@@ -14,7 +14,6 @@ let backendURL = "https://hannesnagel.com/api/v3/superghost"
 
 typealias Player = (id: String, profile: PlayerProfile)
 
-enum RequestType:String{case https, wss}
 
 @globalActor
 actor ApiLayerActor: GlobalActor {
