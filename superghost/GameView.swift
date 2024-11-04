@@ -158,10 +158,10 @@ struct GameView: View {
                                 .font(AppearanceManager.quitGame)
                         }
                         .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                        .buttonBorderShape(.circle)
+                        .buttonBorderShape(.bcCircle)
                     }
                     .buttonStyle(.bordered)
-                    .buttonBorderShape(.circle)
+                    .buttonBorderShape(.bcCircle)
                     .keyboardShortcut(.cancelAction)
                 }
             }

@@ -161,9 +161,17 @@ struct Messagable: ViewModifier {
     @MainActor @ViewBuilder
     var scoreChangeOverlay: some View {
         if showingScore{
+            let transition: ContentTransition = if #available(iOS 17.0, *) {
+                    .numericText(value: Double(score))
+                } else {
+                    .numericText()
+                }
+
             Text(score, format: .number)
                 .font(.system(size: 70))
-                .contentTransition(.numericText(value: Double(score)))
+                .contentTransition(
+                    transition
+                )
         }
     }
     @MainActor @ViewBuilder
@@ -229,36 +237,50 @@ struct Messagable: ViewModifier {
             }
             .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
         } else if widgetExplanationStep == 1 {
-
-            Text("Tap and hold anywhere on your Home Screen")
-                .font(.largeTitle.bold())
-                .padding(.top)
-            if #available(iOS 18.0, *){
-                Text("Then Tap the \"edit\" in the upper left and choose \"Add Widget\"")
+            if #available(iOS 17.0, *){
+                Text("Tap and hold anywhere on your Home Screen")
+                    .font(.largeTitle.bold())
+                    .padding(.top)
+                if #available(iOS 18.0, *){
+                    Text("Then Tap the \"edit\" in the upper left and choose \"Add Widget\"")
+                } else {
+                    Text("Then Tap the \"+\" in the upper left")
+                }
             } else {
-                Text("Then Tap the \"+\" in the upper left")
+                Text("Update you OS to add a Widget First")
+                    .font(.largeTitle.bold())
+                    .padding(.top)
             }
-            Spacer()
-            Image(systemName: "apps.iphone")
-                .resizable()
-                .scaledToFit()
-                .imageScale(.large)
-                .padding()
-                .padding(.top)
-                .padding(.horizontal, 70)
-                .fontWeight(.thin)
+                Spacer()
+                Image(systemName: "apps.iphone")
+                    .resizable()
+                    .scaledToFit()
+                    .imageScale(.large)
+                    .padding()
+                    .padding(.top)
+                    .padding(.horizontal, 70)
+                    .fontWeight(.thin)
 
-            Spacer()
-            Button("Continue"){
-                widgetExplanationStep = 2
+                Spacer()
+            if #available(iOS 17.0, *){
+                Button("Continue"){
+                    widgetExplanationStep = 2
+                }
+                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                .font(.title2.bold())
+
+                Button("Cancel"){
+                    model.showingAction = nil
+                }
+                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            } else {
+                Button("Okay"){
+                    model.showingAction = nil
+                }
+                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                .font(.title2.bold())
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
-            .font(.title2.bold())
-            Button("Cancel"){
-                model.showingAction = nil
-            }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
-        } else if widgetExplanationStep == 2 {
+            } else if widgetExplanationStep == 2 {
 
             Text("Search for superghost")
                 .font(.largeTitle.bold())
@@ -407,6 +429,9 @@ struct Messagable: ViewModifier {
             model.showingAction = nil
         }
         .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+    }
+    enum MessagableError: Error {
+        case couldntLoadFriends
     }
 }
 @MainActor

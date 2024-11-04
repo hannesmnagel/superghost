@@ -125,7 +125,7 @@ struct SettingsView: View {
                             Toggle("Special Event Notifications", isOn: $specialEventNotifications)
                             Toggle("Leaderboard Notifications", isOn: $leaderboardNotifications)
                         } else {
-                            ContentUnavailableView(
+                            ContentPlaceHolderView(
                                 "Notifications not allowed",
                                 systemImage: "bell.badge.slash"
                             )
@@ -157,7 +157,7 @@ struct SettingsView: View {
                             }
                         }
                     } else {
-                        ContentUnavailableView("Loading authorization", systemImage: "bell.badge")
+                        ContentPlaceHolderView("Loading authorization", systemImage: "bell.badge")
                             .task{
                                 self.notificationAuthorization = await withCheckedContinuation({ con in
                                     UNUserNotificationCenter.current().getNotificationSettings { settings in
@@ -180,7 +180,7 @@ struct SettingsView: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                    .buttonBorderShape(.circle)
+                    .buttonBorderShape(.bcCircle)
                     .keyboardShortcut(.cancelAction)
                 }
             }

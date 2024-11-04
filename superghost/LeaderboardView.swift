@@ -36,7 +36,7 @@ struct LeaderboardView: View {
                 }
             }
             if !gkStore.hasUnlockedLeaderboard {
-                ContentUnavailableView(
+                ContentPlaceHolderView(
                     "Earn 1,050 XP to see the leaderboard",
                     systemImage: "chart.bar.fill"
                 )
@@ -137,7 +137,11 @@ struct ScoreDetailView: View {
                 if entry.player.isInvitable {
                     Button("Challenge"){
                         let vc: ViewController
-                        vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
+                        if #available(iOS 17.0, *) {
+                            vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completion: nil)
+                        } else {
+                            vc = entry.challengeComposeController(withMessage: "I just scored \(entry.formattedScore) on the leaderboard!", players: [entry.player], completionHandler: nil)
+                        }
 
 #if os(macOS)
 
@@ -168,7 +172,7 @@ struct ScoreDetailView: View {
                         Image(systemName: "xmark")
                     }
                     .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-                    .buttonBorderShape(.circle)
+                    .buttonBorderShape(.bcCircle)
                     .keyboardShortcut(.cancelAction)
                 }
             }
