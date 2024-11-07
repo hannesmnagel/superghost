@@ -167,13 +167,14 @@ class AppearanceManager {
                 }
                 .buttonStyle(buttonStyle)
             }
-#endif
+#else
             Button{
                 configuration.trigger()
             } label: {
                 configuration.label
             }
             .buttonStyle(buttonStyle)
+#endif
         }
     }
 }
