@@ -116,7 +116,12 @@ struct PlayerProfileView: View {
                 .frame(maxWidth: 300)
                 .task(id: scenePhase, priority: .background) {
 #if os(iOS)
-                    hasWidget = (try? await !WidgetCenter.shared.currentConfigurations().isEmpty) ?? hasWidget
+                    hasWidget = (
+                        try? await withCheckedThrowingContinuation{con in
+                            WidgetCenter.shared.getCurrentConfigurations({ result in
+                                con.resume(with: result)
+                    })
+                    })?.isEmpty ?? hasWidget
 #endif
                     if let skin = Skin.skins.filter({$0.image == playerProfileModel.player.image}).first,
                     !hasUnlocked(skin: skin){
