@@ -124,43 +124,56 @@ class AppearanceManager {
         @State private var feedback = false
 
         func makeBody(configuration: Configuration) -> some View {
-            Button{
-#if !os(iOS)
-                configuration.trigger()
+            #if os(iOS)
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                Button{
+                } label: {
+                    configuration.label
+                }
+                .buttonStyle(buttonStyle)
+
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .updating($isPressed) { value, state, transaction in
+                            state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
+                        }
+                        .onEnded{ value in
+                            if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
+                                configuration.trigger()
+                                if !feedback {
+                                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                                }
+                            }
+                        }
+                )
+                .onChange(of: isPressed) { oldValue, newValue in
+                    if newValue {
+                        Task{
+                            try? await Task.sleep(for: .milliseconds(100))
+                            if isPressed {
+                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                                feedback = true
+                            }
+                        }
+                    } else if feedback {
+                        UIImpactFeedbackGenerator().impactOccurred()
+                    }
+                }
+            } else {
+                Button{
+                    configuration.trigger()
+                } label: {
+                    configuration.label
+                }
+                .buttonStyle(buttonStyle)
+            }
 #endif
+            Button{
+                configuration.trigger()
             } label: {
                 configuration.label
             }
             .buttonStyle(buttonStyle)
-#if os(iOS)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .updating($isPressed) { value, state, transaction in
-                        state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
-                    }
-                    .onEnded{ value in
-                        if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
-                            configuration.trigger()
-                            if !feedback {
-                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                            }
-                        }
-                    }
-            )
-            .onChange(of: isPressed) { oldValue, newValue in
-                if newValue {
-                    Task{
-                        try? await Task.sleep(for: .milliseconds(100))
-                        if isPressed {
-                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                            feedback = true
-                        }
-                    }
-                } else if feedback {
-                    UIImpactFeedbackGenerator().impactOccurred()
-                }
-            }
-#endif
         }
     }
 }
