@@ -68,9 +68,11 @@ struct PaywallView: View {
                                 dismiss()
                             }
                         } else {
+#if !os(visionOS)
                             LegacyPurchaseProductButton(product: selectedProduct) {
                                 dismiss()
                             }
+#endif
                         }
                         if let selectedProduct, viewAllPlans {
                             Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
