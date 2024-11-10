@@ -166,6 +166,7 @@ struct PurchaseProductButton: View {
     }
 }
 
+@available(visionOS, unavailable)
 struct LegacyPurchaseProductButton: View {
     let product: Product?
     let onPurchase: ()->Void
