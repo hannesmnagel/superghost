@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-#if os(iOS)
+#if canImport(WidgetKit)
 import WidgetKit
 #endif
 import GameKit
@@ -115,7 +115,7 @@ struct PlayerProfileView: View {
                 .animation(.smooth, value: playerProfileModel.player.image)
                 .frame(maxWidth: 300)
                 .task(id: scenePhase, priority: .background) {
-#if os(iOS)
+#if canImport(WidgetKit)
                     hasWidget = (
                         try? await withCheckedThrowingContinuation{con in
                             WidgetCenter.shared.getCurrentConfigurations({ result in

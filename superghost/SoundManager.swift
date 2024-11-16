@@ -56,11 +56,16 @@ actor SoundManager{
         player.numberOfLoops = loop ? -1 : 0
     }
     enum Sound: String {
-        case won
+        case won, lost, gameStart
         var ahap: String? {
             switch self {
             case .won:
                 "won.ahap"
+            case .gameStart:
+                "gameStart.ahap"
+                
+            case .lost:
+                "lost.ahap"
             }
         }
     }

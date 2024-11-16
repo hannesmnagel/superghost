@@ -137,7 +137,7 @@ final class GameViewModel: ObservableObject {
 
 
     func isPlayerOne() -> Bool {
-        return game != nil ? game!.player1Id == currentUser.id : false
+        return (game?.player1Id ?? currentUser.id) == currentUser.id
     }
 
     func resetGame() async throws {

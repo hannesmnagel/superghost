@@ -445,14 +445,16 @@ func changeScore(by score: Int) async {
     } else {isDoubleXP = false}
 
     let score = score * (isSunday ? 2 : 1) * (isDoubleXP ? 2 : 1)
-#if canImport(UIKit)
     try? await Task.sleep(for: .seconds(1))
     if score > 0 {
         try? await SoundManager.shared.play(.won, loop: false)
+#if canImport(UIKit)
         showConfetti()
+#endif
+    } else {
+        try? await SoundManager.shared.play(.lost, loop: false)
     }
     try? await Task.sleep(for: .seconds(1.5))
-#endif
     await MessageModel.shared.changeScore(by: score)
 }
 

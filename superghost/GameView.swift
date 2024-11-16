@@ -15,7 +15,7 @@ struct GameView: View {
 
     var body: some View {
         if let alertItem = viewModel.alertItem {
-            
+
             AlertView(
                 alertItem: alertItem,
                 dismissParent: {isPresented = false},
@@ -38,105 +38,173 @@ struct GameView: View {
                         .monospacedDigit()
                 }
                 Spacer()
-                
-                //MARK: Private Game Share Link Screen
-                if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
-                    LoadingView()
-                    if viewModel.game?.player2Id == "privateGame"{
-                        if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
-                            Text("Send Invitation Link")
-                            ShareLink(item: url)
-                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
-                        }
-                    }
-                    //MARK: Playing:
-                } else if let game = viewModel.game{
+                /*
+                 //MARK: Private Game Share Link Screen
+                 if (viewModel.game?.player2Id ?? "").isEmpty || viewModel.game?.player2Id == "privateGame" {
+
+                 Image(PlayerProfileModel.shared.player.image ?? Skin.cowboy.image)
+                 .resizable()
+                 .scaledToFit()
+                 .clipShape(.circle)
+                 .frame(maxWidth: 300)
+                 .matchedGeometryEffect(id: "pp", in: namespace)
+                 .modifier(FlippingModifier(isActive: true))
+
+                 if viewModel.game?.player2Id == "privateGame"{
+                 if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
+                 Text("Send Invitation Link")
+                 ShareLink(item: url)
+                 .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                 }
+                 }
+                 //MARK: Playing:
+                 }
+                 */
+
+                if let game = viewModel.game{
                     VStack {
-                        VStack{
-                            let profile = viewModel.isPlayerOne() ? game.player2profile : game.player1profile
-                            Image(profile?.image ?? Skin.cowboy.image)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(.circle)
-                                .padding(5)
-                                .overlay(Circle().stroke(.red, lineWidth: 5))
-                                .frame(maxWidth: 200)
-                            Text(profile?.name ?? "")
-                                .font(.title.bold())
-                            if let rank = profile?.rank, rank > 0 {
-                                Text("Rank \(rank.formatted())")
-                            } else {
-                                Text("Not ranked")
+                        AppearingAnimationView(after: 7){trigger in
+
+                            let profile = game.player2Id.isEmpty ? nil : viewModel.isPlayerOne() ? game.player2profile : game.player1profile
+                            Group {
+                                if let profile {
+                                    Image(profile.image ?? Skin.cowboy.image)
+                                        .resizable()
+                                        .scaledToFit()
+                                } else {
+                                    Image(systemName: "questionmark")
+                                        .font(.largeTitle)
+                                        .imageScale(.large)
+                                        .padding()
+                                        .modifier(FlippingModifier(isActive: true))
+                                }
                             }
-                        }
-                        .modifier(FlippingModifier(isActive: game.challengingUserId == viewModel.currentUser.id))
-                        .scaleEffect(game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 1 : 0.5)
-                        VStack{
-                            let profile = viewModel.isPlayerOne() ? game.player1profile : game.player2profile
-                            Image(profile?.image ?? Skin.cowboy.image)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(.circle)
-                                .padding(5)
-                                .overlay(Circle().stroke(.blue, lineWidth: 5))
-                                .frame(maxWidth: 200)
-                            Text(profile?.name ?? "")
-                                .font(.title.bold())
-                            if let rank = profile?.rank, rank > 0 {
-                                Text("Rank \(rank.formatted())")
-                            } else {
-                                Text("Not ranked")
+                            .onChange(of: profile == nil) { _, _ in
+                                Task{try? await SoundManager.shared.play(.gameStart, loop: false)}
+                                UIImpactFeedbackGenerator().impactOccurred()
                             }
-                        }
-                        .scaleEffect(game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 0.5 : 1)
-                        if game.player1Challenges == nil {
-                            if game.blockMoveForPlayerId != viewModel.currentUser.id {
-                                if GKStore.shared.games.isEmpty{
-                                    if !game.word.isEmpty {
-                                        Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
-                                        Text("Select a letter so that this still is the case or challenge your opponent")
+                            .onChange(of: trigger) { _, _ in
+                                UIImpactFeedbackGenerator().impactOccurred()
+                            }
+                            .clipShape(.circle)
+                            .padding(5)
+                            .overlay(Circle().stroke(.red, lineWidth: 5))
+                            .frame(maxWidth: (trigger ? (game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 1 : 0.5) : 1)*200)
+                            Text(profile?.name ?? "")
+                                .font((trigger ? (game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? .title.bold() : .caption.bold()) : .title.bold()))
+
+                            if let profile,
+                               game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() || !trigger{
+                                if let rank = profile.rank, rank > 0 {
+                                    Text("Rank \(rank.formatted())")
+                                } else {
+                                    Text("Not ranked")
+                                }
+                            }
+
+                            if game.player2Id.isEmpty || trigger {
+                                Spacer()
+                            }
+
+                            VStack{
+                                let profile = PlayerProfileModel.shared.player
+                                Image(profile.image ?? Skin.cowboy.image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipShape(.circle)
+                                    .padding(5)
+                                    .overlay(Circle().stroke(.blue, lineWidth: 5))
+                                    .frame(maxWidth: (trigger ? (game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? 0.5 : 1) : 1) * 200)
+                                    .matchedGeometryEffect(id: "pp", in: namespace)
+                                Text(profile.name)
+                                    .font((trigger ? (game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? .caption.bold() : .title.bold()) : .title.bold()))
+                                if !game.player2Id.isEmpty,
+                                    game.isBlockingMoveForPlayerOne != viewModel.isPlayerOne() || !trigger {
+                                    if let rank = profile.rank, rank > 0 {
+                                        Text("Rank \(rank.formatted())")
                                     } else {
-                                        Text("Select any Letter you want")
+                                        Text("Not ranked")
                                     }
                                 }
                             }
-                            LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
-                            if viewModel.game?.word.count ?? 0 > 1 {
+                        }
+                        Spacer()
+                        VStack{
+                            if game.blockMoveForPlayerId == viewModel.currentUser.id {
+                                TimelineView(.periodic(from: .now, by: 1)){_ in
+                                    if game.lastMoveAt.timeIntervalSinceNow.magnitude > 15 {
+                                        Group{
+                                            Text("Timeout in ") + Text(game.lastMoveAt.addingTimeInterval(45), style: .timer)
+                                        }
+                                        .monospacedDigit()
+                                        .task{
+                                            try? await Task.sleep(for: .seconds(game.lastMoveAt.addingTimeInterval(45).timeIntervalSinceNow))
+                                            if game.blockMoveForPlayerId == viewModel.currentUser.id {
+                                                try? await viewModel.submitWordAfterChallenge(word: game.word)
+                                            }
+                                        }
+                                        .transition(.scale.animation(.smooth))
+                                    }
+                                }
+                            }
+                            if game.player1Challenges == nil {
+                                if game.blockMoveForPlayerId != viewModel.currentUser.id {
+                                    if GKStore.shared.games.isEmpty{
+                                        if !game.word.isEmpty {
+                                            Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
+                                            Text("Select a letter so that this still is the case or challenge your opponent")
+                                        } else {
+                                            Text("Select any Letter you want")
+                                        }
+                                    }
+                                }
+                                AppearingAnimationView(after: 7){trigger in
+                                    if trigger {
+                                        LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
+                                            .transition(.scale(scale: 0.01, anchor: .bottom).animation(.easeIn))
+                                    } else if !game.player2Id.isEmpty{
+                                        Text("Let's go!")
+                                            .font(.largeTitle.bold())
+                                            .padding(.top)
+                                            .transition(.scale)
+                                    }
+                                }
+                                if game.word.count > 1 {
+                                    AsyncButton{
+                                        try await viewModel.challenge()
+                                    } label: {
+                                        Text("There is no such word")
+                                    }
+                                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                }
+                                //MARK: When you are challenged
+                            } else if game.challengingUserId != viewModel.currentUser.id{
+                                ContentPlaceHolderView(
+                                    "Uhhh, you got challenged!",
+                                    systemImage: "questionmark.square.dashed",
+                                    description: "Are you sure you didn't lie?!"
+                                )
+                                Text(game.word)
+                                    .font(AppearanceManager.wordInGame)
+                                SayTheWordButton(isSuperghost: game.isSuperghost)
                                 AsyncButton{
-                                    try await viewModel.challenge()
+                                    try await viewModel.yesIlied()
                                 } label: {
-                                    Text("There is no such word")
+                                    Text("Yes, I lied")
                                 }
                                 .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                //MARK: When you challenged
+                            } else {
+                                Text("Waiting for player response...")
                             }
-                            //MARK: When you are challenged
-                        } else if game.challengingUserId != viewModel.currentUser.id{
-                            ContentPlaceHolderView(
-                                "Uhhh, you got challenged!",
-                                systemImage: "questionmark.square.dashed",
-                                description: "Are you sure you didn't lie?!"
-                            )
-                            Text(game.word)
-                                .font(AppearanceManager.wordInGame)
-                            SayTheWordButton(isSuperghost: game.isSuperghost)
-                            AsyncButton{
-                                try await viewModel.yesIlied()
-                            } label: {
-                                Text("Yes, I lied")
-                            }
-                            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
-                            //MARK: When you challenged
-                        } else {
-                            Text("Waiting for player response...")
                         }
+                        .disabled(viewModel.game?.blockMoveForPlayerId == viewModel.currentUser.id)
                     }
-                    .animation(.smooth, value: game.isBlockingMoveForPlayerOne)
-                    .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
-                    .padding()
-                    .animation(.bouncy, value: game)
                     Spacer()
                 }
             }
+            .animation(.smooth, value: viewModel.game?.isBlockingMoveForPlayerOne)
+            .animation(.bouncy, value: viewModel.game)
             .frame(maxWidth: .infinity)
             .navigationTitle(viewModel.gameStatusText == .waitingForPlayer ? "Waiting for Player" : "Game started")
 #if !os(macOS)
@@ -265,7 +333,7 @@ func retry<R:Sendable>(count: Int = 3, _ action: () async throws ->R) async reth
 struct FlippingModifier: ViewModifier {
     let isActive : Bool
     @State private var trigger = CGFloat(0)
-    
+
     func body(content: Content) -> some View {
         content
             .rotation3DEffect(isActive ? .degrees(trigger*360) : .zero, axis: (x: trigger, y: trigger, z: trigger))

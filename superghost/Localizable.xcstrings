@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "    Loading Data..." : {
+
+    },
     "    Signing you in..." : {
 
     },
@@ -229,6 +232,9 @@
     "Let's go" : {
 
     },
+    "Let's go!" : {
+
+    },
     "Let's go!!!" : {
 
     },
@@ -322,9 +328,6 @@
     "Select AppIcon" : {
 
     },
-    "Send Invitation Link" : {
-
-    },
     "Settings" : {
 
     },
@@ -413,6 +416,9 @@
     "This is not a word" : {
 
     },
+    "Timeout in " : {
+
+    },
     "Uhhh, you got challenged!" : {
 
     },
@@ -435,9 +441,6 @@
 
     },
     "Wanna play with some Friends?" : {
-
-    },
-    "Welcome %@" : {
 
     },
     "Welcome to Ghost!" : {

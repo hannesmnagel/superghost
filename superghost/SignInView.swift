@@ -18,20 +18,23 @@ struct SignInView: View {
     var body: some View {
         VStack{
             if GKLocalPlayer.local.isAuthenticated {
-                Text("Welcome \(GKLocalPlayer.local.displayName)")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.black)
-                    .padding(20)
-                    .background(Material.ultraThin)
-                    .clipShape(.capsule)
+                ProgressView("    Loading Data...", value: progress)//
                     .task(id: scenePhase){
                         do{
                             try await GKStore.shared.loadInitialData()
+                            progress = 1
+                            try? await Task.sleep(for: .seconds(3))
                             Task{
                                 await StoreManager.shared.updatePurchasedProducts()
                             }
                             onFinish()
                         } catch {}
+                    }
+                    .task{
+                        for i in 10...18{
+                            try? await Task.sleep(for: .seconds(0.3))
+                            progress = Double(i)/20
+                        }
                     }
             } else
             if manualSignInRequired {
@@ -45,15 +48,13 @@ struct SignInView: View {
                         GKLocalPlayer.local.authenticateHandler = {vc, error in
                             if error != nil {
                                 manualSignInRequired = true
-                            } else {
-                                progress = 1
                             }
                         }
                     }
                     .task {
-                        for i in 0...5{
-                            try? await Task.sleep(for: .seconds(0.2))
-                            progress = Double(i)/7
+                        for i in 0...10{
+                            try? await Task.sleep(for: .seconds(0.1))
+                            progress = Double(i)/20
                         }
                     }
             }
@@ -61,14 +62,14 @@ struct SignInView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .background(
-                Image(manualSignInRequired ? .ghostSad : .ghostThinking)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-                    .offset(x: manualSignInRequired ? -20 : -40)
-            )
-            .animation(.smooth, value: manualSignInRequired)
-            .animation(.smooth, value: progress)
+            Image(manualSignInRequired ? .ghostSad : .ghostThinking)
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                .offset(x: manualSignInRequired ? -20 : -40)
+        )
+        .animation(.smooth, value: manualSignInRequired)
+        .animation(.smooth, value: progress)
     }
     @ViewBuilder
     var pleaseSignInView: some View {

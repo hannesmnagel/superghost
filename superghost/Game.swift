@@ -34,6 +34,8 @@ struct Game: Equatable {
         return formatter.string(from: Date())
     }()
 
+    var lastMoveAt = Date()
+
     var winningPlayerId: String? {
         if let player1Wins {
             player1Wins ? player1Id : player2Id

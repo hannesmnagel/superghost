@@ -26,7 +26,7 @@ struct LoadingView: View {
 
 
 #Preview {
-    return LoadingView()
+    LoadingView()
         .border(.red)
         .frame(width: 400, height: 700)
         .modifier(PreviewModifier())

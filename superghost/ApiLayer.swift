@@ -145,6 +145,7 @@ final class ApiLayer: ObservableObject {
                 game.player1Wins = updatedGame.player1Wins ?? game.player1Wins
                 game.rematchGameId = updatedGame.rematchGameId ?? game.rematchGameId
                 game.word = updatedGame.word ?? game.word
+                game.lastMoveAt = .now
                 GameViewModel.shared.game = game
             }
         }
