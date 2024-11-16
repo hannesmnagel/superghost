@@ -81,10 +81,6 @@ struct GameView: View {
                             }
                             .onChange(of: profile == nil) { _, _ in
                                 Task{try? await SoundManager.shared.play(.gameStart, loop: false)}
-                                UIImpactFeedbackGenerator().impactOccurred()
-                            }
-                            .onChange(of: trigger) { _, _ in
-                                UIImpactFeedbackGenerator().impactOccurred()
                             }
                             .clipShape(.circle)
                             .padding(5)
