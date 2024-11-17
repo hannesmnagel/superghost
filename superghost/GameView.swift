@@ -65,7 +65,7 @@ struct GameView: View {
                     VStack {
                         AppearingAnimationView(after: 7){trigger in
 
-                            let profile = game.player2Id.isEmpty ? nil : viewModel.isPlayerOne() ? game.player2profile : game.player1profile
+                            let profile = (game.player2Id.isEmpty || game.player2Id == "privateGame") ? nil : viewModel.isPlayerOne() ? game.player2profile : game.player1profile
                             Group {
                                 if let profile {
                                     Image(profile.image ?? Skin.cowboy.image)
@@ -98,7 +98,7 @@ struct GameView: View {
                                 }
                             }
 
-                            if game.player2Id.isEmpty || trigger {
+                            if (game.player2Id.isEmpty || game.player2Id != "privateGame") || trigger {
                                 Spacer()
                             }
 
@@ -114,7 +114,7 @@ struct GameView: View {
                                     .matchedGeometryEffect(id: "pp", in: namespace)
                                 Text(profile.name)
                                     .font((trigger ? (game.isBlockingMoveForPlayerOne == viewModel.isPlayerOne() ? .caption.bold() : .title.bold()) : .title.bold()))
-                                if !game.player2Id.isEmpty,
+                                if !(game.player2Id.isEmpty || game.player2Id != "privateGame"),
                                     game.isBlockingMoveForPlayerOne != viewModel.isPlayerOne() || !trigger {
                                     if let rank = profile.rank, rank > 0 {
                                         Text("Rank \(rank.formatted())")
@@ -155,9 +155,18 @@ struct GameView: View {
                                     }
                                 }
                                 AppearingAnimationView(after: 7){trigger in
+                                    if game.player2Id == "privateGame" {
+                                        if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")") {
+                                            Text("Send Invitation Link")
+                                            ShareLink(item: url)
+                                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+
+                                        }
+                                    } else
                                     if trigger {
                                         LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
                                             .transition(.scale(scale: 0.01, anchor: .bottom).animation(.easeIn))
+                                            .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                     } else if !game.player2Id.isEmpty{
                                         Text("Let's go!")
                                             .font(.largeTitle.bold())
@@ -172,6 +181,7 @@ struct GameView: View {
                                         Text("There is no such word")
                                     }
                                     .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                    .disabled(viewModel.game?.blockMoveForPlayerId == viewModel.currentUser.id)
                                 }
                                 //MARK: When you are challenged
                             } else if game.challengingUserId != viewModel.currentUser.id{
@@ -183,18 +193,19 @@ struct GameView: View {
                                 Text(game.word)
                                     .font(AppearanceManager.wordInGame)
                                 SayTheWordButton(isSuperghost: game.isSuperghost)
+                                    .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                 AsyncButton{
                                     try await viewModel.yesIlied()
                                 } label: {
                                     Text("Yes, I lied")
                                 }
                                 .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                 //MARK: When you challenged
                             } else {
                                 Text("Waiting for player response...")
                             }
                         }
-                        .disabled(viewModel.game?.blockMoveForPlayerId == viewModel.currentUser.id)
                     }
                     Spacer()
                 }
