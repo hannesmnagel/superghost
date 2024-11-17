@@ -235,7 +235,8 @@ private enum ApiCaller {
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpBody = try JSONEncoder().encode(isSuperghost)
-        
+        urlRequest.httpMethod = "PUT"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
         guard (response as? HTTPURLResponse)?.statusCode == 200,
