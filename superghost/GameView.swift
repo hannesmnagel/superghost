@@ -145,10 +145,13 @@ struct GameView: View {
                             }
                             if game.player1Challenges == nil {
                                 if game.blockMoveForPlayerId != viewModel.currentUser.id {
-                                    if GKStore.shared.games.isEmpty{
+                                    if GKStore.shared.games.count < 4 {
                                         if !game.word.isEmpty {
                                             Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
-                                            Text("Select a letter so that this still is the case or challenge your opponent")
+                                                Text("Select a letter so the sequence can still become that word or challenge your opponent")
+                                            if game.word.count < 3 {
+                                                Text("Careful if it is a word you will loose")
+                                            }
                                         } else {
                                             Text("Select any Letter you want")
                                         }
