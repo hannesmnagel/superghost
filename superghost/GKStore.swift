@@ -183,6 +183,12 @@ class GKStore: ObservableObject {
 
         isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
 
+        if isSuperghost,
+           UserDefaults.standard.bool(forKey: "showingPaywall") {
+            UserDefaults.standard.set(false, forKey: "showingPaywall")
+        }
+
+
 
 #if os(iOS)
         if !isSuperghost,
