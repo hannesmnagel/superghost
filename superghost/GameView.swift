@@ -149,7 +149,7 @@ struct GameView: View {
                                         if !game.word.isEmpty {
                                             Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
                                                 Text("Select a letter so the sequence can still become that word or challenge your opponent")
-                                            if game.word.count < 3 {
+                                            if game.word.count > 2 {
                                                 Text("Careful if it is a word you will loose")
                                             }
                                         } else {
