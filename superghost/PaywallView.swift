@@ -78,19 +78,29 @@ struct PaywallView: View {
                             Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
                                 .font(.footnote)
                         } else if !viewAllPlans {
+                            VStack{
 
-                            HStack{
-                                Link("Terms", destination: URL(string: "https://hannesnagel.com/ghost-tos")!)
-                                    .foregroundStyle(.primary)
-                                Spacer()
                                 Button("View All Plans"){
                                     viewAllPlans = true
                                 }
                                 .foregroundStyle(.accent)
                                 .font(.body)
-                                Spacer()
-                                Link("Privacy", destination: URL(string: "https://hannesnagel.com/ghost-privacy")!)
-                                    .foregroundStyle(.primary)
+                                .padding(.bottom)
+
+                                HStack{
+                                    Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                                        .foregroundStyle(.primary)
+                                    Spacer()
+
+                                    Button("Restore"){
+                                        Task {
+                                            try? await AppStore.sync()
+                                        }
+                                    }
+                                    Spacer()
+                                    Link("Privacy", destination: URL(string: "https://hannesnagel.com/ghost-privacy")!)
+                                        .foregroundStyle(.primary)
+                                }
                             }
                             .font(.callout)
                             .padding(.horizontal)
