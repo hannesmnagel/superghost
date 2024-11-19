@@ -175,6 +175,10 @@ class GKStore: ObservableObject {
     func fetchSubscription() async throws {
         let hasSubscribed = await !StoreManager.shared.purchasedProductIDs.isEmpty
 
+        if hasSubscribed,
+           UserDefaults.standard.bool(forKey: "showingPaywall") {
+            UserDefaults.standard.set(false, forKey: "showingPaywall")
+        }
 
         self.isPayingSuperghost = hasSubscribed
         let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
@@ -182,11 +186,6 @@ class GKStore: ObservableObject {
         let wasSuperghost = isSuperghost
 
         isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
-
-        if isSuperghost,
-           UserDefaults.standard.bool(forKey: "showingPaywall") {
-            UserDefaults.standard.set(false, forKey: "showingPaywall")
-        }
 
 
 
