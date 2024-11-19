@@ -434,7 +434,7 @@ struct WordEntry: Codable, Hashable {
 }
 
 struct Phonetic: Codable, Hashable {
-    let text: String
+    let text: String?
     let audio: String?
 }
 
