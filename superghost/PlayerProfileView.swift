@@ -101,7 +101,20 @@ struct PlayerProfileView: View {
             return false
         }
     }()
-    
+
+    var cloudStorageHasWidget: Bool {
+        if
+            let lastWidgetUpdateString = NSUbiquitousKeyValueStore.default.string(forKey: "lastWidgetUpdate"),
+
+                let lastWidgetUpdate = ISO8601DateFormatter().date(from: lastWidgetUpdateString),
+
+                Calendar.current.isDateInToday(lastWidgetUpdate)
+        {
+            return true
+        } else {
+            return false
+        }
+    }
 
     var body: some View {
         VStack{
@@ -116,12 +129,18 @@ struct PlayerProfileView: View {
                 .frame(maxWidth: 300)
                 .task(id: scenePhase, priority: .background) {
 #if canImport(WidgetKit)
-                    hasWidget = (
-                        try? await withCheckedThrowingContinuation{con in
+                    do {
+                        hasWidget =
+                        !(try await withCheckedThrowingContinuation{con in
                             WidgetCenter.shared.getCurrentConfigurations({ result in
                                 con.resume(with: result)
-                    })
-                    })?.isEmpty ?? hasWidget
+                            })
+                        }).isEmpty
+                    } catch {
+                        hasWidget = cloudStorageHasWidget
+                    }
+#else
+                    hasWidget = cloudStorageHasWidget
 #endif
                     if let skin = Skin.skins.filter({$0.image == playerProfileModel.player.image}).first,
                     !hasUnlocked(skin: skin){
