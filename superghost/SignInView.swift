@@ -24,9 +24,7 @@ struct SignInView: View {
                             try await GKStore.shared.loadInitialData()
                             progress = 1
                             try? await Task.sleep(for: .seconds(3))
-                            Task{
-                                await StoreManager.shared.updatePurchasedProducts()
-                            }
+                            await StoreManager.shared.updatePurchasedProducts()
                             onFinish()
                         } catch {}
                     }
