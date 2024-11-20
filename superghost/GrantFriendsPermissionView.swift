@@ -93,15 +93,18 @@ struct GrantFriendsPermissionView: View {
         }
         VStack{
             AsyncButton {
-                let authStatus = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus()
-                if authStatus == .notDetermined {
-                    await withCheckedContinuation{con in
-                        GKLocalPlayer.local.loadFriends { _, _ in
-                            con.resume()
+                do {
+                    let authStatus = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus()
+                    if authStatus == .notDetermined {
+                        await withCheckedContinuation{con in
+                            GKLocalPlayer.local.loadFriends { _, _ in
+                                con.resume()
+                            }
                         }
                     }
+                } catch {
                 }
-                grantedPermission = try await GKLocalPlayer.local.loadFriendsAuthorizationStatus() == .authorized
+                grantedPermission = true
             } label: {
                 Text("Continue")
             }
