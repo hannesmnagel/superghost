@@ -93,7 +93,7 @@ struct InstructionsView: View {
                 withAnimation{
                     if instructionIndex == instructions.count - 1 {
                         onFinish()
-                        #if !os(macOS)
+                        #if os(iOS)
                         dismiss()
                         #endif
                     } else {

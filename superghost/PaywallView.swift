@@ -27,7 +27,10 @@ struct PaywallView: View {
                     .clipShape(.rect(bottomLeadingRadius: 20, bottomTrailingRadius: 20))
                     .ignoresSafeArea(edges: .top)
                     .layoutPriority(1)
-                    
+                #if os(visionOS)
+                    .padding(.trailing, 80)
+                #endif
+
                 VStack{
                     Text("Become a Superghost")
                         .font(.largeTitle.bold())
@@ -86,6 +89,9 @@ struct PaywallView: View {
                                 .foregroundStyle(.accent)
                                 .font(.body)
                                 .padding(.bottom)
+                                #if os(visionOS)
+                                .padding()
+                                #endif
 
                                 HStack{
                                     Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
@@ -130,6 +136,9 @@ struct PaywallView: View {
                 .keyboardShortcut(.cancelAction)
             }
         }
+        #if os(visionOS)
+        .padding(.bottom, 50)
+        #endif
     }
     func subscriptionDuration(for product: Product) -> String {
         if let subscriptionPeriod = product.subscription?.subscriptionPeriod {

@@ -148,7 +148,9 @@ struct ContentView: View {
                 }
             }
         } else if Int.random(in: 0...3) == 0 && NSUbiquitousKeyValueStore.default.double(forKey: Achievement.widgetAdd.rawValue) != 100 {
+#if !os(visionOS)
             await requestAction(.addWidget)
+#endif
         } else if Int.random(in: 0...5) == 0 {
             Logger.userInteraction.info("Play in Messages feature tip")
             await showMessage("Did you know, you can play against friends in Messages?")

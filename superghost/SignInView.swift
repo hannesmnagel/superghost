@@ -45,6 +45,8 @@ struct SignInView: View {
                         GKLocalPlayer.local.authenticateHandler = {vc, error in
                             if error != nil {
                                 manualSignInRequired = true
+                            } else {
+                                progress += 0.01
                             }
                         }
                     }
