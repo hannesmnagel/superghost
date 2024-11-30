@@ -9,6 +9,7 @@ import SwiftUI
 import BackgroundTasks
 import UserNotifications
 import GameKit
+import Aptabase
 
 @main
 struct superghostApp: App {
@@ -25,6 +26,9 @@ struct superghostApp: App {
     @CloudStorage("specialEventNotifications") var specialEventNotifications = true
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
     
+    init() {
+        Aptabase.shared.initialize(appKey: "A-SH-2968519615", options: InitOptions(host: "https://analytics.hannesnagel.com"))
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -101,7 +105,7 @@ struct superghostApp: App {
                         self.rank = myCurrent
                         PlayerProfileModel.shared.player.rank = self.rank
                     }
-
+                    Logger.trackEvent("push_notification_lb_pass")
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
                     let xpBoostUntil = await xpBoostUntil
@@ -111,6 +115,7 @@ struct superghostApp: App {
                         await MainActor.run{
                             self.xpBoostUntil = in15mins
                         }
+                        Logger.trackEvent("push_notification_double_xp")
                         Logger.appRefresh.log("Sent push notification, because it's double XP time!")
                     }
                     Logger.appRefresh.info("Did not sent push notification but checked if someone passed you on the leaderboard.")

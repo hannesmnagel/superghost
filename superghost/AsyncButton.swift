@@ -29,6 +29,7 @@ struct AsyncButton<Label:View>: View {
                     state = .main
                 } catch {
                     Logger.userInteraction.error("AsyncButton failed with error: \(error, privacy: .public)")
+                    Logger.trackEvent("asyncbutton_failed", with: ["error" : String(describing: error)])
                     state = .failed
                     try? await Task.sleep(for: .seconds(1))
                     state = .main

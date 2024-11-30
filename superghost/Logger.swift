@@ -10,6 +10,7 @@ import os
 import GameKit
 @preconcurrency import UserNotifications
 import SwiftUI
+import Aptabase
 
 final class Logger {
 
@@ -24,6 +25,10 @@ final class Logger {
     static let subscription = os.Logger(subsystem: subsystem, category: Category.subscription.rawValue)
     static let game = os.Logger(subsystem: subsystem, category: Category.game.rawValue)
     static let general = os.Logger(subsystem: subsystem, category: Category.general.rawValue)
+
+    static func trackEvent(_ eventName: String, with parameters: [String: Any] = [:]) {
+        Aptabase.shared.trackEvent(eventName, with: parameters)
+    }
 
     static func appDidActivate() async {
         await analyzer.appDidActivate()
@@ -40,7 +45,6 @@ final class Logger {
     static private let analyzer = Analyzer()
 
     actor Analyzer {
-        @AppStorage("anonymousUserID") private var anonymousUserID = UUID().uuidString
         @AppStorage("notificationsEnabled") private var notificationsEnabled = "not determined"
         @AppStorage("osVersion") private var osVersion = "undetermined"
 
@@ -63,15 +67,18 @@ final class Logger {
                 "unknown"
             }
             if newNotificationsEnabled != notificationsEnabled {
+                Logger.trackEvent("notification_status_change", with: ["notification_status": newNotificationsEnabled])
                 if settings.authorizationStatus == .denied {
                     onDeny?()
                 }
             }
         }
         func appDidActivate() {
+            Logger.trackEvent("app_launch")
             activated = .now
         }
         func appDidDeactivate() async {
+            Logger.trackEvent("app_closed")
             if let activated {
                 await MainActor.run {
                     timeSpentInGhost += (Date.now.timeIntervalSince(activated)/60)

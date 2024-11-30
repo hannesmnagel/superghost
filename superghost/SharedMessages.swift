@@ -41,6 +41,7 @@ func showMessage(_ message: String) {
 @MainActor
 func requestAction(_ action: UserAction){
     Logger.userInteraction.info("Requesting action: \(action.rawValue, privacy: .public)")
+    Logger.trackEvent("requested_action", with: ["action": action.rawValue])
     MessageModel.shared.showingAction = action
 }
 

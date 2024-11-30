@@ -100,6 +100,7 @@ struct HomeView: View {
             .onOpenURL { url in
                 if url.absoluteString.hasPrefix("https://hannesnagel.com/open/ghost/") {
                     let command = url.absoluteString.replacingOccurrences(of: "https://hannesnagel.com/open/ghost/", with: "")
+                    Logger.trackEvent("link_open", with: ["command": command])
                     Logger.userInteraction.info("universal link open command: \(command, privacy: .public)")
 
                     if command == "instructions" {

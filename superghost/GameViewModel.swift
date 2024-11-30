@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import GameKit
+import UserNotifications
 
 enum GameStatusText {
     case waitingForPlayer, started
@@ -40,6 +41,15 @@ final class GameViewModel: ObservableObject {
                             GKStore.shared.games.insert(stat, at: 0)
                             Task{
                                 await changeScore(by: .random(in: 48...52))
+                            }
+
+                            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                                if settings.authorizationStatus == .notDetermined {
+                                    Task{
+                                        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                                        await Logger.checkForNotificationStatusChange()
+                                    }
+                                }
                             }
                         } else {
                             alertItem = .lost
@@ -84,7 +94,7 @@ final class GameViewModel: ObservableObject {
     static let shared = GameViewModel()
     
     private init() {
-        currentUser = User(id: GKLocalPlayer.local.gamePlayerID)
+        currentUser = User(id: UUID().uuidString)
     }
 
 
@@ -92,7 +102,7 @@ final class GameViewModel: ObservableObject {
         try await ApiLayer.shared.startGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         Logger.userInteraction.info("Started Game")
-        
+        Logger.trackEvent("game_start")
         withInvitation = false
     }
     func joinGame(with gameId: String, isSuperghost: Bool) async throws {
@@ -100,12 +110,14 @@ final class GameViewModel: ObservableObject {
 
         withInvitation = true
 
+        Logger.trackEvent("game_join_private")
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
     }
     func hostGame() async throws {
         try await ApiLayer.shared.hostGame(isSuperghost: true, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
+        Logger.trackEvent("game_host")
         Logger.userInteraction.info("Hosted Game")
     }
     func submitWordAfterChallenge(word: String) async throws {
@@ -132,6 +144,18 @@ final class GameViewModel: ObservableObject {
 
     func quitGame() async throws {
         try await ApiLayer.shared.quitGame()
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        let duration: Int
+        if let game,
+           let startDate = formatter.date(from: game.createdAt) {
+            duration = Int(Date().timeIntervalSince(startDate))
+        } else {
+            duration = 0
+        }
+        Logger.trackEvent("game_quit", with: ["duration": duration])
         Logger.userInteraction.info("Quit Game")
     }
 
@@ -153,6 +177,7 @@ final class GameViewModel: ObservableObject {
             try await ApiLayer.shared.rematchGame(isSuperghost: game.isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
         }
 
+        Logger.trackEvent("game_rematch")
         Logger.userInteraction.info("rematching")
     }
     func challenge() async throws {

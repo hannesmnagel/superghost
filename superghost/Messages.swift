@@ -102,6 +102,7 @@ struct Messagable: ViewModifier {
 
         showingScore = true
         Task{await changeScore(by: 50)}
+        Logger.trackEvent("add_friend")
         Logger.score.info("Increased score by 50 because user added a friend.")
 
         try? await Task.sleep(for: .seconds(6))
@@ -120,6 +121,7 @@ struct Messagable: ViewModifier {
                lastWidgetUpdate.timeIntervalSinceNow.magnitude < 20 {break}
             try? await Task.sleep(for: .seconds(1))
         }
+        Logger.trackEvent("add_widget")
         try? await GameStat.submitScore(score + 50)
 
         showingScore = true
@@ -398,7 +400,9 @@ struct Messagable: ViewModifier {
 
                 switch settings.authorizationStatus{
                 case .notDetermined:
-                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in}
+                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in
+                        Task{await Logger.checkForNotificationStatusChange()}
+                    }
                 case .denied:
 #if os(macOS)
                     showMessage("Open settings to allow notifications.")

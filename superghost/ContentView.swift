@@ -57,6 +57,7 @@ struct ContentView: View {
                 PaywallView{
                     showingPaywall = false
                     Logger.userInteraction.info("Dismissed Paywall")
+                    Logger.trackEvent("paywall_dismiss")
                     Task{
                         do{
                             try await GKStore.shared.fetchSubscription()
@@ -134,6 +135,7 @@ struct ContentView: View {
         {
             await showPaywall()
             Logger.userInteraction.info("presenting paywall")
+            Logger.trackEvent("paywall_show")
         } else if Int.random(in: 0...2) == 0,
                   await UNUserNotificationCenter.current().notificationSettings().authorizationStatus != .authorized{
             await requestAction(.enableNotifications)
@@ -153,6 +155,7 @@ struct ContentView: View {
 #endif
         } else if Int.random(in: 0...5) == 0 {
             Logger.userInteraction.info("Play in Messages feature tip")
+            Logger.trackEvent("messages_tip")
             await showMessage("Did you know, you can play against friends in Messages?")
             await showMessage("Just tap the plus Button in Messages and then choose Superghost")
         }
