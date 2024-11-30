@@ -148,14 +148,7 @@ final class GameViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 
-        let duration: Int
-        if let game,
-           let startDate = formatter.date(from: game.createdAt) {
-            duration = Int(Date().timeIntervalSince(startDate))
-        } else {
-            duration = 0
-        }
-        Logger.trackEvent("game_quit", with: ["duration": duration])
+        Logger.trackEvent("game_quit")
         Logger.userInteraction.info("Quit Game")
     }
 
