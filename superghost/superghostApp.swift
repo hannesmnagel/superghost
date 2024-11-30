@@ -42,7 +42,7 @@ struct superghostApp: App {
                     case .background:
                         Task{await Logger.appDidDeactivate()}
                     case .inactive:
-                        Task{await Logger.appDidActivate()}
+                        Task{await Logger.appDidDeactivate()}
                     case .active:
                         Task{await Logger.appDidActivate()}
                     @unknown default:
