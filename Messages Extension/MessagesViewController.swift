@@ -5,7 +5,6 @@
 //  Created by Hannes Nagel on 8/6/24.
 //
 
-import UIKit
 import Messages
 import SwiftUI
 
@@ -165,7 +164,13 @@ final class AppState: ObservableObject {
         conversation.send(message)
         lastMove = move
         NSUbiquitousKeyValueStore.default.set(Double(move.count), forKey: "\(conversation.storeKey).\(session!).lastMoveCount")
-        Logger.trackEvent("messages_move", with: ["caption":layout.caption, "count:\(move.count)"])
+        Logger.trackEvent(
+            "messages_move",
+            with: [
+                "caption":layout.caption ?? "none",
+                "count":"\(move.count)"
+            ]
+        )
     }
 }
 

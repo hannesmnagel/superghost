@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		381832402CFB1E3F00BD355B /* Aptabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3818323F2CFB1E3F00BD355B /* Aptabase */; };
+		381832422CFB2C7B00BD355B /* Aptabase in Frameworks */ = {isa = PBXBuildFile; productRef = 381832412CFB2C7B00BD355B /* Aptabase */; };
 		383C66832C2DE9EE003A62B3 /* SUPER-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C66822C2DE9EE003A62B3 /* SUPER-2.png */; };
 		38474C792C64AC27006FCDB4 /* Messages Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38AF919C2C46D683003D100B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C212C46C50F004950E3 /* WidgetKit.framework */; };
@@ -163,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38B790F02C6495A400AC9BE2 /* Messages.framework in Frameworks */,
+				381832422CFB2C7B00BD355B /* Aptabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +792,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		3818323F2CFB1E3F00BD355B /* Aptabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3818323E2CFB1E3F00BD355B /* XCRemoteSwiftPackageReference "aptabase-swift" */;
+			productName = Aptabase;
+		};
+		381832412CFB2C7B00BD355B /* Aptabase */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3818323E2CFB1E3F00BD355B /* XCRemoteSwiftPackageReference "aptabase-swift" */;
 			productName = Aptabase;

@@ -10,7 +10,9 @@ import os
 import GameKit
 @preconcurrency import UserNotifications
 import SwiftUI
+#if canImport(Aptabase)
 import Aptabase
+#endif
 
 final class Logger {
 
@@ -27,7 +29,9 @@ final class Logger {
     static let general = os.Logger(subsystem: subsystem, category: Category.general.rawValue)
 
     static func trackEvent(_ eventName: String, with parameters: [String: Any] = [:]) {
+#if canImport(Aptabase)
         Aptabase.shared.trackEvent(eventName, with: parameters)
+#endif
     }
 
     static func appDidActivate() async {
