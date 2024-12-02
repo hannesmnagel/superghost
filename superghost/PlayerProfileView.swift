@@ -124,6 +124,7 @@ struct PlayerProfileView: View {
                 .clipShape(.circle)
                 .onTapGesture {
                     expanded.toggle()
+                    Logger.trackEvent(expanded ? "skin_view_open" : "skin_view_close")
                 }
                 .animation(.smooth, value: playerProfileModel.player.image)
                 .frame(maxWidth: 300)
@@ -147,6 +148,7 @@ struct PlayerProfileView: View {
                         showMessage("You lost access to your Skin.")
                         showMessage(skin.unlockBy.lockedDescription)
                         playerProfileModel.player.image = Skin.cowboy.image
+                        Logger.trackEvent("skin_access_lost", with: ["unlock_by":skin.unlockBy.lockedDescription])
                     }
                 }
             if expanded {
@@ -156,6 +158,7 @@ struct PlayerProfileView: View {
                         Button{
                             if isUnlocked {
                                 playerProfileModel.player.image = skin.image
+                                Logger.trackEvent("skin_equipped", with: ["skin":skin.unlockBy])
                             } else {
                                 switch skin.unlockBy {
                                 case .widget:
@@ -166,6 +169,7 @@ struct PlayerProfileView: View {
                                 default:
                                     showMessage(skin.unlockBy.lockedDescription)
                                 }
+                                Logger.trackEvent("skin_not_unlocked", with: ["unlock_by":skin.unlockBy.lockedDescription])
                             }
                         } label: {
                             VStack{
