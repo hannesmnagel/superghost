@@ -105,17 +105,15 @@ struct superghostApp: App {
                         self.rank = myCurrent
                         PlayerProfileModel.shared.player.rank = self.rank
                     }
-                    Logger.trackEvent("push_notification_lb_pass")
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
                     let xpBoostUntil = await xpBoostUntil
-                    if await doubleXP15minNotifications && .random() && (!Calendar.current.isDateInToday(xpBoostUntil) || .random()),
+                    if await doubleXP15minNotifications && .random() && (!Calendar.current.isDateInToday(xpBoostUntil) || (.random() && .random())),
                     let in15mins = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) {
                         sendPushNotification(with: "Play NOW!", description: "It's double XP. But just for 15 minutes!")
                         await MainActor.run{
                             self.xpBoostUntil = in15mins
                         }
-                        Logger.trackEvent("push_notification_double_xp")
                         Logger.appRefresh.log("Sent push notification, because it's double XP time!")
                     }
                     Logger.appRefresh.info("Did not sent push notification but checked if someone passed you on the leaderboard.")
