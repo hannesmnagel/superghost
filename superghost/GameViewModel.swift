@@ -51,6 +51,7 @@ final class GameViewModel: ObservableObject {
                                     }
                                 }
                             }
+                            Logger.trackEvent("game_won")
                         } else {
                             alertItem = .lost
 
@@ -66,6 +67,7 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
+                            Logger.trackEvent("game_lost")
                         }
                         if (newValue.word.count) > 5 {
                             Task.detached{
