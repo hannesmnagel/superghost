@@ -44,6 +44,7 @@ struct GameStat: Codable, Hashable, Identifiable {
             return games.compactMap{$0}
         } catch {
             Logger.score.error("Could not load saved games: \(error)")
+            Logger.trackEvent("game_loading_failed", with: ["error" : String(describing: error)])
             throw error
         }
     }
