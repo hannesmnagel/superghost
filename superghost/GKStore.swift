@@ -217,7 +217,9 @@ class GKStore: ObservableObject {
 
         if hasSubscribed,
            UserDefaults.standard.bool(forKey: "showingPaywall") {
-//            UserDefaults.standard.set(false, forKey: "showingPaywall")
+            #if !DEBUG
+            UserDefaults.standard.set(false, forKey: "showingPaywall")
+            #endif
         }
 
         self.isPayingSuperghost = hasSubscribed
