@@ -58,36 +58,76 @@ class GKStore: ObservableObject {
         )
     }
     func loadInitialData() async throws {
-        //starting achievements task because it doesn't need anything else
-        let achievementsTask = Task {
-            try await loadAchievements()
-        }
-        
-        let gamesTask = Task{
-            self.games = ((try? await GameStat.loadAll()) ?? []).sorted{$0.createdAt > $1.createdAt}
+
+        actor ContinuationState {
+            private var isResumed = false
+
+            func tryResume<T: Sendable>(_ continuation: CheckedContinuation<T, Error>, with result: Result<T, Error>) throws(ContinuationStateError) {
+                guard !isResumed else { throw .alreadyContinued }
+                isResumed = true
+                continuation.resume(with: result)
+            }
+            enum ContinuationStateError : Error {
+                case alreadyContinued
+            }
         }
 
-        guard let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first else {throw HKStoreError.noLeaderboard}
-        guard let leaderboardTitle = leaderboard.title else {throw HKStoreError.noLeaderboardTitle}
-        let leaderboardImage = try await withCheckedThrowingContinuation{con in
-            leaderboard.loadImage { image, error in
-                if let image {
-                    con.resume(returning: Image(uiImage: image))
-                } else {
-                    con.resume(throwing: error!)
+        try await withCheckedThrowingContinuation { continuation in
+            let continuationState = ContinuationState()
+
+            let dataTask = Task {
+                let start = Date()
+                do {
+                    let achievementsTask = Task {
+                        try await loadAchievements()
+                    }
+
+                    let gamesTask = Task {
+                        self.games = ((try? await GameStat.loadAll()) ?? []).sorted { $0.createdAt > $1.createdAt }
+                    }
+
+                    guard let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first else {
+                        throw GKStoreError.noLeaderboard
+                    }
+                    guard let leaderboardTitle = leaderboard.title else {
+                        throw GKStoreError.noLeaderboardTitle
+                    }
+
+                    let leaderboardImage = try await withCheckedThrowingContinuation { innerContinuation in
+                        leaderboard.loadImage { image, error in
+                            if let image {
+                                innerContinuation.resume(returning: Image(uiImage: image))
+                            } else {
+                                innerContinuation.resume(throwing: error!)
+                            }
+                        }
+                    }
+
+                    self.leaderboard = leaderboard
+                    self.leaderboardTitle = leaderboardTitle
+                    self.leaderboardImage = leaderboardImage
+                    PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
+
+                    try await loadData()
+                    try await achievementsTask.value
+                    await gamesTask.value
+
+                    do{
+                        try await continuationState.tryResume(continuation, with: .success(()))
+                    } catch {
+                        Logger.trackEvent("game_store_loading_finally_finished", with: ["after":start.timeIntervalSinceNow.magnitude])
+                    }
+                } catch {
+                    try await continuationState.tryResume(continuation, with: .failure(error))
                 }
             }
-            
+
+            let timeoutTask = Task {
+                try await Task.sleep(for: .seconds(15))
+                try await continuationState.tryResume(continuation, with: .failure(GKStoreError.loadingTimedOut))
+                Logger.trackEvent("game_store_loading_timed_out")
+            }
         }
-
-        self.leaderboard = leaderboard
-        self.leaderboardTitle = leaderboardTitle
-        self.leaderboardImage = leaderboardImage
-        PlayerProfileModel.shared.player.name = GKLocalPlayer.local.alias
-
-        try await loadData()
-        try await achievementsTask.value
-        await gamesTask.value
     }
     func loadAchievements() async throws {
         let achievements = try await GKAchievement.loadAchievements()
@@ -127,8 +167,8 @@ class GKStore: ObservableObject {
     
     private init(){}
     
-    enum HKStoreError: Error {
-        case noLeaderboard, noLeaderboardTitle, noLeaderboardImage
+    enum GKStoreError: Error {
+        case noLeaderboard, noLeaderboardTitle, noLeaderboardImage, loadingTimedOut
     }
     
     func refreshScore() async {
@@ -177,7 +217,7 @@ class GKStore: ObservableObject {
 
         if hasSubscribed,
            UserDefaults.standard.bool(forKey: "showingPaywall") {
-            UserDefaults.standard.set(false, forKey: "showingPaywall")
+//            UserDefaults.standard.set(false, forKey: "showingPaywall")
         }
 
         self.isPayingSuperghost = hasSubscribed
