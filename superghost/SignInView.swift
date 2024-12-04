@@ -14,17 +14,27 @@ struct SignInView: View {
     @State private var showReasons = false
     @Environment(\.scenePhase) var scenePhase
     let onFinish: () -> Void
-    
+    @State private var loadingInitialDataId = UUID()
+
     var body: some View {
         VStack{
             if GKLocalPlayer.local.isAuthenticated {
-                ProgressView("    Loading Data...", value: progress)//
-                    .task(id: scenePhase){
+                ProgressView("    Loading Data...", value: progress)
+                    .padding(.vertical, 5)
+                    .background(.thinMaterial, ignoresSafeAreaEdges: .all)
+                    .clipShape(.capsule)
+                    .task(id: loadingInitialDataId){
+                        let restartTask = Task{
+                            try await Task.sleep(for: .seconds(20))
+                            try Task.checkCancellation()
+                            loadingInitialDataId = .init()
+                        }
                         do{
                             try await GKStore.shared.loadInitialData()
                             progress = 1
                             await StoreManager.shared.updatePurchasedProducts()
                             onFinish()
+                            restartTask.cancel()
                         } catch {}
                     }
                     .task{
@@ -38,7 +48,10 @@ struct SignInView: View {
                 pleaseSignInView
                     .foregroundStyle(.black)
             } else {
-                ProgressView("    Signing you in...", value: progress)//
+                ProgressView("    Signing you in...", value: progress)
+                    .padding(.vertical, 5)
+                    .background(.thinMaterial, ignoresSafeAreaEdges: .all)
+                    .clipShape(.capsule)
                     .task {
                         GKAccessPoint.shared.showHighlights = true
 
