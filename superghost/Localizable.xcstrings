@@ -19,16 +19,6 @@
     " elapsed - ETA:" : {
 
     },
-    "%@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      }
-    },
     "%@ losses left today" : {
 
     },
@@ -39,6 +29,9 @@
 
     },
     "+ " : {
+
+    },
+    "~80% off" : {
 
     },
     "4x XP Boost!!" : {
@@ -150,6 +143,9 @@
     "Continue" : {
 
     },
+    "Continue for %@" : {
+
+    },
     "Couldn't get definitions!" : {
 
     },
@@ -182,16 +178,6 @@
     },
     "Game started" : {
 
-    },
-    "Get Access to Superghost for %@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Get Access to Superghost for %1$@ %2$@"
-          }
-        }
-      }
     },
     "Get Double XP for each Game" : {
 
@@ -431,10 +417,10 @@
     "Uhhh, you got challenged!" : {
 
     },
-    "Update you OS to add a Widget First" : {
+    "Unlock more Skins" : {
 
     },
-    "View All Plans" : {
+    "Update you OS to add a Widget First" : {
 
     },
     "View their profile" : {
