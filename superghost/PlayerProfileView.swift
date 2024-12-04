@@ -18,8 +18,8 @@ struct Skin : Identifiable, Equatable{
     var unlockBy: UnlockReason
     
     enum UnlockReason: Equatable {
-        case widget, score(at: Int), rank(at: Int), playedMatches(count: Int), winInMessages, buy(price: Int)
-        
+        case widget, score(at: Int), rank(at: Int), playedMatches(count: Int), winInMessages, superghost
+
         var lockedDescription: String {
             switch self {
             case .widget:
@@ -32,25 +32,28 @@ struct Skin : Identifiable, Equatable{
                 "Play \(count) matches"
             case .winInMessages:
                 "Win a Game In Messages"
-            case .buy(let price):
-                "You can buy this Skin for \(price)"
+            case .superghost:
+                "Become a superghost to unlock"
             }
         }
     }
+    static let skin = Skin(image: "Skin/Cowboy", unlockBy: .score(at: 0))
     static let cowboy = Skin(image: "Skin/Cowboy", unlockBy: .score(at: 0))
     static let sailor = Skin(image: "Skin/Sailor", unlockBy: .widget)
     static let doctor = Skin(image: "Skin/Doctor", unlockBy: .playedMatches(count: 20))
     static let knight = Skin(image: "Skin/Knight", unlockBy: .winInMessages)
     static let engineer = Skin(image: "Skin/Engineer", unlockBy: .rank(at: 2))
     static let samurai = Skin(image: "Skin/Samurai", unlockBy: .score(at: 1700))
-    
+    static let christmas = Skin(image: "Skin/Christmas", unlockBy: .superghost)
+
     static let skins = [
         cowboy,
         sailor,
         doctor,
         knight,
         engineer,
-        samurai
+        samurai,
+        christmas
     ]
 }
 
@@ -84,8 +87,10 @@ struct PlayerProfileView: View {
     
     @CloudStorage("score") private var score = 1000
     @CloudStorage("rank") private var rank = -1
-    
-    
+
+
+    @CloudStorage("isSuperghost") private var isSuperghost = false
+
     @CloudStorage("lastWinInMessages") private var lastWinInMessages = Date.distantPast
     
     @AppStorage("hasWidget") var hasWidget = {
@@ -158,7 +163,7 @@ struct PlayerProfileView: View {
                         Button{
                             if isUnlocked {
                                 playerProfileModel.player.image = skin.image
-                                Logger.trackEvent("skin_equipped", with: ["skin":skin.unlockBy])
+                                Logger.trackEvent("skin_equipped", with: ["skin":skin.unlockBy.lockedDescription])
                             } else {
                                 switch skin.unlockBy {
                                 case .widget:
@@ -217,8 +222,8 @@ struct PlayerProfileView: View {
             GKStore.shared.games.count >= count
         case .winInMessages:
             Calendar.current.isDate(.now, equalTo: lastWinInMessages, toGranularity: .month)
-        case .buy(_):
-            false
+        case .superghost:
+            isSuperghost
         }
     }
 }

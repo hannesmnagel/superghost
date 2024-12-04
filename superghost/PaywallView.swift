@@ -11,119 +11,89 @@ import StoreKit
 
 struct PaywallView: View {
     let dismiss: ()->Void
-    
-    @State private var viewAllPlans = false
-    @State private var selectedProduct : Product? = nil
-    @State private var products = [Product]()
-    
-    
+
+    @State private var product : Product? = nil
+
+
+    let accentColor: Color = .init(red: 150/255, green: 15/255, blue: 40/255)
+
     var body: some View {
         VStack{
-            
-            VStack(spacing: 0){
-                Image(.ghostStars)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(.rect(bottomLeadingRadius: 20, bottomTrailingRadius: 20))
-                    .ignoresSafeArea(edges: .top)
-                    .layoutPriority(1)
-                #if os(visionOS)
-                    .padding(.trailing, 80)
-                #endif
+            Image("Skin/Christmas")
+                .resizable()
+                .scaledToFit()
+                .clipShape(.rect(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
+                .ignoresSafeArea()
+                .frame(maxWidth: 800, alignment: .center)
+                .frame(maxWidth: .infinity, alignment: .center)
 
-                VStack{
-                    Text("Become a Superghost")
-                        .font(.largeTitle.bold())
-                        .foregroundStyle(.accent)
-                    if viewAllPlans {
-                        ForEach(products) { product in
-                            Button{
-                                selectedProduct = product
-                            } label: {
-                                Text("\(product.displayPrice) \(subscriptionDuration(for: product))")
-                                    .foregroundStyle(selectedProduct == product ? .accent : .secondary)
-                                    .padding(.vertical, 5)
-                                    .frame(maxWidth: .infinity)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 25)
-                                            .stroke(selectedProduct == product ? .accent : .secondary)
-                                    )
-                                    .padding(.horizontal)
-                            }
-                        }
+            Spacer()
 
-                    } else {
-                        Spacer()
-                        VStack(alignment: .leading){
-                            Text("+ ").foregroundColor(.accent) + Text("Loose up to 10 times a day")
-                            Text("+ ").foregroundColor(.accent) + Text("Advanced Gameplay")
-                            Text("+ ").foregroundColor(.accent) + Text("Customize App Icon")
-                        }
-                    }
-                    Spacer()
-                    VStack{
-                        if let selectedProduct, !viewAllPlans {
-                            Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
-                                .font(.footnote)
-                        }
-                        if #available(iOS 17.0, *) {
-                            PurchaseProductButton(product: selectedProduct) {
-                                dismiss()
-                            }
-                        } else {
+            Text("Become a Superghost")
+                .font(.largeTitle.bold())
+                .foregroundStyle(.accent)
+            Text("~80% off")
+                .foregroundStyle(.accent)
+                .bold()
+            Spacer()
+
+            VStack(alignment: .leading){
+                Text("+ ").foregroundColor(.accent) + Text("Loose up to 10 times a day")
+                Text("+ ").foregroundColor(.accent) + Text("Advanced Gameplay")
+                Text("+ ").foregroundColor(.accent) + Text("Customize App Icon")
+                Text("+ ").foregroundColor(.accent) + Text("Unlock more Skins")
+            }
+            .padding()
+            Spacer()
+            if #available(iOS 17.0, *) {
+                PurchaseProductButton(product: product) {
+                    dismiss()
+                }
+                .padding(.horizontal)
+            } else {
 #if !os(visionOS)
-                            LegacyPurchaseProductButton(product: selectedProduct) {
-                                dismiss()
-                            }
+                LegacyPurchaseProductButton(product: product) {
+                    dismiss()
+                }
+                .padding(.horizontal)
 #endif
-                        }
-                        if let selectedProduct, viewAllPlans {
-                            Text("Get Access to Superghost for \(selectedProduct.displayPrice) \(subscriptionDuration(for: selectedProduct))")
-                                .font(.footnote)
-                        } else if !viewAllPlans {
-                            VStack{
+            }
 
-                                Button("View All Plans"){
-                                    viewAllPlans = true
-                                }
-                                .foregroundStyle(.accent)
-                                .font(.body)
-                                .padding(.bottom)
-                                #if os(visionOS)
-                                .padding()
-                                #endif
 
-                                HStack{
-                                    Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
-                                        .foregroundStyle(.primary)
-                                    Spacer()
+            HStack{
+                Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    .foregroundStyle(.primary)
+                Spacer()
 
-                                    Button("Restore"){
-                                        Task {
-                                            try? await AppStore.sync()
-                                        }
-                                    }
-                                    Spacer()
-                                    Link("Privacy", destination: URL(string: "https://hannesnagel.com/ghost-privacy")!)
-                                        .foregroundStyle(.primary)
-                                }
-                            }
-                            .font(.callout)
-                            .padding(.horizontal)
-                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
-                        }
+                Button("Restore"){
+                    Task {
+                        try? await AppStore.sync()
                     }
                 }
+                Spacer()
+                Link("Privacy", destination: URL(string: "https://hannesnagel.com/ghost-privacy")!)
+                    .foregroundStyle(.primary)
             }
-            .font(.title2)
-            .task {
-                selectedProduct = try? await Product.products(for: ["monthly.superghost"]).first
-                products = (try? await Product.products(for: ["monthly.superghost", "annual.superghost","onetime.superghost"])) ?? []
-            }
+            .font(.callout)
+            .padding(.horizontal)
+            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
         }
-        #if !os(macOS)
+        .background(.thinMaterial, ignoresSafeAreaEdges: .all)
+        .background(
+            LinearGradient(
+                stops: [.init(color: .red, location: 0), .init(color: .clear, location: 1)],
+                startPoint: .top,
+                endPoint: .bottom
+            ),
+            ignoresSafeAreaEdges: .all
+        )
+        .font(.title2)
+        .task {
+            product = try? await Product.products(for: ["onetime.superghost"]).first
+        }
+#if !os(macOS)
         .toolbarBackground(.hidden, for: .navigationBar)
-        #endif
+#endif
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button(action: dismiss) {
@@ -136,27 +106,9 @@ struct PaywallView: View {
                 .keyboardShortcut(.cancelAction)
             }
         }
-        #if os(visionOS)
+#if os(visionOS)
         .padding(.bottom, 50)
-        #endif
-    }
-    func subscriptionDuration(for product: Product) -> String {
-        if let subscriptionPeriod = product.subscription?.subscriptionPeriod {
-            switch subscriptionPeriod.unit {
-            case .day:
-                return "Daily"
-            case .week:
-                return "Weekly"
-            case .month:
-                return "Monthly"
-            case .year:
-                return "Annually"
-            @unknown default:
-                return "Unknown duration"
-            }
-        } else {
-            return "Lifetime"
-        }
+#endif
     }
 }
 
@@ -167,9 +119,9 @@ struct PurchaseProductButton: View {
     let onPurchase: ()->Void
     @Environment(\.purchase) var purchase
     @State private var disabled = false
-    
+
     var body: some View {
-        Button("Continue"){
+        Button("Continue for \(product?.displayPrice ?? "...")"){
             Task{
                 guard let product else {return}
                 disabled = true
@@ -192,9 +144,9 @@ struct LegacyPurchaseProductButton: View {
     let product: Product?
     let onPurchase: ()->Void
     @State private var disabled = false
-    
+
     var body: some View {
-        Button("Continue"){
+        Button("Continue for \(product?.displayPrice ?? "...")"){
             Task{
                 guard let product else {return}
                 disabled = true
@@ -214,6 +166,9 @@ struct LegacyPurchaseProductButton: View {
 
 
 #Preview {
-    PaywallView{}
-        .modifier(PreviewModifier())
+    NavigationStack{
+        PaywallView{}
+            .modifier(PreviewModifier())
+            .tint(.accent)
+    }
 }
