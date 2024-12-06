@@ -155,7 +155,8 @@ class GKStore: ObservableObject {
         if leaderboardImage == nil {
             try await loadInitialData()
         }
-        let entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...5))
+        let _entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...1))
+        let entries = try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: createRange(containing: _entries?.0?.rank ?? 1, maxAllowed: _entries?.2 ?? 10))
 
 
         self.localPlayerEntry = entries?.0
@@ -164,7 +165,16 @@ class GKStore: ObservableObject {
         PlayerProfileModel.shared.player.rank = self.rank
 
     }
-    
+    func createRange(containing value: Int, maxAllowed: Int, length: Int = 5) -> NSRange {
+        // Calculate the ideal start to center `value` in the range
+        let idealStart = value - length / 2
+
+        // Ensure the range stays within valid bounds
+        let start = max(1, min(idealStart, maxAllowed - length + 1))
+
+        return NSRange(location: start, length: length)
+    }
+
     private init(){}
     
     enum GKStoreError: Error {

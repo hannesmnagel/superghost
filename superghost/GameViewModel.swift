@@ -74,6 +74,9 @@ final class GameViewModel: ObservableObject {
                                 try? await reportAchievement(.longWord, percent: 100)
                             }
                         }
+                        Task.detached {
+                            try? await reportAchievement(.leaderboardUnlock, percent: 100)
+                        }
                     }
                 } else {
                     newValue.player2Id == "" ? updateGameStatus(.waitingForPlayer) : updateGameStatus(.started)

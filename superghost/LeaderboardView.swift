@@ -37,7 +37,7 @@ struct LeaderboardView: View {
             }
             if !gkStore.hasUnlockedLeaderboard {
                 ContentPlaceHolderView(
-                    "Earn 1,050 XP to see the leaderboard",
+                    "Play a game to join the leaderboard",
                     systemImage: "chart.bar.fill"
                 )
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -84,7 +84,12 @@ struct LeaderboardView: View {
                     Spacer()
                     Text(entry.formattedScore)
                 }
+                .padding(.horizontal)
+                .padding(.vertical, 5)
                 .contentShape(.rect)
+                .background(entry.player.displayName == GKLocalPlayer.local.displayName ? .thinMaterial : .ultraThinMaterial)
+                .background(entry.player.displayName == GKLocalPlayer.local.displayName ? .accent : .clear)
+                .clipShape(.rect(cornerRadius: 10))
             }
             .buttonStyle(.plain)
             .matchedGeometryEffect(id: entry.player.gamePlayerID, in: namespace)
