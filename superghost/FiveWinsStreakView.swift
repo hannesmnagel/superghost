@@ -37,7 +37,7 @@ struct FiveWinsStreakView: View {
         }
         Spacer()
             Button("Continue"){showingFiveWinsStreak = false}
-                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                 .font(.title2)
                 .padding(.horizontal)
     }

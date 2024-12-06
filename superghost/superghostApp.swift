@@ -35,7 +35,7 @@ struct superghostApp: App {
             LaunchingView()
                 .preferredColorScheme(.dark)
                 .tint(.accent)
-                .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: DefaultButtonStyle()))
+                .buttonStyle(DefaultButtonStyle())
                 .modifier(Messagable())
                 .onChange(of: scenePhase) {oldValue, newValue in
                     switch newValue {

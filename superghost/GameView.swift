@@ -54,7 +54,7 @@ struct GameView: View {
                  if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")"){
                  Text("Send Invitation Link")
                  ShareLink(item: url)
-                 .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                 .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                  }
                  }
                  //MARK: Playing:
@@ -162,7 +162,7 @@ struct GameView: View {
                                         if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")") {
                                             Text("Send Invitation Link")
                                             ShareLink(item: url)
-                                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
 
                                         }
                                     } else
@@ -183,7 +183,7 @@ struct GameView: View {
                                     } label: {
                                         Text("There is no such word")
                                     }
-                                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                    .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
                                     .disabled(viewModel.game?.blockMoveForPlayerId == viewModel.currentUser.id)
                                 }
                                 //MARK: When you are challenged
@@ -202,7 +202,7 @@ struct GameView: View {
                                 } label: {
                                     Text("Yes, I lied")
                                 }
-                                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
                                 .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                 //MARK: When you challenged
                             } else {
@@ -235,7 +235,7 @@ struct GameView: View {
                             Image(systemName: "xmark")
                                 .font(AppearanceManager.quitGame)
                         }
-                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                        .buttonStyle(.bordered)
                         .buttonBorderShape(.bcCircle)
                     }
                     .buttonStyle(.bordered)
@@ -243,6 +243,7 @@ struct GameView: View {
                     .keyboardShortcut(.cancelAction)
                 }
             }
+            .background(PlayerProfileModel.shared.player.color.gradient, ignoresSafeAreaEdges: .all)
         }
     }
 }

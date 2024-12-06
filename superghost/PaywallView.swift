@@ -76,7 +76,7 @@ struct PaywallView: View {
             }
             .font(.callout)
             .padding(.horizontal)
-            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+            .buttonStyle(.plain)
         }
         .background(.thinMaterial, ignoresSafeAreaEdges: .all)
         .background(
@@ -99,7 +99,7 @@ struct PaywallView: View {
                 Button(action: dismiss) {
                     Image(systemName: "xmark")
                 }
-                .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                .buttonStyle(.bordered)
                 .buttonBorderShape(.bcCircle)
                 .background(.black)
                 .clipShape(.circle)
@@ -134,7 +134,7 @@ struct PurchaseProductButton: View {
             }
         }
         .disabled(disabled || product == nil)
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .bold()
     }
 }
@@ -159,7 +159,7 @@ struct LegacyPurchaseProductButton: View {
             }
         }
         .disabled(disabled || product == nil)
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .bold()
     }
 }

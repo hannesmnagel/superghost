@@ -6,6 +6,18 @@
 //
 
 import SwiftUI
+extension View {
+
+    @ViewBuilder
+    func stretchable(in geo: GeometryProxy) -> some View {
+        let width = geo.size.width
+        let height = geo.size.height
+        let minY = geo.frame(in: .named("list")).minY - 70
+        let useStandard = minY <= 0
+        self.frame(width: width, height: height + (useStandard ? 0 : minY))
+            .offset(y: useStandard ? 0 : -minY)
+    }
+}
 
 struct WordDefinitionView: View {
     let word: String
@@ -16,9 +28,51 @@ struct WordDefinitionView: View {
         case failed, loading, success(definitions: [WordEntry])
     }
 
+    @State private var offset: CGFloat = 0
+
     var body: some View {
 
         List{
+            if let game{
+                Section{
+
+                    GeometryReader{geo in
+                        VStack{
+                            game.player2profile?.imageView
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(.circle)
+
+                            Text(game.won ? "Victory against" : "Defeated by")
+                                .bold()
+                                .foregroundStyle(game.won ? .accent : .orange)
+                            VStack{
+                                Text(game.player2profile?.name ?? "Gustav")
+                                if let rank = game.player2profile?.rank{
+                                    Text("\(rank.ordinalString()) place")
+                                } else {
+                                    Text("Not ranked")
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .frame(minWidth: 100)
+                            .padding(10)
+                            .background(.thinMaterial)
+                            .clipShape(.rect(cornerRadius: 20))
+                            .overlay{
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(game.won ? Color.accent : .orange)
+                            }
+                        }
+                        .stretchable(in: geo)
+                    }
+                    .frame(minHeight: 230)
+
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                }
+            }
             Section{
                 Text(word)
                     .padding(.leading)
@@ -82,6 +136,7 @@ struct WordDefinitionView: View {
                 }
             }
         }
+        .coordinateSpace(name: "list")
         .listStyle(.plain)
     }
     @MainActor @ViewBuilder
@@ -111,5 +166,24 @@ struct WordDefinitionView: View {
 }
 
 #Preview {
-    WordDefinitionView(word: "word")
+    NavigationStack{
+        WordDefinitionView(word: "word", game:
+                .init(
+                    player2: (
+                        id: "playerid",
+                        profile: .init(
+                            rank: 4,
+                            name: "Gustav"
+                        )
+                    ),
+                    withInvitation: true,
+                    won: true,
+                    word: "word",
+                    id: UUID().uuidString
+                )
+        )
+        .toolbar{
+
+        }
+    }
 }

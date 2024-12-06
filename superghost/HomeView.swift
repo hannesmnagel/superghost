@@ -15,6 +15,7 @@ struct HomeView: View {
     @CloudStorage("wordToday") private var wordToday = "-----"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
     @CloudStorage("showOnBoarding") var isFirstUse = true
+    @ObservedObject private var playerModel = PlayerProfileModel.shared
 
     var body: some View {
         HStack {
@@ -27,53 +28,46 @@ struct HomeView: View {
             .frame(maxWidth: 300)
 #endif
             VStack {
-                List{
+                ScrollView{
                     PlayerProfileView()
-                    Section{
-                        header
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(.none)
-                            .listItemTint(ListItemTint?.none)
-                            .listRowSeparator(.hidden)
-                    }
-                    Section{
-                        {
-                            var resultingText = Text("")
-                            for (index, letter) in wordToday.enumerated() {
-                                resultingText = resultingText + (
-                                    (letter == "-") ? Text(
-                                        String(Array("SUPERGHOST".suffix(wordToday.count))[index])
-                                    )
-                                    .foregroundColor(.secondary.opacity(0.5)) : Text(String(letter))
-                                    .foregroundColor(.accent)
+                        .padding(.vertical, 50)
+
+                    ({
+                        var resultingText = Text("")
+                        for (index, letter) in wordToday.enumerated() {
+                            resultingText = resultingText + (
+                                (letter == "-") ? Text(
+                                    String(Array("SUPERGHOST".suffix(wordToday.count))[index])
                                 )
-                            }
-                            return resultingText
-                        }()
-                            .font(.largeTitle.bold())
-                            .textCase(.uppercase)
-                            .frame(maxWidth: .infinity)
-                        Text("\(wordToday.count(where: {$0 == "-"}), format: .number) losses left today")
-                            .font(.footnote)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
+                                .foregroundColor(.secondary.opacity(0.5)) : Text(String(letter))
+                                .foregroundColor(.accent)
+                            )
+                        }
+                        return resultingText
+                    }())
+                    .font(.largeTitle.bold())
+                    .textCase(.uppercase)
+                    .frame(maxWidth: .infinity)
+                    Text("\(wordToday.count(where: {$0 == "-"})) losses left today")
+                        .font(.footnote)
+                        .frame(maxWidth: .infinity, alignment: .center)
+
+                        header
+
+
+
                     EventView()
-                    Section{
                         LeaderboardView(isSuperghost: isSuperghost)
-                    }
-                    Section{
-                        AchievementsView()
-                    }
+                        .padding()
 #if !os(macOS)
-                    Section{
-                        StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
-                    }
+                    StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
 #endif
-                    Section{
+
+                    AchievementsView()
+                        .padding(.vertical)
+
                         SettingsButton(isSuperghost: isSuperghost)
-                            .listRowBackground(Color.clear)
                             .frame(maxWidth: .infinity)
-                    }
                 }
                 .scrollContentBackground(.hidden)
 #if os(macOS)
@@ -132,21 +126,24 @@ struct HomeView: View {
             }
         }
 #if !os(macOS)
-        .sheet(item: $gameStatSelection) { gameStat in
+        .fullScreenCover(item: $gameStatSelection) { gameStat in
             NavigationStack{
                 WordDefinitionView(word: gameStat.word, game: gameStat)
-                    .padding(.top)
                     .toolbar{
                         ToolbarItem(placement: .cancellationAction){
                             Button{gameStatSelection = nil} label: {
                                 Image(systemName: "xmark")
                             }
                             .keyboardShortcut(.cancelAction)
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.bcCircle)
                         }
                     }
                     .background((gameStat.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1)).ignoresSafeArea())
             }
         }
+        .background(playerModel.player.color.gradient
+            , ignoresSafeAreaEdges: .all)
 #endif
     }
     @MainActor @ViewBuilder
@@ -175,7 +172,7 @@ struct HomeView: View {
                 }
             }
             .keyboardShortcut(.defaultAction)
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
 
             AsyncButton {
                 try await GameViewModel.shared.hostGame()
@@ -184,7 +181,7 @@ struct HomeView: View {
                 Text("Host a Game")
                     .font(.largeTitle)
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
 
 
 
@@ -193,7 +190,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.bottom, 30)
-        .textCase(nil)
+        .padding(.horizontal)
     }
 }
 

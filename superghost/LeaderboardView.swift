@@ -55,7 +55,7 @@ struct LeaderboardView: View {
                         .contentShape(.rect)
                     }
                     .foregroundStyle(.accent)
-                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonStyle(.bordered)
                     .buttonBorderShape(.capsule)
                     .padding()
                 }
@@ -86,7 +86,7 @@ struct LeaderboardView: View {
                 }
                 .contentShape(.rect)
             }
-            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+            .buttonStyle(.plain)
             .matchedGeometryEffect(id: entry.player.gamePlayerID, in: namespace)
         }
     }
@@ -116,7 +116,7 @@ struct ScoreDetailView: View {
                                 GKAccessPoint.shared.trigger(player: entry.player)
                             }
                         }
-                        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                        .buttonStyle(.bordered)
                         .buttonBorderShape(.capsule)
                     }
 
@@ -129,7 +129,7 @@ struct ScoreDetailView: View {
                             GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
                         }
                     }
-                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonStyle(.bordered)
                     .buttonBorderShape(.capsule)
                 } else {
                     Text("Rank: \(entry.rank)")
@@ -171,7 +171,7 @@ struct ScoreDetailView: View {
                     } label: {
                         Image(systemName: "xmark")
                     }
-                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonStyle(.bordered)
                     .buttonBorderShape(.bcCircle)
                     .keyboardShortcut(.cancelAction)
                 }

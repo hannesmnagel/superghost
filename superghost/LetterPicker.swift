@@ -43,6 +43,6 @@ struct LetterPicker: View {
         }
         .keyboardShortcut(.defaultAction)
         .disabled(leadingLetter.isEmpty && trailingLetter.isEmpty)
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
     }
 }

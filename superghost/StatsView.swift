@@ -25,143 +25,157 @@ struct StatsView: View {
 
     @ObservedObject private var gkStore = GKStore.shared
 
+    @State private var maxGames = 6
+
     var body: some View {
 #if os(macOS)
         VStack{}
             .toolbar {
                 summary
             }
-        let listClosed = 20
+
+        Text("Recent Games")
+            .font(AppearanceManager.leaderboardTitle)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .opacity(gkStore.games.isEmpty ? 0 : 1)
 #else
-        ViewThatFits {
-            summary
-            ScrollView(.horizontal){
-                summary
-            }
-            .scrollContentBackground(.hidden)
-        }
-        let listClosed = 5
+        Text("Recent Games")
+            .font(AppearanceManager.leaderboardTitle)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .opacity(gkStore.games.isEmpty ? 0 : 1)
+
+        summary
 #endif
-        ForEach(gkStore.games.prefix(expandingList ? .max : listClosed)){game in
-            Button{selection = game} label: {
-                HStack{
-                    Text(game.word)
-                    Spacer()
-                    Image(systemName: game.won ? "crown.fill" : "xmark")
+        LazyVGrid(columns: [.init(.adaptive(minimum: 150, maximum: 200))]){
+            ForEach(gkStore.games.prefix(max(6, maxGames))){game in
+                Button{selection = game} label: {
+                    MinimizedGameView(game: game)
+                        .padding(5)
+                        .contentShape(.rect)
                 }
-                .contentShape(.rect)
+                .buttonStyle(.plain)
             }
-            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
-            .listRowBackground(
-                (game.won ? Color.green.brightness(0.5).opacity(0.1) : Color.red.brightness(0.5).opacity(0.1))
-                .background(Color.black.opacity(0.9))
-            )
         }
-        if gkStore.games.count > listClosed {
-            Button{
-                withAnimation(.smooth){expandingList.toggle()}
-            } label: {
-                HStack{
-                    Text(expandingList ? "Less" : "More")
-                    Image(systemName: "ellipsis")
+        .padding(.horizontal)
+        HStack {
+            if gkStore.games.count > maxGames {
+                Button{
+                    withAnimation(.smooth){maxGames += 10}
+                } label: {
+                    HStack{
+                        Text("More")
+                        Image(systemName: "plus.circle")
+                    }
+                    .contentShape(.rect)
                 }
-                .contentShape(.rect)
             }
-            .foregroundStyle(.accent)
-            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-            .buttonBorderShape(.capsule)
-            .frame(maxWidth: .infinity)
+            if maxGames > 6 {
+                Button{
+                    withAnimation(.smooth){maxGames -= 10}
+                } label: {
+                    HStack{
+                        Text("Less")
+                        Image(systemName: "minus.circle")
+                    }
+                    .contentShape(.rect)
+                }
+            }
         }
+        .foregroundStyle(.accent)
+        .buttonStyle(.bordered)
+        .buttonBorderShape(.capsule)
+        .frame(maxWidth: .infinity)
     }
+    @ViewBuilder var wordTodayView: some View {
+        VStack{
+            Text(wordToday)
+                .font(AppearanceManager.statsValue)
+            Text("Word Today")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+    @ViewBuilder var winStreakView: some View {
+        VStack{
+            Text(winningStreak, format: .number)
+                .font(AppearanceManager.statsValue)
+            Text("Win Streak")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+    @ViewBuilder var winRateView: some View {
+        VStack{
+            Text(winningRate, format: .percent.precision(.fractionLength(0)))
+                .font(AppearanceManager.statsValue)
+            Text("Win Rate")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+    @ViewBuilder var winsTodayView: some View {
+        VStack{
+            Text(winsToday, format: .number)
+                .font(AppearanceManager.statsValue)
+            Text("Wins Today")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+    @ViewBuilder var scoreView: some View {
+        VStack{
+            Text(score, format: .number)
+                .font(AppearanceManager.statsValue)
+            Text("XP")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+    @ViewBuilder var rankView: some View {
+        VStack{
+            if rank >= 0{
+                Text(rank, format: .number)
+                    .font(AppearanceManager.statsValue)
+            } else {
+                Text("No")
+                    .font(AppearanceManager.statsValue)
+            }
+            Text("Rank")
+                .font(AppearanceManager.statsLabel)
+        }
+        .frame(maxWidth: 300)
+    }
+
     @ViewBuilder @MainActor
     var summary: some View {
-                HStack(alignment: .top){
-#if os(macOS)
-                    VStack{
-                        Text(wordToday)
-                            .font(AppearanceManager.statsValue)
-                        Text("Word Today")
-                            .font(AppearanceManager.statsLabel)
-                    }
-                    .frame(width: 100)
-                    Divider()
-#endif
-                    VStack{
-                        Text(winningStreak, format: .number)
-                            .font(AppearanceManager.statsValue)
-                        Text("Win Streak")
-                            .font(AppearanceManager.statsLabel)
-                    }
-#if os(macOS)
-                    .frame(width: 100)
-#endif
-                    .frame(minWidth: 70)
-                    Divider()
-                    VStack{
-                        Text(winningRate, format: .percent.precision(.fractionLength(0)))
-                            .font(AppearanceManager.statsValue)
-                        Text("Win Rate")
-                            .font(AppearanceManager.statsLabel)
-                    }
-#if os(macOS)
-                    .frame(width: 100)
-#endif
-                    .frame(minWidth: 70)
-                    Divider()
-                    VStack{
-                        Text(winsToday, format: .number)
-                            .font(AppearanceManager.statsValue)
-                        Text("Wins Today")
-                            .font(AppearanceManager.statsLabel)
-                    }
-#if os(macOS)
-                    .frame(width: 100)
-#endif
-                    .frame(minWidth: 70)
-                    Divider()
-                    VStack{
-                        Text(score, format: .number)
-                            .font(AppearanceManager.statsValue)
-                        Text("XP")
-                            .font(AppearanceManager.statsLabel)
-                    }
-#if os(macOS)
-                    .frame(width: 100)
-#endif
-                    .frame(minWidth: 70)
-                    Divider()
-                    VStack{
-                        if rank >= 0{
-                            Text(rank, format: .number)
-                                .font(AppearanceManager.statsValue)
-                        } else {
-                            Text("No")
-                                .font(AppearanceManager.statsValue)
-                        }
-                        Text("Rank")
-                            .font(AppearanceManager.statsLabel)
-                    }
-#if os(macOS)
-                    .frame(width: 100)
-#endif
-                    .frame(minWidth: 70)
-                }
-        .multilineTextAlignment(.center)
-        .listRowBackground(
-            HStack{
-                GeometryReader{geo in
-                    Rectangle()
-                        .fill(.red.opacity(0.5 + 0.1 * Double(gkStore.games.today.lost.count)))
-                        .frame(width:
-                                geo.frame(in: .named("rowbackground")).width * CGFloat(gkStore.games.today.lost.count) / CGFloat(wordToday.count)
-                        )
-                }
+        Grid{
+            GridRow{
+                scoreView
+                    .padding(4)
+                    .background(.white.opacity(0.05))
+                    .clipShape(.rect(cornerRadius: 15))
+                rankView
+                    .padding(4)
+                    .background(.white.opacity(0.05))
+                    .clipShape(.rect(cornerRadius: 15))
             }
-                .coordinateSpace(name: "rowbackground")
-                .ignoresSafeArea()
-                .background(Color.green.opacity(0.5))
-        )
-        .clipped()
+            GridRow{
+                winStreakView
+                    .padding(4)
+                    .background(.white.opacity(0.05))
+                    .clipShape(.rect(cornerRadius: 15))
+                winRateView
+                    .padding(4)
+                    .background(.white.opacity(0.05))
+                    .clipShape(.rect(cornerRadius: 15))
+            }
+
+        }
+        .multilineTextAlignment(.center)
+        .padding()
+        .background(.thinMaterial)
+        .clipShape(.rect(cornerRadius: 20))
+        .padding()
     }
 }
 

@@ -18,7 +18,7 @@ struct AchievementsView: View {
             Text("Achievements")
                 .font(AppearanceManager.leaderboardTitle)
             ScrollView(.horizontal){
-                LazyHGrid(rows: [ GridItem(.fixed(200))]) {
+                LazyHGrid(rows: [ GridItem(.fixed(220))]) {
                     if let achievedAchievements = gkStore.achievedAchievements {
                         ForEach(achievedAchievements, id: \.0.identifier) { achievement in
                             Button{
@@ -28,7 +28,7 @@ struct AchievementsView: View {
                                     .frame(width: 200)
                                     .contentShape(.rect)
                             }
-                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+                            .buttonStyle(.plain)
                         }
                     }
                     if let unachievedAchievements = gkStore.unachievedAchievements {
@@ -40,11 +40,12 @@ struct AchievementsView: View {
                                     .frame(width: 200)
                                     .contentShape(.rect)
                             }
-                            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .plain))
+                            .buttonStyle(.plain)
                         }
                     }
                 }
                 .id([gkStore.unachievedAchievements?.debugDescription, gkStore.achievedAchievements?.debugDescription])
+                .padding(.leading)
 
             }
             Button{
@@ -56,11 +57,11 @@ struct AchievementsView: View {
                 }
                 .contentShape(.rect)
             }
-            .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+            .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
             .padding()
         }
-        .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 0))
+
         .onDisappear{isExpanded = false}
     }
 }
@@ -118,7 +119,7 @@ struct AchievementView: View {
             achievement.0.asyncImage(achieved: isCompleted)
                 .frame(width: 100, height: 100)
                 .padding(2)
-                .background(.gray.gradient)
+                .background(.thickMaterial)
                 .clipShape(.circle)
 
             Text(achievement.0.title)
@@ -130,6 +131,8 @@ struct AchievementView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke())
+        .background(.thinMaterial)
+        .clipShape(.rect(cornerRadius: 20))
+        .padding(5)
     }
 }

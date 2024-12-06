@@ -101,7 +101,7 @@ struct InstructionsView: View {
                     }
                 }
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
             .padding(.horizontal)
             .padding(.top, 40)
         }

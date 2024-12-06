@@ -64,7 +64,7 @@ class AppearanceManager {
 
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .buttonStyle(HapticStlye(buttonStyle: .plain))
+                .buttonStyle(.plain)
                 .foregroundStyle(isEnabled ? (isSecondary ? .white : .black) : .secondary)
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -74,114 +74,5 @@ class AppearanceManager {
                 .scaleEffect(configuration.isPressed ? 0.9 : 1)
         }
     }
-    struct HapticStlyeCustom<Style: ButtonStyle>: PrimitiveButtonStyle {
-        let buttonStyle: Style
-        @GestureState private var isPressed = false
-        @State private var feedback = false
-
-        func makeBody(configuration: Configuration) -> some View {
-            Button{} label: {
-                configuration.label
-            }
-            .buttonStyle(buttonStyle)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .updating($isPressed) { value, state, transaction in
-                        state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
-                    }
-                    .onEnded{ value in
-                        if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
-                            configuration.trigger()
-#if os(iOS)
-                            if !feedback {
-                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                            }
-#endif
-                        }
-                    }
-            )
-#if os(iOS)
-            .onChange(of: isPressed) { oldValue, newValue in
-                if newValue {
-                    Task{
-                        try? await Task.sleep(for: .milliseconds(100))
-                        if isPressed {
-                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                            feedback = true
-                        }
-                    }
-                } else if feedback {
-                    UIImpactFeedbackGenerator().impactOccurred()
-                }
-            }
-#endif
-        }
-    }
-
-    struct HapticStlye<Style: PrimitiveButtonStyle>: PrimitiveButtonStyle {
-        let buttonStyle: Style
-        @GestureState private var isPressed = false
-        @State private var feedback = false
-
-        func makeBody(configuration: Configuration) -> some View {
-            #if os(iOS)
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                Button{
-                } label: {
-                    configuration.label
-                }
-                .buttonStyle(buttonStyle)
-
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($isPressed) { value, state, transaction in
-                            state = max(value.translation.height.magnitude, value.translation.width.magnitude) < 10
-                        }
-                        .onEnded{ value in
-                            if max(value.translation.height.magnitude, value.translation.width.magnitude) < 10 {
-                                configuration.trigger()
-                                if !feedback {
-                                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                                }
-                            }
-                        }
-                )
-                .onChange(of: isPressed) { oldValue, newValue in
-                    if newValue {
-                        Task{
-                            try? await Task.sleep(for: .milliseconds(100))
-                            if isPressed {
-                                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                                feedback = true
-                            }
-                        }
-                    } else if feedback {
-                        UIImpactFeedbackGenerator().impactOccurred()
-                    }
-                }
-            } else {
-                Button{
-                    configuration.trigger()
-                } label: {
-                    configuration.label
-                }
-                .buttonStyle(buttonStyle)
-            }
-#else
-            Button{
-                configuration.trigger()
-            } label: {
-                configuration.label
-            }
-            .buttonStyle(buttonStyle)
-#endif
-        }
-    }
 }
 
-#Preview{
-    Button("Lol"){
-        print("lol")
-    }
-    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
-}

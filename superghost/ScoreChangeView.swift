@@ -48,7 +48,7 @@ struct ScoreChangeView: View {
             Button("Continue"){
                 UserDefaults.standard.set(false, forKey: "showingScoreChange")
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
             .padding(.horizontal)
             .font(.title2)
         }

@@ -140,7 +140,7 @@ struct SignInView: View {
         Button("Sign In") {
                 GKAccessPoint.shared.trigger(state: .localPlayerProfile){}
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .padding(.horizontal)
         Button("Why do I have to sign in?") {
             withAnimation{

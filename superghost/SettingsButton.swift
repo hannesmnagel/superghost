@@ -35,7 +35,7 @@ struct SettingsButton: View {
                 .contentShape(.capsule)
         }
         .font(AppearanceManager.settingsButton)
-        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+        .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
         .foregroundStyle(.accent)
 #endif
@@ -168,6 +168,8 @@ struct SettingsView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(PlayerProfileModel.shared.player.color.gradient, ignoresSafeAreaEdges: .all)
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationTitle("Settings")
@@ -179,7 +181,7 @@ struct SettingsView: View {
                     } label: {
                         Image(systemName: "xmark")
                     }
-                    .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+                    .buttonStyle(.bordered)
                     .buttonBorderShape(.bcCircle)
                     .keyboardShortcut(.cancelAction)
                 }

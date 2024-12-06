@@ -108,7 +108,7 @@ struct GrantFriendsPermissionView: View {
             } label: {
                 Text("Continue")
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
             .padding(.horizontal)
             if !showReasons {
                 Button(showReasons ? "Skip" : "But Why?!") {

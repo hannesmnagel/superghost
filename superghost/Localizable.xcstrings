@@ -22,8 +22,33 @@
     "%@ losses left today" : {
 
     },
+    "%@ place" : {
+
+    },
     "%@ XP" : {
 
+    },
+    "%lld losses left today" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld loss left today"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : "%lld losses left today"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "%lld." : {
 
@@ -150,6 +175,12 @@
 
     },
     "Customize App Icon" : {
+
+    },
+    "Defeat" : {
+
+    },
+    "Defeated by" : {
 
     },
     "Display Your current win rate" : {
@@ -296,6 +327,9 @@
     "Rank: %lld" : {
 
     },
+    "Ranked %@" : {
+
+    },
     "Recent Games" : {
 
     },
@@ -421,6 +455,12 @@
 
     },
     "Update you OS to add a Widget First" : {
+
+    },
+    "Victory %@" : {
+
+    },
+    "Victory against" : {
 
     },
     "View their profile" : {

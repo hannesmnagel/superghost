@@ -348,7 +348,7 @@ struct GameView: View {
                 }
             }
         }
-        .buttonStyle(AppearanceManager.HapticStlye(buttonStyle: .bordered))
+        .buttonStyle(.bordered)
         .buttonBorderShape(.capsule)
     }
     func processPlayerMove(for word: String, currentUser: String, player1Id: String, player2Id: String, newCount: Int) async throws {

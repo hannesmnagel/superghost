@@ -28,10 +28,10 @@ struct Messagable: ViewModifier {
             .overlay {
                 ZStack{
                     if let message = model.message.first {
-                        Color.black
+                        Color.clear
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .ignoresSafeArea()
-                            .transition(.opacity)
+                            .background(.thinMaterial, ignoresSafeAreaEdges: .all)
+                            .transition(.opacity.animation(.smooth))
                         HStack{
                             Text(message)
                                 .padding()
@@ -52,9 +52,7 @@ struct Messagable: ViewModifier {
                                 ghostScale = 0.9
                             }
                             try? await Task.sleep(for: .seconds(message.count/10))
-                            withAnimation(.smooth){
-                                model.message = Array(model.message.dropFirst())
-                            }
+                            model.message = Array(model.message.dropFirst())
                         }
                     }
                     
@@ -202,12 +200,12 @@ struct Messagable: ViewModifier {
         } label: {
             Text("Add Friends")
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .font(.title2.bold())
         Button("Maybe later"){
             model.showingAction = nil
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
     }
     @MainActor @ViewBuilder
     var addWidget: some View{
@@ -232,12 +230,12 @@ struct Messagable: ViewModifier {
                 widgetExplanationStep = 1
                 presentationDetent = .large
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
             .font(.title2.bold())
             Button("Maybe later"){
                 model.showingAction = nil
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
         } else if widgetExplanationStep == 1 {
             if #available(iOS 17.0, *){
                 Text("Tap and hold anywhere on your Home Screen")
@@ -268,18 +266,18 @@ struct Messagable: ViewModifier {
                 Button("Continue"){
                     widgetExplanationStep = 2
                 }
-                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                 .font(.title2.bold())
 
                 Button("Cancel"){
                     model.showingAction = nil
                 }
-                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
             } else {
                 Button("Okay"){
                     model.showingAction = nil
                 }
-                .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                 .font(.title2.bold())
             }
             } else if widgetExplanationStep == 2 {
@@ -308,12 +306,12 @@ struct Messagable: ViewModifier {
                     try? await dismissWhenAddedWidget()
                 }
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
             .font(.title2.bold())
             Button("Cancel"){
                 model.showingAction = nil
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
         } else {
 
 
@@ -342,7 +340,7 @@ struct Messagable: ViewModifier {
             Button("Cancel"){
                 model.showingAction = nil
             }
-            .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+            .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
             .onDisappear{
                 widgetExplanationStep = 0
             }
@@ -371,7 +369,7 @@ struct Messagable: ViewModifier {
         Button(buttonTitle){
             model.showingAction = nil
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .font(.title2.bold())
     }
     @MainActor @ViewBuilder
@@ -427,12 +425,12 @@ struct Messagable: ViewModifier {
                 try? await dismissWhenNotificationsAllowed()
             }
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
         .font(.title2.bold())
         Button("Maybe later"){
             model.showingAction = nil
         }
-        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: true)))
+        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: true))
     }
     enum MessagableError: Error {
         case couldntLoadFriends

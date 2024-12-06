@@ -14,7 +14,12 @@ struct Game: Equatable {
     var player1profile: PlayerProfile?
 
     var player2Id = ""
-    var player2profile: PlayerProfile = .init(name: ["Heinz Gustav", "Otto128", "TressG", "ShitHappens"].randomElement()!)
+    var player2profile: PlayerProfile = [
+        PlayerProfile(image: Skin.christmas.image, name: "Heinz Gustav"),
+        PlayerProfile(image: Skin.doctor.image, name: "Otto128"),
+        PlayerProfile(image: Skin.samurai.image, name: "TressG"),
+        PlayerProfile(image: Skin.engineer.image, name: "ShitHappens")
+    ].randomElement()!
 
     var isBlockingMoveForPlayerOne = true
 
@@ -88,5 +93,21 @@ struct PlayerProfile: Equatable, Codable, Hashable {
 #else
         return Image(uiImage: .init(named: image ?? "Skin/Cowboy") ?? .init(named: "Skin/Cowboy")!)
 #endif
+    }
+    var color: Color {
+        switch image ?? ""{
+        case Skin.christmas.image:
+                .red.opacity(0.5)
+        case Skin.doctor.image:
+                .gray.opacity(0.2)
+        case Skin.samurai.image:
+                .gray
+        case Skin.sailor.image:
+                .blue.opacity(0.2)
+        case Skin.knight.image:
+                .gray.opacity(0.3)
+        default:
+                .brown.opacity(0.4)
+        }
     }
 }

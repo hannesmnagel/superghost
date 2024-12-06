@@ -47,7 +47,7 @@ struct AlertView: View {
                     } label: {
                         Text("Quit")
                     }
-                    .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                    .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                     Spacer()
                 }
             } else {
@@ -72,7 +72,7 @@ struct AlertView: View {
                         } label: {
                             Text("Rematch")
                         }
-                        .buttonStyle(AppearanceManager.HapticStlyeCustom(buttonStyle: AppearanceManager.FullWidthButtonStyle(isSecondary: false)))
+                        .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
                         .keyboardShortcut(.defaultAction)
                     }
 
