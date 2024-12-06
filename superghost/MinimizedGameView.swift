@@ -55,4 +55,5 @@ struct MinimizedGameView: View {
             id: UUID().uuidString
         )
     )
+    .frame(width: 150, height: 200)
 }

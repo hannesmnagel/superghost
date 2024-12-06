@@ -15,7 +15,6 @@
 		38AF919D2C46D683003D100B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A46C232C46C50F004950E3 /* SwiftUI.framework */; };
 		38AF91AB2C46D685003D100B /* gamestatsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */; platformFilters = (ios, macos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38B790F02C6495A400AC9BE2 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38B790EF2C6495A400AC9BE2 /* Messages.framework */; };
-		38C4CC922D02384600407ED4 /* MinimizedGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C4CC912D02384600407ED4 /* MinimizedGameView.swift */; };
 		38D75F7D2C418643000C0DDF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38D75F7C2C418643000C0DDF /* StoreKit.framework */; };
 		38F4F5A12CFE1EEF0070EB55 /* Aptabase in Frameworks */ = {isa = PBXBuildFile; productRef = 38F4F5A02CFE1EEF0070EB55 /* Aptabase */; };
 /* End PBXBuildFile section */
@@ -70,7 +69,6 @@
 		38AF919B2C46D683003D100B /* gamestatsWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = gamestatsWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		38B790EE2C6495A400AC9BE2 /* Messages Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Messages Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38B790EF2C6495A400AC9BE2 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
-		38C4CC912D02384600407ED4 /* MinimizedGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedGameView.swift; sourceTree = "<group>"; };
 		38D75F7C2C418643000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS1.2.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		38D75F7E2C418647000C0DDF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -180,7 +178,6 @@
 		38AE74FB2C1E094500DFB6A7 = {
 			isa = PBXGroup;
 			children = (
-				38C4CC912D02384600407ED4 /* MinimizedGameView.swift */,
 				383C66822C2DE9EE003A62B3 /* SUPER-2.png */,
 				5CA7F2602CAD7B46007D02F5 /* superghost */,
 				5CA7F2B82CAD7B4D007D02F5 /* gamestatsWidget */,
@@ -356,7 +353,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38C4CC922D02384600407ED4 /* MinimizedGameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
