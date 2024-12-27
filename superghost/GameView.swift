@@ -159,7 +159,7 @@ struct GameView: View {
                                 }
                                 AppearingAnimationView(after: 7){trigger in
                                     if game.player2Id == "privateGame" {
-                                        if let url = URL(string: "https://hannesnagel.com/api/v2/superghost/private/\(viewModel.game?.id ?? "")") {
+                                        if let url = URL(string: "https://superghost.hannesnagel.com/v3/private/\(viewModel.game?.id ?? "")") {
                                             Text("Send Invitation Link")
                                             ShareLink(item: url)
                                                 .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))

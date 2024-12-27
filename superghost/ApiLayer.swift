@@ -10,7 +10,6 @@ import Combine
 import StoreKit
 
 
-let backendURL = "https://hannesnagel.com/api/v3/superghost"
 
 typealias Player = (id: String, profile: PlayerProfile)
 
@@ -107,7 +106,7 @@ final class ApiLayer: ObservableObject {
 
     private func connectToWebSocket(gameId: String) async {
             let urlSession = URLSession(configuration: .default)
-            let url = URL(string: "wss://hannesnagel.com/api/v3/superghost/game/subscribe/\(gameId)")!
+        let url = URL(string: "wss://superghost.hannesnagel.com/v3/game/subscribe/\(gameId)")!
 
             webSocketTask = urlSession.webSocketTask(with: url)
             await withCheckedContinuation{con in
@@ -200,7 +199,7 @@ private enum ApiCaller {
     enum APIError: Error {
         case requestFailed
     }
-    static let baseURL = "https://hannesnagel.com/api/v3/superghost"
+    static let baseURL = "https://superghost.hannesnagel.com/v3"
 
     // MARK: - Create Game
     struct CreateGameRequest: Codable {
