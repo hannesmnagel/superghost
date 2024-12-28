@@ -27,7 +27,7 @@ struct superghostApp: App {
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
     
     init() {
-        Aptabase.shared.initialize(appKey: "A-SH-2968519615", options: InitOptions(host: "https://analytics.hannesnagel.com"))
+        Aptabase.shared.initialize(appKey: "A-SH-2968519615", options: InitOptions(host: "https://analytics.hannesnagel.com", flushInterval: 1))
     }
 
     var body: some Scene {
@@ -108,7 +108,7 @@ struct superghostApp: App {
                     Logger.appRefresh.info("Sent push notification, because someone passed you on the leaderboard.")
                 } else {
                     let xpBoostUntil = await xpBoostUntil
-                    if await doubleXP15minNotifications && .random() && (!Calendar.current.isDateInToday(xpBoostUntil) || (.random() && .random())),
+                    if await doubleXP15minNotifications && .random() && (!Calendar.current.isDateInToday(xpBoostUntil) || (.random() && .random() && .random() && .random())),
                     let in15mins = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) {
                         sendPushNotification(with: "Play NOW!", description: "It's double XP. But just for 15 minutes!")
                         await MainActor.run{
