@@ -28,6 +28,5 @@ final class PlayerProfileModel: ObservableObject {
         } else {
             self.player = .init(name: GKLocalPlayer.local.alias)
         }
-        self.player = .init(name: UUID().uuidString)
     }
 }
