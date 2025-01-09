@@ -15,7 +15,7 @@ struct Game: Equatable {
 
     var player2Id = ""
     var player2profile: PlayerProfile = [
-        PlayerProfile(image: Skin.christmas.image, name: "Heinz Gustav"),
+        PlayerProfile(image: Skin.cowboy.image, name: "Heinz Gustav"),
         PlayerProfile(image: Skin.doctor.image, name: "Otto128"),
         PlayerProfile(image: Skin.samurai.image, name: "TressG"),
         PlayerProfile(image: Skin.engineer.image, name: "ShitHappens")
