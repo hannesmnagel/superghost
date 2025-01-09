@@ -84,40 +84,40 @@
 		5CA7F2AF2CAD7B46007D02F5 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AsyncFuncs.swift,
-				ButtonBorderShapes.swift,
-				CloudStoragePropertyWrapper.swift,
-				ContentPlaceHolderView.swift,
-				Game.swift,
-				GameStat.swift,
+				Game/Game.swift,
 				Localizable.xcstrings,
-				Logger.swift,
-				onChange.swift,
-				SharedMessages.swift,
-				Skin.swift,
+				Messages/SharedMessages.swift,
+				ReusableViews/ContentPlaceHolderView.swift,
+				Stats/Models/GameStat.swift,
+				Stats/Models/Skin.swift,
+				Utilities/AsyncFuncs.swift,
+				Utilities/ButtonBorderShapes.swift,
+				Utilities/CloudStoragePropertyWrapper.swift,
+				Utilities/Logger.swift,
+				ViewModifiers/onChange.swift,
 			);
 			target = 38AF919A2C46D683003D100B /* gamestatsWidgetExtension */;
 		};
 		5CA7F2B02CAD7B46007D02F5 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Alerts.swift,
 				Appearance.swift,
-				AsyncButton.swift,
-				AsyncFuncs.swift,
-				ButtonBorderShapes.swift,
-				CloudStoragePropertyWrapper.swift,
-				ContentPlaceHolderView.swift,
-				Game.swift,
-				GameStat.swift,
-				Logger.swift,
-				onChange.swift,
+				Game/Game.swift,
+				Game/SingleLetterPicker.swift,
+				Game/Status/Alerts.swift,
+				Game/Status/WordDefinitionView.swift,
+				Messages/SharedMessages.swift,
 				PreviewModifier.swift,
-				SharedMessages.swift,
-				SharedTopViewController.swift,
-				SingleLetterPicker.swift,
-				Skin.swift,
-				WordDefinitionView.swift,
+				ReusableViews/AsyncButton.swift,
+				ReusableViews/ContentPlaceHolderView.swift,
+				Stats/Models/GameStat.swift,
+				Stats/Models/Skin.swift,
+				Utilities/AsyncFuncs.swift,
+				Utilities/ButtonBorderShapes.swift,
+				Utilities/CloudStoragePropertyWrapper.swift,
+				Utilities/Logger.swift,
+				Utilities/SharedTopViewController.swift,
+				ViewModifiers/onChange.swift,
 			);
 			target = 38B790ED2C6495A400AC9BE2 /* Messages Extension */;
 		};
