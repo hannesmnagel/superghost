@@ -28,8 +28,6 @@ struct Game: Equatable {
     var player1Challenges = Bool?.none
 
     var rematchGameId = String?.none
-    
-    var isSuperghost: Bool
 
     var word = ""
 

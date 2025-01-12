@@ -40,8 +40,6 @@ class GKStore: ObservableObject {
     @CloudStorage("winStreak") private var winningStreak = 0
     @CloudStorage("wordToday") private var wordToday = "-----"
     @CloudStorage("winsToday") private var winsToday = 0
-    @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
-    @CloudStorage("isSuperghost") private var isSuperghost = false
     @CloudStorage("isPayingSuperghost") private var isPayingSuperghost = false
     @CloudStorage("showTrialEndsIn") private var showTrialEndsIn : Int? = nil
     
@@ -198,13 +196,6 @@ class GKStore: ObservableObject {
 
         winningRate = games.winningRate
 
-        if Int(winningStreak/5) < Int(games.winningStreak/5) && (winningStreak + 1) == games.winningStreak {
-            superghostTrialEnd = Calendar.current.date(byAdding: .day, value: 1, to: max(Date(), superghostTrialEnd)) ?? superghostTrialEnd
-            UserDefaults.standard.set(true, forKey: "showingFiveWinsStreak")
-            Task{
-                try? await fetchSubscription()
-            }
-        }
         winningStreak = games.winningStreak
 
         let gamesToday = games.today
@@ -213,7 +204,7 @@ class GKStore: ObservableObject {
 
         let gamesLostToday = gamesToday.lost
 
-        let word = isSuperghost ? "SUPERGHOST" : "GHOST"
+        let word = "SUPERGHOST"
         let lettersOfWord = word.prefix(gamesLostToday.count)
         let placeHolders = Array(repeating: "-", count: word.count).joined()
         let actualPlaceHolders = placeHolders.prefix(max(0, word.count-gamesLostToday.count))
@@ -224,42 +215,6 @@ class GKStore: ObservableObject {
     
     func fetchSubscription() async throws {
         let hasSubscribed = await !StoreManager.shared.purchasedProductIDs.isEmpty
-
-        if hasSubscribed,
-           UserDefaults.standard.bool(forKey: "showingPaywall") {
-            #if !DEBUG
-            UserDefaults.standard.set(false, forKey: "showingPaywall")
-            #endif
-        }
-
         self.isPayingSuperghost = hasSubscribed
-        let timeSinceTrialEnd = Date().timeIntervalSince(superghostTrialEnd)
-        let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-        let wasSuperghost = isSuperghost
-
-        isSuperghost = hasSubscribed || timeSinceTrialEnd < 0
-
-
-
-#if os(iOS)
-        if !isSuperghost,
-           AppearanceManager.shared.appIcon != .standard{
-            Task{
-                try? await UIApplication.shared.setAlternateIconName("AppIcon.standard")
-                AppearanceManager.shared.appIcon = .standard
-            }
-        }
-#endif
-
-
-        //is in trial:
-        if !hasSubscribed && timeSinceTrialEnd < 0 {
-            showTrialEndsIn = Int(-daysSinceTrialEnd+0.5)
-        } else {
-            showTrialEndsIn = nil
-        }
-        if isSuperghost != wasSuperghost {
-            await refreshScore()
-        }
     }
 }

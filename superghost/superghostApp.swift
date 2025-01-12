@@ -13,8 +13,6 @@ import Aptabase
 
 @main
 struct superghostApp: App {
-
-    @CloudStorage("isSuperghost") private var isSuperghost = false
     @CloudStorage("rank") private var rank = -1
     @CloudStorage("doubleXPuntil") private var xpBoostUntil = Date.distantPast
 
@@ -125,7 +123,7 @@ struct superghostApp: App {
 #endif
 #if os(macOS)
         Settings {
-            SettingsView(isSuperghost: isSuperghost) {
+            SettingsView() {
                 NSApp.keyWindow?.close()
                 NSApp.mainWindow?.becomeFirstResponder()
 

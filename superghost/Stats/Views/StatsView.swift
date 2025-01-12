@@ -19,7 +19,6 @@ struct StatsView: View {
     @CloudStorage("superghostTrialEnd") var superghostTrialEnd = (Calendar.current.date(byAdding: .day, value: 7, to: .now) ?? .now)
 
     @Binding var selection: GameStat?
-    let isSuperghost : Bool
 
     @State private var expandingList = false
 
@@ -180,6 +179,6 @@ struct StatsView: View {
 }
 
 #Preview {
-    StatsView(selection: .constant(nil), isSuperghost: true)
+    StatsView(selection: .constant(nil))
         .modifier(PreviewModifier())
 }

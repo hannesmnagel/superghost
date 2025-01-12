@@ -21,7 +21,8 @@ struct PlayerProfileView: View {
     @CloudStorage("rank") private var rank = -1
 
 
-    @CloudStorage("isSuperghost") private var isSuperghost = false
+    @CloudStorage("isPayingSuperghost") private var isPayingSuperghost = false
+
 
     @CloudStorage("lastWinInMessages") private var lastWinInMessages = Date.distantPast
     
@@ -95,7 +96,12 @@ struct PlayerProfileView: View {
             .frame(minHeight: 300)
             if expanded {
                 LazyVGrid(columns: [.init(.adaptive(minimum: 100, maximum: 200))]) {
-                    ForEach(skins){skin in
+                    ForEach(
+                        skins
+                            .filter{
+                                $0.unlockBy != .superghost || isPayingSuperghost
+                            }
+                    ){skin in
                         let isUnlocked = hasUnlocked(skin: skin)
                         Button{
                             if isUnlocked {
@@ -160,7 +166,7 @@ struct PlayerProfileView: View {
         case .winInMessages:
             Calendar.current.isDate(.now, equalTo: lastWinInMessages, toGranularity: .month)
         case .superghost:
-            isSuperghost
+            isPayingSuperghost
         }
     }
 }

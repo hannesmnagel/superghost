@@ -10,7 +10,6 @@ import UserNotifications
 import OSLog
 
 struct SettingsButton: View {
-    let isSuperghost: Bool
     @AppStorage("showingSettings") private var showingSettings = false
 
 
@@ -50,7 +49,6 @@ struct SettingsView: View {
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
     @State private var notificationAuthorization = UNAuthorizationStatus?.none
 
-    let isSuperghost: Bool
 
     enum Destination: String {case learn, none}
     let dismiss: ()->Void
@@ -66,22 +64,9 @@ struct SettingsView: View {
                         InstructionsView{}
                     }
                 }
-                Section{
-                    if !isSuperghost{
-                        Button("Subscribe to Superghost"){
-                            UserDefaults.standard.set(true, forKey: "showingPaywall")
-                        }
-                    } else {
-#if DEBUG
-                        Button("Show Paywall"){
-                            UserDefaults.standard.set(true, forKey: "showingPaywall")
-                        }
-#endif
-                    }
-                }
 #if os(iOS)
                 Section("Icon"){
-                    NavigationLink("Select AppIcon", destination: AppIconPickerView(isSuperghost: isSuperghost))
+                    NavigationLink("Select AppIcon", destination: AppIconPickerView())
                 }
 #endif
                 Section{
@@ -196,20 +181,15 @@ struct SettingsView: View {
 struct AppIconPickerView: View {
     @Environment(\.dismiss) var dismiss
 
-    let isSuperghost: Bool
     let icons = AppearanceManager.AppIcon.allCases
     var body: some View {
         ScrollView{
             LazyVGrid(columns: [.init(.adaptive(minimum: 150, maximum: 300))]) {
                 ForEach(icons, id: \.self) { icon in
                     Button{
-                        if isSuperghost || icon == .standard {
-                            AppearanceManager.shared.appIcon = icon
-                            UIApplication.shared.setAlternateIconName(icon.rawValue)
-                            dismiss()
-                        } else {
-                            UserDefaults.standard.set(true, forKey: "showingPaywall")
-                        }
+                        AppearanceManager.shared.appIcon = icon
+                        UIApplication.shared.setAlternateIconName(icon.rawValue)
+                        dismiss()
                     } label: {
                         Image(icon.rawValue.appending(".image"))
                             .resizable()
@@ -222,11 +202,6 @@ struct AppIconPickerView: View {
                                 .stroke(Color.accent, lineWidth: 3)
                         }
                     }
-                    .overlay(alignment: .topTrailing) {
-                        if !isSuperghost && !(icon == .standard){
-                            Image(systemName: "lock.fill")
-                        }
-                    }
                     .padding()
                 }
             }
@@ -237,10 +212,6 @@ struct AppIconPickerView: View {
 #endif
 
 #Preview {
-    SettingsButton(isSuperghost: true)
-        .modifier(PreviewModifier())
-}
-#Preview {
-    SettingsView(isSuperghost: true) {}
+    SettingsButton()
         .modifier(PreviewModifier())
 }

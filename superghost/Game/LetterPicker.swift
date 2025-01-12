@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LetterPicker: View {
-    let isSuperghost: Bool
     let word: String
     @State private var leadingLetter = ""
     @State private var trailingLetter = ""
@@ -18,10 +17,8 @@ struct LetterPicker: View {
     var body: some View {
         HStack{
             if !word.isEmpty {
-                if GameViewModel.shared.withInvitation || isSuperghost{
-                    SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
-                        .disabled(!trailingLetter.isEmpty)
-                }
+                SingleLetterPicker(letter: $leadingLetter, allowedLetters: allowedLetters)
+                    .disabled(!trailingLetter.isEmpty)
                 Text(word)
                     .font(AppearanceManager.wordInGame)
             }

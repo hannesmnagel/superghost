@@ -52,7 +52,7 @@ final class Logger {
         @AppStorage("notificationsEnabled") private var notificationsEnabled = "not determined"
         @AppStorage("osVersion") private var osVersion = "undetermined"
 
-        @CloudStorage("isSuperghost") private var isSuperghost = false
+        @CloudStorage("isPayingSuperghost") private var isPayingSuperghost = false
 
         @CloudStorage("timeSpentInGhost") private var timeSpentInGhost = 0.0//in minutes
         private var activated : Date?

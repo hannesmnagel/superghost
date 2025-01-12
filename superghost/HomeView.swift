@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct HomeView: View {
-    let isSuperghost: Bool
     @State private var gameStatSelection: GameStat?
     @ObservedObject var gkStore = GKStore.shared
     @Binding var isGameViewPresented: Bool
-    @CloudStorage("wordToday") private var wordToday = "-----"
+    @CloudStorage("wordToday") private var wordToday = "----------"
     @AppStorage("startPopoverPresented") var startPopoverPresented = true
     @CloudStorage("showOnBoarding") var isFirstUse = true
     @ObservedObject private var playerModel = PlayerProfileModel.shared
@@ -23,7 +22,7 @@ struct HomeView: View {
             List{
                 Text("Recent Games")
                     .font(.title.bold())
-                StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
+                StatsView(selection: $gameStatSelection)
             }
             .frame(maxWidth: 300)
 #endif
@@ -37,17 +36,18 @@ struct HomeView: View {
                         for (index, letter) in wordToday.enumerated() {
                             resultingText = resultingText + (
                                 (letter == "-") ? Text(
-                                    String(Array("SUPERGHOST".suffix(wordToday.count))[index])
+                                    String(Array("SUPERGHOST")[index])
                                 )
                                 .foregroundColor(.secondary.opacity(0.5)) : Text(String(letter))
                                 .foregroundColor(.accent)
                             )
                         }
                         return resultingText
+                            .font(.largeTitle.bold())
+                            .textCase(.uppercase)
+                            .frame(maxWidth: .infinity)
                     }())
-                    .font(.largeTitle.bold())
-                    .textCase(.uppercase)
-                    .frame(maxWidth: .infinity)
+
                     Text("\(wordToday.count(where: {$0 == "-"})) losses left today")
                         .font(.footnote)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -57,16 +57,16 @@ struct HomeView: View {
 
 
                     EventView()
-                        LeaderboardView(isSuperghost: isSuperghost)
+                        LeaderboardView()
                         .padding()
 #if !os(macOS)
-                    StatsView(selection: $gameStatSelection, isSuperghost: isSuperghost)
+                    StatsView(selection: $gameStatSelection)
 #endif
 
                     AchievementsView()
                         .padding(.vertical)
 
-                        SettingsButton(isSuperghost: isSuperghost)
+                        SettingsButton()
                             .frame(maxWidth: .infinity)
                 }
                 .scrollContentBackground(.hidden)
@@ -99,11 +99,9 @@ struct HomeView: View {
 
                     if command == "instructions" {
                         isFirstUse = true
-                    } else if command == "paywall" {
-                        UserDefaults.standard.set(true, forKey: "showingPaywall")
                     } else if command == "start" {
                         Task{
-                            try await GameViewModel.shared.getTheGame(isSuperghost: isSuperghost)
+                            try await GameViewModel.shared.getTheGame()
                             isGameViewPresented = true
                         }
                     } else if command == "host" {
@@ -118,7 +116,7 @@ struct HomeView: View {
 
                         Logger.userInteraction.info("Opened link to gameid: \(gameId, privacy: .public)")
 
-                        try await GameViewModel.shared.joinGame(with: gameId, isSuperghost: isSuperghost)
+                        try await GameViewModel.shared.joinGame(with: gameId)
                         gameStatSelection = nil
                         isGameViewPresented = true
                     }
@@ -151,13 +149,13 @@ struct HomeView: View {
 
         VStack{
             AsyncButton {
-                try await GameViewModel.shared.getTheGame(isSuperghost: isSuperghost)
+                try await GameViewModel.shared.getTheGame()
                 isGameViewPresented = true
             } label: {
                 Text("Start")
                     .font(.largeTitle)
             }
-            .disabled(gkStore.games.today.lost.count >= (isSuperghost ? 10 : 5))
+            .disabled(gkStore.games.today.lost.count >= 10)
             .popover(isPresented: $startPopoverPresented) {
                 VStack{
                     Text("What are you waiting for?")
@@ -165,11 +163,6 @@ struct HomeView: View {
                 }
                 .padding()
                 .presentationCompactAdaptation(.popover)
-            }
-            .onTapGesture {
-                if !isSuperghost && gkStore.games.today.lost.count >= 5{
-                    UserDefaults.standard.set(true, forKey: "showingPaywall")
-                }
             }
             .keyboardShortcut(.defaultAction)
             .buttonStyle(AppearanceManager.FullWidthButtonStyle(isSecondary: false))
@@ -195,6 +188,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(isSuperghost: true, isGameViewPresented: .constant(false))
+    HomeView(isGameViewPresented: .constant(false))
         .modifier(PreviewModifier())
 }

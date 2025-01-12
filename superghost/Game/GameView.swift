@@ -147,7 +147,7 @@ struct GameView: View {
                                 if game.blockMoveForPlayerId != viewModel.currentUser.id {
                                     if GKStore.shared.games.count < 4 {
                                         if !game.word.isEmpty {
-                                            Text("Can you think of a word that \(game.isSuperghost ? "contains" : "starts with") \(game.word)?")
+                                            Text("Can you think of a word that contains \(game.word)?")
                                                 Text("Select a letter so the sequence can still become that word or challenge your opponent")
                                             if game.word.count > 2 {
                                                 Text("Careful if it is a word you will loose")
@@ -167,7 +167,7 @@ struct GameView: View {
                                         }
                                     } else
                                     if trigger {
-                                        LetterPicker(isSuperghost: game.isSuperghost, word: viewModel.game?.word ?? "")
+                                        LetterPicker(word: viewModel.game?.word ?? "")
                                             .transition(.scale(scale: 0.01, anchor: .bottom).animation(.easeIn))
                                             .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                     } else if !game.player2Id.isEmpty{
@@ -195,7 +195,7 @@ struct GameView: View {
                                 )
                                 Text(game.word)
                                     .font(AppearanceManager.wordInGame)
-                                SayTheWordButton(isSuperghost: game.isSuperghost)
+                                SayTheWordButton()
                                     .disabled(game.blockMoveForPlayerId == viewModel.currentUser.id)
                                 AsyncButton{
                                     try await viewModel.yesIlied()
@@ -253,7 +253,7 @@ struct GameView: View {
         .modifier(PreviewModifier())
 }
 #Preview{
-    LetterPicker(isSuperghost: true, word: "word")
+    LetterPicker(word: "word")
         .modifier(PreviewModifier())
 }
 
@@ -296,7 +296,6 @@ struct Definition: Codable, Hashable {
 }
 
 struct SayTheWordButton: View {
-    let isSuperghost: Bool
     @State private var isExpanded = false
     @State private var word = ""
     @FocusState var focused : Bool
@@ -310,9 +309,7 @@ struct SayTheWordButton: View {
         }
         AsyncButton {
             if isExpanded {
-                if try await isWord(word) && (
-                    (GameViewModel.shared.withInvitation || isSuperghost) ? word.localizedCaseInsensitiveContains(GameViewModel.shared.game?.word ?? "") : word.uppercased().hasPrefix((GameViewModel.shared.game?.word ?? "").uppercased())
-                ) {
+                if try await isWord(word) && word.localizedCaseInsensitiveContains(GameViewModel.shared.game?.word ?? "") {
                     try await GameViewModel.shared.submitWordAfterChallenge(word: word)
                 } else{
                     word = "This doesn't fit"

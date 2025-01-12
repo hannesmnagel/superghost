@@ -15,7 +15,6 @@ extension GKLeaderboard.Entry: Swift.Identifiable {
 }
 
 struct LeaderboardView: View {
-    let isSuperghost: Bool
     @ObservedObject private var gkStore = GKStore.shared
     @State private var selectedScore: GKLeaderboard.Entry?
     @State private var playerScope = GKLeaderboard.PlayerScope.global
@@ -222,5 +221,5 @@ extension GKPlayer {
 
 
 #Preview {
-    LeaderboardView(isSuperghost: true)
+    LeaderboardView()
 }

@@ -128,15 +128,8 @@
     "But Why?!" : {
 
     },
-    "Can you think of a word that %@ %@?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Can you think of a word that %1$@ %2$@?"
-          }
-        }
-      }
+    "Can you think of a word that contains %@?" : {
+
     },
     "Can you win another one?" : {
 
@@ -357,9 +350,6 @@
     "Settings" : {
 
     },
-    "Show Paywall" : {
-
-    },
     "Sign In" : {
 
     },
@@ -376,9 +366,6 @@
 
     },
     "Submit Move" : {
-
-    },
-    "Subscribe to Superghost" : {
 
     },
     "Superghost for %lld more days" : {

@@ -22,37 +22,37 @@ actor ApiLayerActor: GlobalActor {
 @ApiLayerActor
 final class ApiLayer: ObservableObject {
 
-    func startGame(isSuperghost: Bool, as player: Player) async throws {
+    func startGame(as player: Player) async throws {
         do{
-            let id = try await ApiCaller.openGame(isSuperghost: isSuperghost)
-            await setGameVar(to: .init(id: id, player2Id: player.id, player2profile: player.profile, isSuperghost: isSuperghost))
+            let id = try await ApiCaller.openGame()
+            await setGameVar(to: .init(id: id, player2Id: player.id, player2profile: player.profile))
             try await joinGame(with: id, as: player)
         } catch {
-            let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false, isSuperghost: isSuperghost)
-            await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost))
+            let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: false)
+            await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile))
             await connectToWebSocket(gameId: id)
         }
     }
 
 
     func joinGame(with gameId: String, as player: Player) async throws {
-        await setGameVar(to: .init(id: gameId, player2Id: player.id, player2profile: player.profile, isSuperghost: true))
+        await setGameVar(to: .init(id: gameId, player2Id: player.id, player2profile: player.profile))
         await connectToWebSocket(gameId: gameId)
         
         try await ApiCaller.joinGame(gameId: gameId, playerId: player.id, playerProfile: player.profile)
     }
 
-    func hostGame(isSuperghost: Bool, as player: Player) async throws {
-        let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        await setGameVar(to: .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame", isSuperghost: isSuperghost))
+    func hostGame(as player: Player) async throws {
+        let gameId = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true)
+        await setGameVar(to: .init(id: gameId, player1Id: player.id, player1profile: player.profile, player2Id: "privateGame"))
         await connectToWebSocket(gameId: gameId)
     }
 
-    func rematchGame(isSuperghost: Bool, as player: Player) async throws {
+    func rematchGame(as player: Player) async throws {
         let oldGameId = await GameViewModel.shared.game?.id ?? ""
         disconnectWebSocket()
-        let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true, isSuperghost: isSuperghost)
-        await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile, isSuperghost: isSuperghost))
+        let id = try await ApiCaller.createGame(player1Id: player.id, player1Profile: player.profile, isPrivate: true)
+        await setGameVar(to: .init(id: id, player1Id: player.id, player1profile: player.profile))
         await connectToWebSocket(gameId: id)
         
         try await ApiCaller.rematchGame(oldGameId: oldGameId, newGameId: id)
@@ -206,17 +206,17 @@ private enum ApiCaller {
         let player1Id: String
         let player1profile: PlayerProfile
         let isPrivate: Bool
-        let isSuperghost: Bool
+        var isSuperghost: Bool = true
     }
 
-    static func createGame(player1Id: String, player1Profile: PlayerProfile, isPrivate: Bool, isSuperghost: Bool) async throws -> String {
+    static func createGame(player1Id: String, player1Profile: PlayerProfile, isPrivate: Bool) async throws -> String {
         let url = URL(string: "\(baseURL)/game/create")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let createGameRequest = CreateGameRequest(player1Id: player1Id, player1profile: player1Profile, isPrivate: isPrivate, isSuperghost: isSuperghost)
+        let createGameRequest = CreateGameRequest(player1Id: player1Id, player1profile: player1Profile, isPrivate: isPrivate)
         request.httpBody = try JSONEncoder().encode(createGameRequest)
 
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -229,11 +229,11 @@ private enum ApiCaller {
     }
 
     // MARK: - Open Game
-    static func openGame(isSuperghost: Bool) async throws -> String {
+    static func openGame() async throws -> String {
         let url = URL(string: "\(baseURL)/game/open")!
 
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpBody = try JSONEncoder().encode(isSuperghost)
+        urlRequest.httpBody = try JSONEncoder().encode(true)
         urlRequest.httpMethod = "PUT"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
@@ -378,6 +378,4 @@ struct GameMove: Codable {
     var player1Challenges = Bool?.none
 
     var rematchGameId = String?.none
-    
-    var isSuperghost: Bool?
 }

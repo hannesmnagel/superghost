@@ -103,14 +103,14 @@ final class GameViewModel: ObservableObject {
     }
 
 
-    func getTheGame(isSuperghost: Bool) async throws {
-        try await ApiLayer.shared.startGame(isSuperghost: isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
+    func getTheGame() async throws {
+        try await ApiLayer.shared.startGame(as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         Logger.userInteraction.info("Started Game")
         Logger.trackEvent("game_start")
         withInvitation = false
     }
-    func joinGame(with gameId: String, isSuperghost: Bool) async throws {
+    func joinGame(with gameId: String) async throws {
         try await ApiLayer.shared.joinGame(with: gameId, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
@@ -119,7 +119,7 @@ final class GameViewModel: ObservableObject {
         Logger.userInteraction.info("Joined Game with ID: \(gameId)")
     }
     func hostGame() async throws {
-        try await ApiLayer.shared.hostGame(isSuperghost: true, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
+        try await ApiLayer.shared.hostGame(as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
 
         withInvitation = true
         Logger.trackEvent("game_host")
@@ -170,9 +170,9 @@ final class GameViewModel: ObservableObject {
         alertItem = nil
         if let rematchGameId = game.rematchGameId {
             try await quitGame()
-            try await joinGame(with: rematchGameId, isSuperghost: game.isSuperghost)
+            try await joinGame(with: rematchGameId)
         } else {
-            try await ApiLayer.shared.rematchGame(isSuperghost: game.isSuperghost, as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
+            try await ApiLayer.shared.rematchGame(as: (id: currentUser.id, profile: PlayerProfileModel.shared.player))
         }
 
         Logger.trackEvent("game_rematch")
