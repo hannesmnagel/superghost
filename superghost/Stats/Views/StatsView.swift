@@ -147,6 +147,34 @@ struct StatsView: View {
 
     @ViewBuilder @MainActor
     var summary: some View {
+#if os(macOS)
+        HStack{
+            scoreView
+                .padding(4)
+                .background(.white.opacity(0.05))
+                .clipShape(.rect(cornerRadius: 15))
+                .frame(minWidth: 100)
+                .fixedSize()
+            rankView
+                .padding(4)
+                .background(.white.opacity(0.05))
+                .clipShape(.rect(cornerRadius: 15))
+                .frame(minWidth: 100)
+                .fixedSize()
+            winStreakView
+                .padding(4)
+                .background(.white.opacity(0.05))
+                .clipShape(.rect(cornerRadius: 15))
+                .frame(minWidth: 100)
+                .fixedSize()
+            winRateView
+                .padding(4)
+                .background(.white.opacity(0.05))
+                .clipShape(.rect(cornerRadius: 15))
+                .frame(minWidth: 100)
+                .fixedSize()
+        }
+#else
         Grid{
             GridRow{
                 scoreView
@@ -175,6 +203,7 @@ struct StatsView: View {
         .background(.thinMaterial)
         .clipShape(.rect(cornerRadius: 20))
         .padding()
+#endif
     }
 }
 

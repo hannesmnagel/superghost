@@ -154,7 +154,9 @@ struct SettingsView: View {
                 }
             }
             .scrollContentBackground(.hidden)
+        #if !os(macOS)
             .background(PlayerProfileModel.shared.player.color.gradient, ignoresSafeAreaEdges: .all)
+        #endif
             .font(AppearanceManager.buttonsInSettings)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationTitle("Settings")

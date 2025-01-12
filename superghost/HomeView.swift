@@ -20,8 +20,6 @@ struct HomeView: View {
         HStack {
 #if os(macOS)
             List{
-                Text("Recent Games")
-                    .font(.title.bold())
                 StatsView(selection: $gameStatSelection)
             }
             .frame(maxWidth: 300)
