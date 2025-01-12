@@ -15,11 +15,11 @@ struct PaywallView: View {
     @State private var product : Product? = nil
 
 
-    let accentColor: Color = .init(red: 150/255, green: 15/255, blue: 40/255)
+    let accentColor: Color = Color( #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1))
 
     var body: some View {
         VStack{
-            Image("Skin/Christmas")
+            Image(.ghostStars)
                 .resizable()
                 .scaledToFit()
                 .clipShape(.rect(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
@@ -81,7 +81,7 @@ struct PaywallView: View {
         .background(.thinMaterial, ignoresSafeAreaEdges: .all)
         .background(
             LinearGradient(
-                stops: [.init(color: .red, location: 0), .init(color: .clear, location: 1)],
+                stops: [.init(color: .accent, location: 0), .init(color: .clear, location: 1)],
                 startPoint: .top,
                 endPoint: .bottom
             ),
