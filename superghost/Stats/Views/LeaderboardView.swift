@@ -28,7 +28,7 @@ struct LeaderboardView: View {
             HStack{
                 if let leaderboardTitle = gkStore.leaderboardTitle{
                     Text(leaderboardTitle)
-                        .font(AppearanceManager.leaderboardTitle)
+                        .font(.title.bold())
                 }
                 if let image = gkStore.leaderboardImage{
                     image.resizable().scaledToFit().clipShape(.circle).frame(width: 40, height: 40)

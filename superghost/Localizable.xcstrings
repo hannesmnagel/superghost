@@ -176,6 +176,9 @@
     "Defeated by" : {
 
     },
+    "Display Leaderboard" : {
+
+    },
     "Display Your current win rate" : {
 
     },
@@ -228,6 +231,9 @@
 
     },
     "Launch Superghost" : {
+
+    },
+    "Leaderboard" : {
 
     },
     "Leaderboard Notifications" : {
@@ -399,6 +405,9 @@
     "Tap and hold anywhere on your Home Screen" : {
 
     },
+    "Tap to load the data" : {
+
+    },
     "Tap to play" : {
 
     },
@@ -515,6 +524,9 @@
 
     },
     "Yes, I lied" : {
+
+    },
+    "You are " : {
 
     },
     "You are rank %lld" : {

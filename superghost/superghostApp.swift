@@ -10,6 +10,9 @@ import BackgroundTasks
 import UserNotifications
 import GameKit
 import Aptabase
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 @main
 struct superghostApp: App {
@@ -23,7 +26,8 @@ struct superghostApp: App {
     @CloudStorage("doubleXP15minNotifications") var doubleXP15minNotifications = true
     @CloudStorage("specialEventNotifications") var specialEventNotifications = true
     @CloudStorage("leaderboardNotifications") var leaderboardNotifications = true
-    
+    @CloudStorage("leaderboardWidgetData") var leaderboardData = [LeaderboardEntry]()
+
     init() {
         Aptabase.shared.initialize(appKey: "A-SH-2968519615", options: InitOptions(host: "https://analytics.hannesnagel.com", flushInterval: 1))
     }
@@ -35,14 +39,22 @@ struct superghostApp: App {
                 .tint(.accent)
                 .buttonStyle(DefaultButtonStyle())
                 .modifier(Messagable())
-                .onChange(of: scenePhase) {oldValue, newValue in
+                .onChange(of: scenePhase) {
+                    oldValue,
+                    newValue in
                     switch newValue {
                     case .background:
                         Task{await Logger.appDidDeactivate()}
                     case .inactive:
                         Task{await Logger.appDidDeactivate()}
                     case .active:
-                        Task{await Logger.appDidActivate()}
+                        Task{
+                            await Logger.appDidActivate()
+                            leaderboardData = await fetchLeaderboard() ?? leaderboardData
+#if canImport(WidgetKit)
+                            WidgetCenter.shared.reloadAllTimelines()
+#endif
+                        }
                     @unknown default:
                         return
                     }
@@ -75,6 +87,14 @@ struct superghostApp: App {
                       Date().timeIntervalSince(timeout) < 10 {
                     try? await Task.sleep(for: .seconds(1))
                 }
+                let lb = await fetchLeaderboard()
+                await MainActor.run {
+                    leaderboardData = lb ?? leaderboardData
+                }
+
+#if canImport(WidgetKit)
+                WidgetCenter.shared.reloadAllTimelines()
+#endif
                 if await leaderboardNotifications,
                    rank > 0,
                    let entries = try await GKLeaderboard
@@ -131,6 +151,35 @@ struct superghostApp: App {
 
         }
 #endif
+    }
+
+    nonisolated func fetchLeaderboard() async -> [LeaderboardEntry]? {
+        do {
+            let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: ["global.score"]).first!
+            let _entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...1))
+            let entries = try await leaderboard.loadEntries(for: .global, timeScope: .allTime, range: createRange(containing: _entries.0?.rank ?? 1, maxAllowed: _entries.2))
+
+
+            return entries.1.map { entry in
+                LeaderboardEntry(
+                    rank: entry.rank,
+                    name: entry.player.displayName,
+                    score: entry.score.formatted(),
+                    isLocalPlayer: entry.player.displayName == GKLocalPlayer.local.displayName
+                )
+            }
+        } catch {
+            return nil
+        }
+    }
+    nonisolated func createRange(containing value: Int, maxAllowed: Int, length: Int = 3) -> NSRange {
+        // Calculate the ideal start to center `value` in the range
+        let idealStart = value - length / 2
+
+        // Ensure the range stays within valid bounds
+        let start = max(1, min(idealStart, maxAllowed - length + 1))
+
+        return NSRange(location: start, length: length)
     }
 #if !os(macOS)
     nonisolated func scheduleLBNotifications() {
@@ -202,4 +251,11 @@ struct superghostApp: App {
                 trigger: trigger)
             )
     }
+}
+
+struct LeaderboardEntry : Hashable, Codable {
+    let rank: Int
+    let name: String
+    let score: String
+    let isLocalPlayer: Bool
 }

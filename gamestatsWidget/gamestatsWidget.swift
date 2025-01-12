@@ -50,6 +50,8 @@ struct Provider: AppIntentTimelineProvider {
                 }
             case .icon:
                 return "Icon"
+            case .leaderboard:
+                return ""
             }
         }()
         if !context.isPreview {
@@ -96,6 +98,8 @@ struct Provider: AppIntentTimelineProvider {
                 }
             case .icon:
                 return "Icon"
+            case .leaderboard:
+                return ""
             }
         }()
         let entry = SimpleEntry(text: string, configuration: configuration)
@@ -120,33 +124,74 @@ struct SimpleEntry: TimelineEntry {
 struct GamestatsWidgetEntryView : View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) var widgetFamily
+    @CloudStorage("leaderboardWidgetData") var leaderboardData = [LeaderboardEntry]()
 
 
     var body: some View {
-        ZStack {
-            Image(widgetFamily == .systemSmall ? .ghost512 : .ghost1024)
-                .resizable()
-                .scaledToFit()
-                .scaleEffect(1.4)
-                .brightness(-0.5)
-            if entry.configuration.configuration != .icon {
-                VStack{
-                    Spacer()
-                    Text(entry.text)
-                        .font(.system(size: entry.configuration.configuration == .word ? 27 : 40).bold())
-                    subtext
-                        .font(.subheadline)
+        if entry.configuration.configuration == .leaderboard {
+            if leaderboardData.isEmpty {
+                Text("Tap to load the data")
+            } else {
+                Text("Leaderboard")
+                    .font(.subheadline)
+                    .bold()
+                inlineLeaderboard(entries: leaderboardData)
+                    .font(.caption)
+                Group{
+                    Text("You are ") + Text(leaderboardData.first{$0.isLocalPlayer}?.rank.ordinalString() ?? "not on the leaderboard")
                 }
-                .foregroundStyle(.white)
+                .font(.caption2)
             }
+        } else {
+            ZStack {
+                Image(widgetFamily == .systemSmall ? .ghost512 : .ghost1024)
+                    .resizable()
+                    .scaledToFit()
+                    .scaleEffect(1.4)
+                    .brightness(-0.5)
+                if entry.configuration.configuration != .icon {
+                    VStack{
+                        Spacer()
+                        Text(entry.text)
+                            .font(.system(size: entry.configuration.configuration == .word ? 27 : 40).bold())
+                        subtext
+                            .font(.subheadline)
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+            .multilineTextAlignment(.center)
         }
-        .multilineTextAlignment(.center)
-
     }
     var subtext: Text {
         let representation = Configuration.caseDisplayRepresentations[entry.configuration.configuration]
         return Text(representation?.title ?? "")
     }
+
+    @ViewBuilder
+    func inlineLeaderboard(entries: [LeaderboardEntry]) -> some View {
+        ForEach(entries, id: \.self) { entry in
+            HStack{
+                Text(entry.name)
+                Spacer()
+                Text(entry.score)
+            }
+            .padding(.vertical, 5)
+
+            .padding(.horizontal, 3)
+            .contentShape(.rect)
+            .background(entry.isLocalPlayer ? .thinMaterial : .ultraThinMaterial)
+            .background(entry.isLocalPlayer ? .accent : .clear)
+            .clipShape(.rect(cornerRadius: 10))
+        }
+    }
+}
+
+struct LeaderboardEntry : Hashable, Codable {
+    let rank: Int
+    let name: String
+    let score: String
+    let isLocalPlayer: Bool
 }
 
 struct gamestatsWidget: Widget {
