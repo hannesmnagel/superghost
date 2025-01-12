@@ -51,7 +51,7 @@ final class GameViewModel: ObservableObject {
                                     }
                                 }
                             }
-                            Logger.trackEvent("game_won", with: ["word": newValue.word])
+                            Logger.trackEvent("game_won", with: ["word": newValue.word, "games" : GKStore.shared.games.count])
                         } else {
                             alertItem = .lost
 
@@ -67,7 +67,7 @@ final class GameViewModel: ObservableObject {
                             Task{
                                 await changeScore(by: -.random(in: 48...52))
                             }
-                            Logger.trackEvent("game_lost", with: ["word": newValue.word])
+                            Logger.trackEvent("game_lost", with: ["word": newValue.word, "games" : GKStore.shared.games.count])
                         }
                         if (newValue.word.count) > 5 {
                             Task.detached{
