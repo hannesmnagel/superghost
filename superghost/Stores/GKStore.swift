@@ -73,7 +73,7 @@ class GKStore: ObservableObject {
         try await withCheckedThrowingContinuation { continuation in
             let continuationState = ContinuationState()
 
-            let dataTask = Task {
+            Task {
                 let start = Date()
                 do {
                     let achievementsTask = Task {
@@ -120,7 +120,7 @@ class GKStore: ObservableObject {
                 }
             }
 
-            let timeoutTask = Task {
+            Task {
                 try await Task.sleep(for: .seconds(15))
                 try await continuationState.tryResume(continuation, with: .failure(GKStoreError.loadingTimedOut))
                 Logger.trackEvent("game_store_loading_timed_out")
