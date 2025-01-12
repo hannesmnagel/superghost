@@ -93,6 +93,7 @@
 				Utilities/AsyncFuncs.swift,
 				Utilities/ButtonBorderShapes.swift,
 				Utilities/CloudStoragePropertyWrapper.swift,
+				Utilities/Image.swift,
 				Utilities/Logger.swift,
 				ViewModifiers/onChange.swift,
 			);
@@ -115,6 +116,7 @@
 				Utilities/AsyncFuncs.swift,
 				Utilities/ButtonBorderShapes.swift,
 				Utilities/CloudStoragePropertyWrapper.swift,
+				Utilities/Image.swift,
 				Utilities/Logger.swift,
 				Utilities/SharedTopViewController.swift,
 				ViewModifiers/onChange.swift,
