@@ -28,6 +28,7 @@ private final class UbiquitousStorageObserver<Value: Codable>: ObservableObject 
         self.cancellable = NotificationCenter.default
             .publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification)
             .merge(with: NotificationCenter.default.publisher(for: Notification.Name(rawValue: "\(key) will change")))
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] notification in
                 guard let self = self else { return }
                 if !self.sendFromSelf{
