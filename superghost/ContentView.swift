@@ -77,9 +77,6 @@ struct ContentView: View {
         }
     }
     nonisolated func promptUserForAction() async {
-        let timeSinceTrialEnd = await Date().timeIntervalSince(superghostTrialEnd)
-        let daysSinceTrialEnd = timeSinceTrialEnd / (Calendar.current.dateInterval(of: .day, for: .now)?.duration ?? 1)
-
         let isSunday = Calendar.current.component(.weekday, from: .now) == 1
 
         let isDoubleXP : Bool
