@@ -45,6 +45,7 @@ actor SoundManager{
         players[sound] = player
         player.prepareToPlay()
         player.volume = 1
+#if !os(macOS) && !os(macOS)
         if let ahap = sound.ahap{
             await withCheckedContinuation{con in
                 hapticsEngine?.start{_ in con.resume()}
@@ -52,6 +53,7 @@ actor SoundManager{
             let url = URL(fileURLWithPath: Bundle.main.path(forResource: ahap, ofType: nil)!)
             try? hapticsEngine?.playPattern(from: url)
         }
+#endif
         player.play()
         player.numberOfLoops = loop ? -1 : 0
     }
